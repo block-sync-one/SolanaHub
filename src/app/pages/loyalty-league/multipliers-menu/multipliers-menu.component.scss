@@ -114,7 +114,7 @@
     align-items: center;
     border-radius: 8px;
     border: 1px solid  var(--ion-color-border);
-    background:  var(--ion-color-dark);;
+    background:  var(--ion-color-light);;
     position: relative; 
     #boosted-lst-icon {
         position: absolute;
@@ -137,7 +137,7 @@
     }
 
     ion-text {
-        color: var(--ion-color-light);;
+        color: var(--ion-color-dark);;
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
