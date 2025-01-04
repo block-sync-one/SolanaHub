@@ -4,8 +4,11 @@ import {
   IonButton,
   IonButtons,
   IonMenuButton,
-  IonRippleEffect
+  IonRippleEffect,
+  IonIcon
 } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { menuOutline } from 'ionicons/icons';
 @Component({
   selector: 'app-menu',
   templateUrl: './menu.component.html',
@@ -16,12 +19,15 @@ import {
     IonButton,
     IonButtons,
     IonMenuButton,
-    IonRippleEffect
+    IonRippleEffect,
+    IonIcon
   ]
 })
 export class MenuComponent  implements OnInit {
 
-  constructor() { }
+  constructor() { 
+    addIcons({menuOutline})
+  }
 
   ngOnInit() {}
 
