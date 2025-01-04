@@ -4,11 +4,6 @@ export const getBaseConfig = (): BaseConfig => {
   return {
     platformFeeCollector:'HUBpmKPsZaXWCDoWh1SScYMneVSQJve99NamntdsEovP',
     rpcs: [
-      // {
-      //   name: "QuickNode",
-      //   imageURL: "../assets/images/quicknode-icon.png",
-      //   value: "https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro"
-      // },
       {
         name: 'Helius',
         imageURL: '../assets/images/helius-icon.png',
