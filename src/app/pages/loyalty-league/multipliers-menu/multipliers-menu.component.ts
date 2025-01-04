@@ -6,7 +6,7 @@ import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { Multipliers } from 'src/app/models';
 import { AsyncPipe, DecimalPipe, JsonPipe, KeyValuePipe } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { diamondOutline, flash, flashOutline } from 'ionicons/icons';
+import { diamondOutline, flash, flashOutline, linkOutline } from 'ionicons/icons';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { AnimatedIconComponent } from 'src/app/shared/components';
@@ -26,10 +26,8 @@ import va from '@vercel/analytics';
     IonLabel,
     IonText,
     IonImg,
-    IonMenu,
-    AsyncPipe,
-    KeyValuePipe,
-    DecimalPipe
+    DecimalPipe,
+    IonIcon
   ],
   animations: [
     trigger('menuAnimation', [
@@ -162,12 +160,11 @@ export class MultipliersMenuComponent implements OnInit {
   private multipliersFetched = inject(LoyaltyLeagueService).getBoosters()
 
   ngOnInit(): void {
-    console.log('load multiplier menu');
     va.track('loyalty league', { event: 'multipliers menu open' })
     this.updateMultipliers()
   }
   constructor() {
-    addIcons({flash,diamondOutline,flashOutline});
+    addIcons({diamondOutline,linkOutline,flash,flashOutline});
   }
   async updateMultipliers() {
 

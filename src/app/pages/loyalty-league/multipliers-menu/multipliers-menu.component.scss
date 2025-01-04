@@ -37,7 +37,7 @@
 }
 
 .group-title {
-    color: var(--ion-color-light);;
+    color: var(--ion-color-dark);;
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -100,6 +100,12 @@
         span{
             color:  var(--ion-color-border);
             margin-inline: 12px;
+        }
+        a{
+            display: flex;
+        }
+        ion-icon{
+            color: var(--ion-color-dark);
         }
     }
 }
