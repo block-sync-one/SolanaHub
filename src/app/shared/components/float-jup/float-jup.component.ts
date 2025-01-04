@@ -208,7 +208,7 @@ export class FloatJupComponent implements OnInit {
       defaultExplorer: 'solscan',
       widgetStyle: {
         position: "bottom-right",
-        size: 'default'
+        size: 'small'
       }
     });
 
