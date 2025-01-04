@@ -102,7 +102,9 @@
 </ng-template>
 <ng-template #redirectTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="tx-out">
-    <a target="_blank" [href]="row.link"> <ion-img src="assets/icon/link.svg"></ion-img> </a>
+    <a target="_blank" [href]="row.link"> 
+      <ion-icon name="link-outline"/>
+       </a>
   </div>
 </ng-template>
 <ng-template #statusTpl let-row let-rowIndex="rowIndex" let-column="column">

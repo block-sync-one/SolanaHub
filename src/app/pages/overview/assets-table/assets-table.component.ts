@@ -3,7 +3,7 @@ import { Component, Input, OnInit, TemplateRef, ViewChild, computed, signal } fr
 import { IonImg, IonButton, IonIcon, IonSkeletonText, IonChip } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { arrowBack, arrowForward } from 'ionicons/icons';
+import { arrowBack, arrowForward, linkOutline } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 import { AssetModalComponent } from './asset-modal/asset-modal.component';
 import { PortfolioService } from 'src/app/services/portfolio.service';
@@ -34,6 +34,7 @@ import { Observable } from 'rxjs';
     NgClass,
     NgStyle,
     PriceChartComponent,
+    IonIcon
   ]
 })
 export class AssetsTableComponent implements OnInit {
@@ -75,7 +76,7 @@ export class AssetsTableComponent implements OnInit {
     private _modalCtrl: ModalController,
     public utils: UtilService
   ) {
-    addIcons({arrowBack, arrowForward});
+    addIcons({linkOutline,arrowBack,arrowForward});
   }
 
   public solPrice = this._portfolioBreakdownService.solPrice;

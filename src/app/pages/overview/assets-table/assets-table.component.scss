@@ -50,6 +50,10 @@
 .tx-out {
     display: flex;
     justify-content: center;
+    ion-icon{
+      font-size: 22px;
+      color: var(--ion-color-dark);
+    }
 }
 
 .collection-info {
