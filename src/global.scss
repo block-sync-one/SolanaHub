@@ -56,10 +56,10 @@ ion-col {
     margin: 0;
     padding: 0;
 }
-.dark-theme #stash-box  .inner ion-img{
+.dark-theme .invert-color{
     filter: invert(1) !important;
 }
-.dark-theme .platform ion-img{
+.dark-theme .platform ion-img, .dark-theme .tier-container:after{
     filter: brightness(0.5) invert(1) !important;
   }
 ion-button {

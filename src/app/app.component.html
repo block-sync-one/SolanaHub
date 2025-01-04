@@ -2,7 +2,7 @@
 <!-- <ngx-turnstile #turnStile [siteKey]="turnStileKey" (errored)="log($event)" (resolved)="sendCaptchaResponse($event)" theme="auto"
   [tabIndex]="0" /> -->
   <!-- <turnstile-captcha /> -->
-  {{isReady$}}
+  <div class="ion-hide">{{isReady$ | async}}</div>
 <ion-header mode="md" [translucent]="true">
   <app-menu />
 
@@ -52,19 +52,19 @@
                   <ion-label>{{ p.title }}</ion-label>
                   @if((watchMode$ | async)){
                   @if (p.title != 'Overview') {
-                  <ion-chip color="secondary">
+                  <ion-chip color="primary">
                     Disabled
                   </ion-chip>
                   }
                   }@else{
 
                   @if (!p.active) {
-                  <ion-chip color="secondary">
+                  <ion-chip color="primary">
                     Soon
                   </ion-chip>
                   }
                   @if(p.title == 'Notifications' && notifIndicator()){
-                  <ion-chip color="secondary">
+                  <ion-chip color="primary">
                     {{notifIndicator()}}
                   </ion-chip>
                   }

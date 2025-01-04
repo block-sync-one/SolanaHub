@@ -4,8 +4,9 @@ import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 'src/app/shared/components';
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
-import { PortfolioBreakdownService } from "../../services";
+import { PortfolioBreakdownService, WatchModeService } from "../../services";
 import { FreemiumService } from 'src/app/shared/layouts/freemium/freemium.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 
 @Component({
@@ -24,10 +25,11 @@ export class OverviewPage implements OnInit {
   private readonly _portfolioBreakDownService = inject(PortfolioBreakdownService)
   private readonly _portfolioService = inject(PortfolioService)
   private readonly _freemiumService = inject(FreemiumService)
+  private readonly _watchModeService = inject(WatchModeService)
   public readonly isFreemium = this._freemiumService.isPremium
   public readonly allWalletsAssets = this._portfolioBreakDownService.getEnabledWalletsAssets;
   public readonly portfolioTotalUsdValue =  this._portfolioBreakDownService.portfolioTotalUsdValue;
-
+public readonly watchMode = toSignal(this._watchModeService.watchMode$)
   /**
    * Computed property that returns a Map of total USD values for all wallets.
    *

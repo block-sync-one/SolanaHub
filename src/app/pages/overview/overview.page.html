@@ -2,10 +2,10 @@
   <ion-grid style="position: relative;">
     <ion-row class="ion-justify-content-between data-set">
 
-      <ion-col id="portfolio-breakdown" class="gap" size="12" [sizeMd]="isFreemium() ? 8 : 12">
+      <ion-col id="portfolio-breakdown" class="gap" size="12" [sizeMd]="(isFreemium() && !watchMode() ) ? 8 : 12">
         <portfolio-breakdown chartText="Total net worth" [assets]="allWalletsAssets" #portfolioBreakdown />
       </ion-col>
-      @if(isFreemium()){
+      @if(isFreemium() && !watchMode()){
       <ion-col id="portfolio-menu" size="12" sizeMd="3.6">
         <portfolio-menu/>
       </ion-col>
