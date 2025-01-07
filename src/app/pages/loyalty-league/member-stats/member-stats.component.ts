@@ -12,7 +12,7 @@ import { loyaltyLeagueMember, Tier } from 'src/app/models';
 import { ReferAFriendModalComponent, LoyaltyPathComponent, LoyaltyBadgeComponent } from '../';
 import { NumberCounterComponent } from "../../../shared/components/number-counter/number-counter.component";
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import { distinctUntilChanged, map, Observable, of, shareReplay, switchMap } from 'rxjs';
+import { distinctUntilChanged, map, Observable, of, shareReplay, switchMap, take } from 'rxjs';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { CodesComponent } from './codes/codes.component';
 import { QuestsComponent } from '../quests/quests.component';
@@ -65,17 +65,16 @@ export class MemberStatsComponent implements OnChanges {
     private _loyaltyLeagueService: LoyaltyLeagueService,
     private _shs: SolanaHelpersService,
     public _popoverController: PopoverController,
+    private _utilService: UtilService,
   ) {
 
     addIcons({discOutline,informationCircleOutline,copyOutline});
   }
   tiers: Tier[] = this._loyaltyLeagueService.tiers
-  public hiddenPts = signal('🍳 🧑‍🍳 🍳 👨‍🍳 🍳')
   public wallet$ = this._shs.walletExtended$
   public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$.pipe(
 
     map(member => {
-      console.log(member);
       if(member.hubSOLBreakdown){
        member.hubSOLBreakdown = Object.entries(member.hubSOLBreakdown)
         .filter(([_, value]) => Number(value) >= 0.001)
@@ -88,6 +87,13 @@ export class MemberStatsComponent implements OnChanges {
       if(Object.keys(member.hubSOLBreakdown).length > 0){
      this.pointCategories.push({title: 'Snapshot', key:'hubSOLBreakdown', tooltip: 'Your current hubSOL holding according to last snapshot.'})
       }
+      // this._loyaltyLeagueService.getSessionMetrics().pipe(take(1)).subscribe(metrics => {
+      //   console.log('metrics', metrics);
+      //   if(metrics.airdrop > 0){
+      //     this.pointCategories.push({ title: 'Your airdrop', key: 'airdrop', tooltip: 'Your allocation base on your share in the points pool'  });
+      //     member.airdrop = member.totalPts / metrics.totalPoints * metrics.airdrop
+      //   }
+      // })
       }
       return member
     }),
@@ -152,5 +158,8 @@ export class MemberStatsComponent implements OnChanges {
       event: event,
     })
     modal.present();
+  }
+  public formatNumber(num: any) {
+    return this._utilService.fixedNumber(num)
   }
 }

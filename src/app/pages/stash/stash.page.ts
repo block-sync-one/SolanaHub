@@ -166,7 +166,7 @@ export class StashPage implements OnInit {
           {
             "id": 9,
             "question": "Do I need to pay for using Stash?",
-            "answer": "Yes, there is a simple fee structure for using Stash. For most operations, we charge a flat 3% fee based on the value of the transaction. However, for identifying and managing 'out of range' DeFi positions, there is a fixed fee of 0.01 SOL per position. This pricing ensures transparency while allowing us to maintain and improve the service for all users."
+            "answer": "Yes, there is a simple fee structure for using Stash. For most operations, we charge a flat 5% fee based on the value of the transaction. However, for identifying and managing 'out of range' DeFi positions, there is a fixed fee of 0.01 SOL per position. This pricing ensures transparency while allowing us to maintain and improve the service for all users."
           }
           
         ]

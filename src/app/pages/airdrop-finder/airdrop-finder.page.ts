@@ -75,10 +75,11 @@ export class AirdropFinderPage implements OnInit {
 
 
   async getAirdrops() {
+    console.log('getAirdrops');
     const { publicKey } = this._shs.getCurrentWallet()
     const airdrops = await this._afs.getWalletAirdrops(publicKey.toBase58())
+    console.log('airdrops', airdrops);
     const data = { airdrops: airdrops.airdrops, points: airdrops }
-
     // const platforms = await this._portfolio.getPlatformsData();
     // data.airdrops = data.airdrops.map(ad => {
     //   ad.stage = ad.stage.replaceAll("_", " ")
@@ -111,6 +112,7 @@ export class AirdropFinderPage implements OnInit {
 
       // ]
     }
+    this.getAirdrops()
 
 
   }

@@ -11,7 +11,7 @@ import { EarningsService } from './earnings.service';
 })
 export class HelpersService {
 
-    public platformFee = 0.03
+    public platformFee = 0.05
     public platformFeeInSOL = signal(0)
     public rentFee = 0.002039
     public dasAssets = signal([])
