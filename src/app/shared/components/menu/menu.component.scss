@@ -28,6 +28,7 @@
         height: 24px;
     }
     ion-buttons {
+        z-index: 1000;
         position: absolute;
         left: 0;
         top: 0;

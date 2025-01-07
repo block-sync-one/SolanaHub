@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import {IonButton, IonImg, IonText, IonLabel, IonSkeletonText } from '@ionic/angular/standalone';
 import lottie from "lottie-web";
 import {
@@ -48,7 +48,23 @@ import va from '@vercel/analytics'
   ]
 })
 export class PromoComponent implements AfterViewInit {
-  @Input() estimateStashValue: number = null;
+  @Input() set estimateStashValue(value: number) {
+    console.log('value', value);
+    
+    this._estimateStashValue = value;
+    // You can add any additional logic here when the value changes
+    this.handleEstimateValueChange();
+  }
+  get estimateStashValue(): number {
+    return this._estimateStashValue;
+  }
+  private _estimateStashValue: number = null;
+
+  private handleEstimateValueChange() {
+    // Add any specific logic you need when the value changes
+    console.log('Estimate value changed:', this._estimateStashValue);
+  }
+
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;
   public wordCarousel = ["Dust value", "Stake accounts", "DeFi positions"];
   public wordCounter = -1;
