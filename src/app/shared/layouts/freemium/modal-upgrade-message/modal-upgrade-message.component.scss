@@ -1,0 +1,32 @@
+ion-chip {
+  --color: var(--ion-color-primary);
+}
+
+.upgrade-wrapper {
+  &__upgrade {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    border-top: 1px solid #E3E8EF;
+    padding-block-start: 1rem;
+  }
+
+  &__pro {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .8rem;
+  }
+
+  &__pro-description {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  &__learn-more ion-button {
+    font-size: 13px;
+    text-transform: capitalize;
+  }
+}
+
