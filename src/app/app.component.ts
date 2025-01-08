@@ -36,11 +36,9 @@ import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league
 
 import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
-import { DonateComponent } from './shared/layouts/donate/donate.component';
+
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
-import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-// import { FreemiumService } from './shared/layouts/freemium/freemium.service';
 
 import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
@@ -74,13 +72,11 @@ import { CaptchaService } from './services/captcha.service';
     IonImg,
     LoyaltyLeagueMemberComponent,
     FloatJupComponent,
-    FreemiumModule,
     IonIcon
   ],
 })
 export class AppComponent implements OnInit {
 
-  // public adShouldShow = this._freemiumService.adShouldShow;
 
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
@@ -100,7 +96,6 @@ export class AppComponent implements OnInit {
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
 
   constructor(
-    // private _freemiumService: FreemiumService,
     public router: Router,
     private _captchaService: CaptchaService,
     private _notifService: NotificationsService,

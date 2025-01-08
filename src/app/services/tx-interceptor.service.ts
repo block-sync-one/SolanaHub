@@ -8,7 +8,6 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { FreemiumService } from '../shared/layouts/freemium/freemium.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,6 @@ export class TxInterceptorService {
   // private _shs = inject(SolanaHelpersService);
   // private _wallet = this._shs.getCurrentWallet()
   constructor(
-    private _freemiumService: FreemiumService,
     private _toasterService: ToasterService,
     private _shs: SolanaHelpersService,
     private _util: UtilService,
@@ -52,9 +50,7 @@ export class TxInterceptorService {
 
       transaction.add(this._memoIx('SolanaHub memo', walletOwner))
 
-      const serviceFeeInst = this._freemiumService.addServiceFee(walletOwner, type)
-    console.log(serviceFeeInst);
-    if (serviceFeeInst) transaction.add(serviceFeeInst)
+
     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
