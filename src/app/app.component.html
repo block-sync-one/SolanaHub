@@ -30,7 +30,7 @@
                 <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
                 @for (p of g.pages; track $index) {
 
-                <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'" style="opacity: 1;"
+                <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title !== 'Overview'" style="opacity: 1;"
                   routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
                   @if(p.title === 'hubSOL'){
                   <ion-img src="/assets/images/hubSOL.svg" />
@@ -41,7 +41,7 @@
                   <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
                   <ion-label>{{ p.title }}</ion-label>
                   @if((watchMode$ | async)){
-                  @if (p.title != 'Overview') {
+                  @if (p.title !== 'Overview') {
                   <ion-chip color="secondary">
                     Disabled
                   </ion-chip>
@@ -53,7 +53,7 @@
                     Soon
                   </ion-chip>
                   }
-                  @if(p.title == 'Notifications' && notifIndicator()){
+                  @if(p.title === 'Notifications' && notifIndicator()){
                   <ion-chip color="secondary">
                     {{notifIndicator()}}
                   </ion-chip>
@@ -88,7 +88,7 @@
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content" [class.ad-offset]="false">
-      <!-- <freemium-ad/> -->
+       <freemium-ad/>
        @if((isCaptchaVerified$ | async) == false){
       <turnstile-captcha />
        }@else{

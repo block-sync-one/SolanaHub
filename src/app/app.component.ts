@@ -77,9 +77,6 @@ import { CaptchaService } from './services/captcha.service';
   ],
 })
 export class AppComponent implements OnInit {
-
-  // public adShouldShow = this._freemiumService.adShouldShow;
-
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),

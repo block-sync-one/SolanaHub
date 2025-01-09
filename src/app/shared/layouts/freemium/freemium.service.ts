@@ -1,8 +1,8 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
-import { SolanaHelpersService, VirtualStorageService } from 'src/app/services';
+import {computed, effect, Injectable, signal} from '@angular/core';
+import {SolanaHelpersService, VirtualStorageService} from 'src/app/services';
 import va from '@vercel/analytics';
-import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
-import { environment } from 'src/environments/environment';
+import {PublicKey, SystemProgram, TransactionInstruction} from '@solana/web3.js';
+import {environment} from 'src/environments/environment';
 
 interface Account {
   isPremium: boolean;
@@ -18,17 +18,28 @@ export class FreemiumService {
   private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];
   private _platformFee: number | null = null;
-  private _hideAd = signal(this.getAdConfig());
+  private _showAd = signal(this.getAdStatus());
   private _isPremiumCache = new Map<string, Account>();
 
   constructor(
     private _shs: SolanaHelpersService,
-      private _vrs: VirtualStorageService,
+    private _vrs: VirtualStorageService,
   ) {
-    // this._initializeService();
-    // effect(() => {
-    //   this._updateAccount();
-    // });
+    this._initializeService();
+
+    effect(() => {
+      this._updateAccount();
+    });
+  }
+
+  /**
+   * Checks if the user's action is a premium action.
+   *
+   * @param {string} name - The name of the premium action to check.
+   * @returns {boolean} True if the premium action exists, false otherwise.
+   */
+  public isPremiumAction(name: string): boolean {
+    return this._premiumServices.includes(name);
   }
 
   private async _initializeService(): Promise<void> {
@@ -75,7 +86,7 @@ export class FreemiumService {
     if (this._isPremiumCache.has(walletAddress)) {
       return this._isPremiumCache.get(walletAddress)!;
     }
-  
+
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
       const data: Account = await response.json();
@@ -102,30 +113,30 @@ export class FreemiumService {
     const expirationDate = new Date();
     expirationDate.setMonth(expirationDate.getMonth() + 1);
     this._vrs.localStorage.saveData('hideFreemiumAd', expirationDate.toISOString());
-    this._hideAdEvent();
-    this._hideAd.set(true);
+    this._showAdEvent();
+    this._showAd.set(false);
   }
 
-  public getAdConfig(): boolean {
+  public getAdStatus(): boolean {
     const savedDate = this._vrs.localStorage.getData('hideFreemiumAd');
     if (savedDate) {
       const expirationDate = new Date(savedDate);
       if (expirationDate > new Date()) {
-        return true;
+        return false;
       } else {
         this._vrs.localStorage.removeData('hideFreemiumAd');
       }
     }
-    return false;
+    return true;
   }
 
-  public readonly adShouldShow = computed(() => {
+  public readonly isAdEnabled = computed(() => {
     const isPremium = this.isPremium();
     if (isPremium === null) return null;
-    return !isPremium && !this._hideAd();
+    return !isPremium && this._showAd();
   });
 
-  private _hideAdEvent(): void {
+  private _showAdEvent(): void {
     va.track('hide freemium ad');
   }
 }
