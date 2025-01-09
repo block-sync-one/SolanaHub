@@ -1,10 +1,9 @@
 
-@if(isPremium() != null) {
-
-  <chip (click)="openFreemumAccessPopup()"
+@if(isPremium() !== null) {
+  <chip (click)="openFreemiumAccessPopup()"
   [color]="isPremium() ? 'primary' : ''" >
   @if(isPremium()) {
-    <div id="chip-content">  
+    <div id="chip-content">
       <span>Premium</span> <ion-icon name="star-outline"/>
     </div>
   }@else {

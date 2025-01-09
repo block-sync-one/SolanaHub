@@ -1,59 +1,92 @@
-#modal-intro {
-    display: flex;
-    justify-content: space-between;
-    margin-block-end: 20px;
-  
-    .icon-wrapper {
-      width: 48px;
-      height: 48px;
-      border-radius: var(--radius-lg, 10px);
-      border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
-      box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-block-end: 12px;
-  
-    }
-  
-    ion-img {
-      width: 24px;
-      height: 24px;
-    }
-  
-    #title {
-      text-transform: capitalize;
-      color: var(--ion-color-text-2);
-      font-size: 18px;
-      font-weight: 600;
-      line-height: 28px;
-    }
-  
-    #desc {
-      text-transform: capitalize;
-      color: #4B5565;
-      font-size: 13px;
-      line-height: 18px;
-      /* 138.462% */
-    }
-  
-    #close-modal {
-      cursor: pointer;
-    }
+.freemium-access-popup {
+  position: relative;
+  text-align: center;
+  padding-top: 0;
+}
+
+.plan-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 1.2rem;
+  padding-inline: 2rem;
+}
+
+.d-flex {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+}
+
+.modal-description {
+  font-size: 13px;
+  margin-bottom: 1rem;
+  color: #4B5565;
+}
+
+.divider {
+  border-bottom: 1px solid #E3E8EF;
+}
+
+.modal-header {
+  .energy {
+    display: inline-block;
+    padding-top: -20px;
+    height: 200px;
+    width: auto;
   }
 
-  .plans-wrapper {
-    display: flex;
-    justify-content: space-between;
+  .d-flex {
+    margin-top: -5rem;
+  }
+
+  &__title {
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .close-ad ion-img {
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+    width: 25px;
+    cursor: pointer;
+  }
 }
-  .service-title {
-    font-weight: 600;
+
+.modal-body {
+  border: 1px solid #E3E8EF;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding-block: 1.5rem;
+  margin-block: 1.5rem;
+
+  &__hubSol {
+    font-size: 2rem;
+    font-weight: 500;
+  }
+
+  ion-img {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.service {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  align-items: center;
+
+  &__description {
+    font-weight: 500;
     color: var(--ion-color-dark);
-    margin-block-end: 8px;
+  }
 }
-.service-desc {
-  margin-block-end: 16px;
-  color: var(--ion-color-dark);
-  border-bottom: 1px solid var(--ion-color-secondary);
-  padding-block-end: 4px;
+
+.modal-footer ion-button {
+  text-transform: capitalize
 }

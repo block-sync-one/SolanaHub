@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { IonIcon, IonImg, IonButton } from '@ionic/angular/standalone';
+import {IonIcon, IonImg, IonButton, IonLabel} from '@ionic/angular/standalone';
 import {
   PopupPlanComponent,
   BadgeComponent,
@@ -18,13 +18,14 @@ import { ChipComponent } from '../../components/chip/chip.component';
     BadgeComponent,
     RoadComponent,
     AdComponent,
-  ],  
+  ],
   imports: [
     ChipComponent,
     CommonModule,
     IonIcon,
     IonButton,
-    IonImg
+    IonImg,
+    IonLabel
   ],
   exports: [
     PopupPlanComponent,

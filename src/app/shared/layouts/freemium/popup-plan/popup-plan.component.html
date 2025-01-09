@@ -1,51 +1,56 @@
-<div class="freemum-access-popup ion-padding">
-
-    <div id="modal-intro">
-        <div>
-
-            <div class="icon-wrapper">
-                <ion-img src="assets/images/freemium-up-icon.svg" />
-            </div>
-            <div id="title">Unlock Premium Features</div>
-            <div id="desc">Stake 100 SOL or more to unlock premium features.</div>
-        </div>
-
-        <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
+<div class="freemium-access-popup ion-padding">
+  <div class="modal-header">
+    <ion-img class="energy" src="assets/images/freemium-energy.svg"></ion-img>
+    <div class="d-flex">
+      <div class="modal-header__title">Stake to join SolanaHub</div>
+      <chip color="primary">PRO</chip>
     </div>
-    <div class="plans-wrapper">
-        <div id="services">
-            <div class="service-title">Services</div>
-            <div class="service-desc">Basic features</div>
-            <div class="service-desc">Multi Wallet Support</div>
-            <div class="service-desc">Liquid LST Actions</div>
-            <div class="service-desc">Stash Page</div>
-            <div class="service-desc">Stake Boost</div>
-        </div>
-        <div id="free-plan" class="plan-box">
-            <div class="service-title">Free</div>
-            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
-            <div class="service-desc">0.01 SOL (up to 3 total wallets)</div>
-            <div class="service-desc">0.002 SOL per transaction</div>
-            <div class="service-desc">0.002 SOL per transaction</div>
-            <div class="service-desc"><ion-icon name="close-outline"></ion-icon></div>
-
-        </div>
-        <div id="divider"></div>
-        <div id="premium-plan" class="plan-box">
-            <div class="service-title">Premium</div>
-            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
-            <div class="service-desc">FREE</div>
-            <div class="service-desc">Unlimited</div>
-            <div class="service-desc">Unlimited</div>
-            <div class="service-desc"><ion-icon name="checkmark-outline"></ion-icon></div>
-
-        </div>
+    <div class="close-ad" (click)="closeModal()">
+      <ion-img id="close-modal" src="assets/images/close-icon.svg" />
     </div>
-    <freemium-road/>
+  </div>
+  <div class="modal-body">
+    <div class="modal-body__header">
+      <div class="modal-description">You currently own</div>
+      <div class="d-flex">
+        <ion-img src="assets/images/hubSOL.svg"></ion-img>
+        <div class="modal-body__hubSol">{{ stake() }} hubSOL</div>
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div>
+      <div class="modal-description">Enjoy SolanaHub with no limits, no fees, and growing community:</div>
+      <div class="plan-container">
+        <div class="service">
+          <ion-img src="/assets/images/ll/check.svg"></ion-img>
+          <ion-label class="service__description">Multi Wallet Support</ion-label>
+        </div>
+        <div class="service">
+          <ion-img src="/assets/images/ll/check.svg"></ion-img>
+          <ion-label class="service__description">No platform fees</ion-label>
+        </div>
+        <div class="service">
+          <ion-img src="/assets/images/ll/check.svg"></ion-img>
+          <ion-label class="service__description">Access to staking insight</ion-label>
+        </div>
+        <div class="service">
+          <ion-img src="/assets/images/ll/check.svg"></ion-img>
+          <ion-label class="service__description">Enjoy Stake boost</ion-label>
+        </div>
+        <div class="service">
+          <ion-img src="/assets/images/ll/check.svg"></ion-img>
+          <ion-label class="service__description">Alpha discord access</ion-label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <ion-button expand="block">Stake total of 20 hubSOL to Upgrade</ion-button>
+  </div>
 </div>
 
 
-<!-- 
+<!--
  services:
  - multi wallet support
  - liquid LST actions

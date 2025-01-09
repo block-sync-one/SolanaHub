@@ -5,6 +5,7 @@ import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent} from 's
 import { PortfolioService } from 'src/app/services/portfolio.service';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
 import { PortfolioBreakdownService } from "../../services";
+import { FreemiumModule } from "../../shared/layouts/freemium/freemium.module";
 
 
 @Component({
@@ -17,7 +18,8 @@ import { PortfolioBreakdownService } from "../../services";
     PortfolioBreakdownComponent,
     AssetsTableComponent,
     TransactionsHistoryTableComponent,
-    PortfolioMenuComponent
+    PortfolioMenuComponent,
+    FreemiumModule
   ]
 })
 export class OverviewPage implements OnInit {
