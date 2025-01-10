@@ -3,48 +3,44 @@
   <page-header
   title="staking"
   description="Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous source of passive income"
-  />
+  >
 
+  <ion-row id="stat-wrapper" class="ion-justify-content-between ion-margin-top">
+    @for (stat of validatorData; track $index) {
+    <ion-col size="5.5" sizeLg="3.5" class="staking-stat">
+      <div class="stat-title">{{stat.title}}</div>
+      <div class="stat-desc">
+
+        {{stat.desc()}}
+        
+        @if (stat.desc() === null) {
+        <ion-skeleton-text [animated]="true" />
+        }
+      </div>
+
+    </ion-col>
+    }
+
+  </ion-row>
+  </page-header>
+
+  
   <ion-grid>
 
   
 
-      <ion-row id="stat-wrapper" class="ion-justify-content-between">
-        @for (stat of validatorsData; track $index) {
-        <ion-col size="5.5" sizeLg="2.9" class="staking-stat">
-          <div class="icon-wrapper ion-hide-lg-down">
-            <ion-icon [name]="stat.icon" />
-          </div>
-          <div class="stat-title">{{stat.title}}</div>
-          <div class="stat-desc">
-
-            @if(stat.extraData){
-              {{stat.extraData.epochInfo?.timepassInPercentgae}}
-              <ion-progress-bar [buffer]="stat.extraData?.timepassInPercentgae"></ion-progress-bar>
-              <span style="font-size: 13px;">{{stat.extraData?.ETA}}</span>
-            }@else {
-              {{stat.desc}}
-            }
-            @if (stat.desc === '') {
-            <ion-skeleton-text [animated]="true" />
-            }
-          </div>
-
-        </ion-col>
-        }
-
-      </ion-row>
 
 
     <div>
 
       <ion-row id="stake-box">
-        <ion-col size="12" sizeXl="8">
-          <stake-form [stakePools]="stakePools" [validatorsList]="validatorsList" />
+    <stake-form />
+        <!-- <ion-col size="12" sizeXl="8">
+          <stake-form [stakePools]="stakePools" />
         </ion-col>
         <ion-col size="12" sizeXl="4">
           <stake-positions [stakePools]="stakePools"/>
-        </ion-col>
+        </ion-col> -->
       </ion-row>
 
     </div>

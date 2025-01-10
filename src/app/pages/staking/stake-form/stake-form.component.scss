@@ -1,0 +1,38 @@
+:host {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+#stake-form {
+    padding: 16px 16px 8px 16px;
+    border: 1px solid var(--ion-color-border);
+    background-color: var(--ion-color-light);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+ion-segment {
+    padding: 4px;
+    border-radius: 8px;
+    --background: var(--ion-background-color);
+}
+
+ion-segment-button {
+    height: 36px;
+    padding: 8px 12px;
+    justify-content: center;
+    align-items: center;
+
+    ion-label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--ion-color-dark);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 18px;
+    }
+}

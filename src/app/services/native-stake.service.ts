@@ -34,32 +34,9 @@ export class NativeStakeService {
     private _shs: SolanaHelpersService
   ) { }
 
-
-  private async _getStakeAccountState(stakeAccountPubkey: PublicKey) {
-    // Fetch the account information
-    const accountInfo = await this._shs.connection.getAccountInfo(stakeAccountPubkey);
-    const StakeAccountLayout = struct([
-      u32('state'),
-      u8('rentExemptReserve'),
-      // Add other fields as necessary
-    ]);
-  
-    if (accountInfo === null) {
-      console.log('Stake account not found');
-      return;
-    }
-  
-    if (!accountInfo.owner.equals(StakeProgram.programId)) {
-      console.log('Not a stake account');
-      return;
-    }
-  
-    const data = Buffer.from(accountInfo.data);
-    const decodedData = StakeAccountLayout.decode(data);
-    //@ts-ignore
-    const state = decodedData.state;
-     //@ts-ignore
-    console.log('Stake account state:', state);
+  public async getSolanaHubValidatorInfo() {
+    const validators = await this._shs.getValidatorsList()
+    return validators.find(v => v.vote_identity === this._shs.SolanaHubVoteKey)
   }
 
   private async _extendStakeAccount(

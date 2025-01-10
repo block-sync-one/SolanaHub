@@ -1,0 +1,30 @@
+<div id="stake-form">
+  <div id="segment-stake-wrapper">
+    <ion-segment value="stake" mode="ios">
+      <ion-segment-button value="stake">
+        <ion-label>Stake
+          <chip color="primary" name="7% APY" />
+        </ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="unstake">
+        <ion-label>Unstake</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <ion-segment-view>
+    <ion-segment-content id="stake">
+      <div id="convert-to-hubSOL-wrapper">
+        @if(true) {
+        <convert-to-hub-sol-box />
+        }
+      </div>
+      <div id="stake-form-wrapper">
+        stake
+      </div>
+    </ion-segment-content>
+    <ion-segment-content id="unstake">
+      unstake
+    </ion-segment-content>
+  </ion-segment-view>
+</div>
+  

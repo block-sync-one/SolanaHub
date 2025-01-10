@@ -1,0 +1,24 @@
+<div id="convert-to-hubSOL">
+  <div id="content">
+    <div id="asset-detection">
+      <chip color="sub">
+        <div id="asset-detection-wrapper">
+          <div id="asset-detection-icons">
+            @for (asset of assetsDetected; track asset) {
+            <ion-avatar> <ion-img [src]="asset.icon" #img (ionError)="img.src = 'assets/images/unknown.svg'"
+                [alt]="asset.name" /> </ion-avatar>
+            }
+          </div>
+          <span>{{assetsDetected.length}} asset detected</span>
+        </div>
+      </chip>
+      <span class="promo">Swap your LSTs and stake accounts to hubSOL to get </span>
+      <span class="promo" id="promo-bonus">extra 200 $ per year</span>
+    </div>
+  </div>
+  <div id="button-wrapper">
+    <ion-button>
+      <span>Swap to hubSOL</span>
+    </ion-button>
+  </div>
+</div>

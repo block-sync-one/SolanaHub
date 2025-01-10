@@ -15,109 +15,56 @@ import {
   IonContent,
   IonIcon
 } from '@ionic/angular/standalone';
-import { AsyncPipe, DecimalPipe } from '@angular/common';
-import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
-import { Validator } from 'src/app/models';
-import { forkJoin, map, take } from 'rxjs';
-import { PositionsComponent } from './positions/positions.component';
+import { JupStoreService, NativeStakeService,  UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import { StakeFormComponent } from './stake-form/stake-form.component';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
-import { MenuComponent } from 'src/app/shared/components/menu/menu.component';
-import { ActivatedRoute } from '@angular/router';
+
 import { addIcons } from 'ionicons';
 import { gitBranchOutline, hourglassOutline, leafOutline, statsChartOutline } from 'ionicons/icons';
-interface ValidatorsStats {
-  numberOfValidators: number,
-  clusterAPY: number,
-  epoch: { number: number, eta: number }
-  totalStake: number
+
+interface ValidatorDataItem {
+  title: string;
+  desc: WritableSignal<number | string>;
+  isSignal?: boolean;
 }
+
 @Component({
   selector: 'app-staking',
   templateUrl: './staking.page.html',
   styleUrls: ['./staking.page.scss'],
   standalone: true,
   imports: [
-
     PageHeaderComponent,
     IonGrid,
     IonRow,
     IonCol,
     IonContent,
-    IonProgressBar,
-    PositionsComponent,
-
     IonSkeletonText,
-    FormComponent,
-    IonIcon
+    StakeFormComponent
   ]
 })
 export class StakingPage implements OnInit {
-  public validatorsStats: WritableSignal<ValidatorsStats> = signal(null);
-  public validatorsList = signal([] as Validator[])
-  private _validatorsData$ = forkJoin({
-    validatorsList: this._shs.getValidatorsList(),
-    avgAPY: this._shs.getAvgApy(),
-    epochInfo: this._shs.getEpochInfo(),
-    totalStake: this._shs.getClusterStake()
-  }).pipe(map(data => {
-    this.validatorsList.set(data.validatorsList)
-    this.validatorsData = [
 
-      {
-        title: 'Cluster APY',
-        icon: 'stats-chart-outline',
-        desc: data.avgAPY + '%',
-      },
-      {
-        title: 'Total SOL staked',
-        icon: 'leaf-outline',
-        //@ts-ignore
-        desc: this._util.formatBigNumbers(data.totalStake.activeStake),
-      },
-      {
-        icon: 'git-branch-outline',
-        title: 'Validators',
-        desc: this._util.decimalPipe.transform(data.validatorsList.length),
-      },
-      {
-        icon: 'hourglass-outline',
-        title: 'EPOCH ' + data.epochInfo.epoch,
-        desc: data.epochInfo.ETA,
-        extraData: data.epochInfo
-      },
-    ]
-  }
-  ))
-
-  public validatorsData: any = [
+  public validatorData: ValidatorDataItem[] = [
     {
-      icon: 'stats-chart-outline',
-      title: 'Cluster APY',
-      desc: ''
+      title: 'Validator Since',
+      desc: signal(2021),
     },
     {
-      icon: 'leaf-outline',
-      title: 'Total SOL staked',
-      desc: ''
+      title: 'Total Staked',
+      desc: signal(null),
     },
     {
-      icon: 'git-branch-outline',
-      title: 'Validators',
-      desc: ''
-    },
-    {
-      icon: 'hourglass-outline',
-      title: 'EPOCH ',
-      desc: ''
-    },
+      title: 'Uptime',
+      desc: signal(null),
+    }
   ]
   constructor(
-    private _shs: SolanaHelpersService,
     private _util: UtilService,
     private _jupStore: JupStoreService,
     private _lss: LiquidStakeService,
-
+    private _nst: NativeStakeService
   ) {
     addIcons({
       gitBranchOutline,
@@ -130,8 +77,17 @@ export class StakingPage implements OnInit {
   public stakePools = signal([])
 
   ngOnInit() {
+    this._nst.getSolanaHubValidatorInfo().then(info => {
+      console.log(info);
+      
+      this.validatorData[1].desc.set(
+        this._util.formatBigNumbers(info.activated_stake) + ' SOL'
+      );
+      this.validatorData[2].desc.set(
+        info.uptime.toString() + '%'
+      );
+    });
 
-    this._validatorsData$.pipe(take(1)).subscribe()
     this._lss.getStakePoolList().then(pl => this.stakePools.set(pl));
   }
 

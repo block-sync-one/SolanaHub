@@ -71,6 +71,7 @@ export class SolanaHelpersService {
     return validators
   }
   private _validatorsList: Validator[] =  []
+  
   public async getValidatorsList(): Promise<Validator[]> {
     this.featureValidator(this._validatorsList, 'B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9')
     if (this._validatorsList.length > 0) {
