@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal, computed, effect, inject, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, QueryList, ViewChildren, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Stake } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
@@ -9,6 +9,9 @@ import {
 } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DecimalPipe, NgClass } from '@angular/common';
+import { FreemiumService } from "../../../../../shared/layouts/freemium/freemium.service";
+import { ChipComponent } from "../../../../../shared/components/chip/chip.component";
+
 @Component({
   selector: 'merge-modal',
   templateUrl: './merge-modal.component.html',
@@ -22,19 +25,21 @@ import { DecimalPipe, NgClass } from '@angular/common';
     IonCheckbox,
     ScrollingModule,
     NgClass,
-    DecimalPipe
+    DecimalPipe,
+    ChipComponent
   ]
 })
 export class MergeModalComponent implements OnInit {
+  public _freemiumService = inject(FreemiumService);
+
   @Input() targetStake: Stake;
   @Input() stakeAccounts: Stake[];
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>
   public accountsToMerge: WritableSignal<Stake[]> = signal(null);
+  public isPremium = this._freemiumService.isPremium;
+
   public mergedBalance = computed(() => this.accountsToMerge() ? this.accountsToMerge().reduce((accumulator, currentValue: Stake) => accumulator + currentValue.balance, 0) : 0)
-  public selectedAccounts = []
-  constructor() {
-  }
 
   selectAccount(checkbox, valid) {
     if (valid) {
@@ -55,7 +60,7 @@ export class MergeModalComponent implements OnInit {
 
 
   ngOnInit() {
-    // hide the target stake account from the list 
+    // hide the target stake account from the list
     this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address);
   }
 }
