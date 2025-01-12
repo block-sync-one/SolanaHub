@@ -12,7 +12,7 @@
     max-width: 100%;
     padding: 16px;
     border-radius: 16px;
-    background: var(--ion-color-menu);
+    background: var(--ion-color-light);;
 
 
     #flip-tokens-wrapper {
@@ -25,7 +25,7 @@
         &::after {
             content: "";
             height: 1px;
-            background: #E3E8EF;
+            background: var(--ion-color-border);
             width: 100%;
             position: absolute;
             z-index: 0;
@@ -38,11 +38,11 @@
         --box-shadow: 0px 0px 0px 0px rgba(16, 24, 40, 0.05);
         width: 34px;
         height: 34px;
-        --background:var(--ion-color-menu);
+        --background:var(--ion-color-light);;
         --border-radius: 200px;
         --border-style: solid;
         --border-width: 1px;
-        --border-color: var(--ion-color-border);
+        --border-color:  var(--ion-color-border);
         --padding-bottom: 0;
         --padding-end: 0;
         --padding-top: 0;
@@ -52,7 +52,7 @@
         ion-icon {
             width: 16px;
             height: 16px;
-            color: #9aa4b2;
+            color: var(--ion-light-gray);
         }
 
         &:hover {

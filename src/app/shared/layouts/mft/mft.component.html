@@ -66,7 +66,8 @@
     @if (configuration.paginationEnabled && !configuration.isLoading) {
     <div id="table-controls">
       <ion-button mode="md" fill="clear" (click)="previousPage()">
-        <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" />
+        <!-- <ion-img src="/assets/icon/arrow-right.svg" style="transform: rotate(180deg);" /> -->
+        <ion-icon name="arrow-forward-outline" style="transform: rotate(180deg);"/>
         <span class="ion-hide-md-down">
           previous
         </span>
@@ -75,8 +76,8 @@
         <span class="ion-hide-md-down">
           next
         </span>
-        <ion-img src="/assets/icon/arrow-right.svg" />
-  
+        <!-- <ion-img src="/assets/icon/arrow-right.svg" /> -->
+        <ion-icon name="arrow-forward-outline"/>
       </ion-button>
     </div>
     }

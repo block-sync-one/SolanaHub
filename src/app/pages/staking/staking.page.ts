@@ -12,7 +12,8 @@ import {
   IonMenuButton,
   IonSkeletonText,
   IonProgressBar,
-  IonContent
+  IonContent,
+  IonIcon
 } from '@ionic/angular/standalone';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { JupStoreService, PriceHistoryService, SolanaHelpersService, UtilService } from 'src/app/services';
@@ -23,6 +24,8 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 import { MenuComponent } from 'src/app/shared/components/menu/menu.component';
 import { ActivatedRoute } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { gitBranchOutline, hourglassOutline, leafOutline, statsChartOutline } from 'ionicons/icons';
 interface ValidatorsStats {
   numberOfValidators: number,
   clusterAPY: number,
@@ -35,22 +38,18 @@ interface ValidatorsStats {
   styleUrls: ['./staking.page.scss'],
   standalone: true,
   imports: [
-    MenuComponent,
+
     PageHeaderComponent,
     IonGrid,
     IonRow,
     IonCol,
-    IonHeader,
-    IonImg,
-    IonButton,
     IonContent,
-    IonButtons,
     IonProgressBar,
-    IonMenuButton,
     PositionsComponent,
-    AsyncPipe,
+
     IonSkeletonText,
-    FormComponent
+    FormComponent,
+    IonIcon
   ]
 })
 export class StakingPage implements OnInit {
@@ -64,25 +63,25 @@ export class StakingPage implements OnInit {
   }).pipe(map(data => {
     this.validatorsList.set(data.validatorsList)
     this.validatorsData = [
-   
+
       {
-        logoURI: 'assets/images/coins-icon.svg',
         title: 'Cluster APY',
+        icon: 'stats-chart-outline',
         desc: data.avgAPY + '%',
       },
       {
-        logoURI: 'assets/images/stake-icon.svg',
         title: 'Total SOL staked',
+        icon: 'leaf-outline',
         //@ts-ignore
         desc: this._util.formatBigNumbers(data.totalStake.activeStake),
       },
       {
-        logoURI: 'assets/images/validators-icon.svg',
+        icon: 'git-branch-outline',
         title: 'Validators',
         desc: this._util.decimalPipe.transform(data.validatorsList.length),
       },
       {
-        logoURI: 'assets/images/hourglass-icon.svg',
+        icon: 'hourglass-outline',
         title: 'EPOCH ' + data.epochInfo.epoch,
         desc: data.epochInfo.ETA,
         extraData: data.epochInfo
@@ -93,36 +92,43 @@ export class StakingPage implements OnInit {
 
   public validatorsData: any = [
     {
-      logoURI: 'assets/images/validators-icon.svg',
-      title: 'Validators',
-      desc: ''
-    },
-    {
-      logoURI: 'assets/images/coins-icon.svg',
+      icon: 'stats-chart-outline',
       title: 'Cluster APY',
       desc: ''
     },
     {
-      logoURI: 'assets/images/hourglass-icon.svg',
-      title: 'EPOCH ',
+      icon: 'leaf-outline',
+      title: 'Total SOL staked',
       desc: ''
     },
     {
-      logoURI: 'assets/images/stake-icon.svg',
-      title: 'Total SOL staked',
+      icon: 'git-branch-outline',
+      title: 'Validators',
       desc: ''
-    }
+    },
+    {
+      icon: 'hourglass-outline',
+      title: 'EPOCH ',
+      desc: ''
+    },
   ]
   constructor(
-    private _shs: SolanaHelpersService, 
+    private _shs: SolanaHelpersService,
     private _util: UtilService,
-    private _jupStore:JupStoreService,
+    private _jupStore: JupStoreService,
     private _lss: LiquidStakeService,
 
-    ) { }
+  ) {
+    addIcons({
+      gitBranchOutline,
+      statsChartOutline,
+      hourglassOutline,
+      leafOutline
+    })
+  }
   public solPrice = this._jupStore.solPrice;
   public stakePools = signal([])
-  
+
   ngOnInit() {
 
     this._validatorsData$.pipe(take(1)).subscribe()

@@ -18,7 +18,7 @@ ion-img{
   }
 
 .wallet-details-wrapper {
-  background-color: #FCFCFD;
+  background-color: var(--ion-background-color);
   // padding-block: 9px;
 
 }
@@ -26,11 +26,16 @@ ion-img{
   border-left: 6px solid var(--ion-color-primary);
 }
 .wallet-details-header, 
-
+#able-controls{
+  ion-icon{
+    color: var(--ion-color-dark);
+    font-size: 22px;
+  }
+}
 .wallet-details-breakdown {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e6e8ec;
+  border-bottom: 1px solid var(--ion-color-border);
   padding-inline: 1.5rem;
   // line-height: .5;
   .wallet-address {

@@ -4,7 +4,7 @@
       <div class="inner" @easeOut *ngIf="preview">
         
         <div id="img-wrapper">
-          <ion-img src="/assets/images/stash-icon.svg"/>
+          <ion-img src="/assets/images/stash-icon.svg" class="invert-color"/>
         </div>
         <ion-label>
           Introducing Stash Finder – your smart financial assistant!
@@ -16,9 +16,9 @@
         <div id="btn-wrapper">
           <ion-button (click)="startAnalyze()">Uncover Hidden Balance</ion-button>
         </div>
-        <p id="estimated-value" >  <span>Estimated Stash Value: </span>
+        <p id="estimated-value" >  <span class="text-primary">Estimated Stash Value: </span>
           @if(estimateStashValue){
-           <span style="font-weight: 600; color: var(--ion-color-secondary);">{{estimateStashValue | currency:'USD'}}</span>
+           <span style="font-weight: 600; color: var(--ion-color-primary);">{{estimateStashValue | currency:'USD'}}</span>
           }@else {
             <ion-skeleton-text animated/>
           }</p>

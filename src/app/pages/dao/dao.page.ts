@@ -19,23 +19,16 @@ import { AsyncPipe, JsonPipe } from '@angular/common';
   styleUrls: ['./dao.page.scss'],
   standalone: true,
   imports: [
-    AsyncPipe,
     DaoGroupComponent,
     IonImg,
-    IonButton,
-    IonTabButton,
-    IonList,
     PageHeaderComponent,
     TableHeadComponent,
-    IonSelect,
-    IonSelectOption,
     TableMenuComponent,
     SearchBoxComponent,
     IonRow,
     IonCol,
     IonContent,
-    IonGrid,
-    JsonPipe
+    IonGrid
   ]
 })
 export class DaoPage implements OnInit {
@@ -56,15 +49,20 @@ export class DaoPage implements OnInit {
   }
 
   private async initiateFetchProposals(defiPositions: defiHolding[]) {
+    console.log('initiateFetchProposals');
+    
     // get users realms deposit
     const realmsPositions = defiPositions?.filter(position => position.platform === 'realms')
+
+    
     if (realmsPositions) {
       
       // extract token address
       const communityMintHoldings = [...new Set(realmsPositions.map(position => position.poolTokens.map(token => token.address)).flat())]
       // const communityMintHoldings = [...new Set(realmsPositions.map(position => position.poolTokens.map(token => {return {address: token.address,decimals: token.decimals }})).flat())]
-
-      this.aggregateDAO(communityMintHoldings)
+      setTimeout(() => {
+        this.aggregateDAO(communityMintHoldings)
+      });
 
     } else {
       setTimeout(() => {
@@ -109,7 +107,7 @@ export class DaoPage implements OnInit {
     const { publicKey } = this._shs.getCurrentWallet()
 
     const daoProposals = await this._dao.getWalletAllProposals(publicKey.toBase58(), communityMintHoldings);
-
+    console.log(daoProposals);
     let activeGOVprop = []
     daoProposals.forEach(gov => {
       let govv ={

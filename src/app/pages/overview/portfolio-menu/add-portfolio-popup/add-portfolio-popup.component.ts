@@ -2,7 +2,7 @@ import {Component, inject, OnInit, signal, Input} from '@angular/core';
 import {PopoverController} from "@ionic/angular";
 import {IonButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonText} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
-import {alertCircleOutline, closeOutline} from "ionicons/icons";
+import {alertCircleOutline, closeOutline, walletOutline } from "ionicons/icons";
 import {AddressValidatorService, PortfolioService} from "../../../../services";
 
 @Component({
@@ -31,7 +31,7 @@ export class AddPortfolioPopupComponent {
   public invalidWallet = "Oops! invalid wallet"
 
   constructor() {
-    addIcons({alertCircleOutline,closeOutline});
+    addIcons({walletOutline,alertCircleOutline,closeOutline});
   }
 
   addNewPortfolio(walletAddress: any, nickname: any) {

@@ -11,14 +11,14 @@
     overflow: auto;
 }
 #multipliers-menu-container {
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     width: 470px;
     max-width: 100%;
     overflow: auto;
 }
 
 #multipliers-title {
-    color: var(--colors-foreground-fg-primary-900, #121926);
+    color: var(--ion-color-light);;
     font-size: 18px;
     font-weight: 600;
     line-height: 28px;
@@ -27,7 +27,7 @@
 }
 
 #close-icon {
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     width: 24px;
     cursor: pointer;
     position: absolute;
@@ -37,7 +37,7 @@
 }
 
 .group-title {
-    color: var(--colors-text-text-primary-900, #121926);
+    color: var(--ion-color-light);;
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -98,7 +98,7 @@
         display: flex;
         align-items: center;
         span{
-            color: var(--Colors-Background-bg-quaternary, #E3E8EF);
+            color:  var(--ion-color-border);
             margin-inline: 12px;
         }
     }
@@ -113,8 +113,8 @@
     justify-content: center;
     align-items: center;
     border-radius: 8px;
-    border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: var(--Colors-Background-bg-primary_alt, var(--ion-color-light));
+    border: 1px solid  var(--ion-color-border);
+    background:  var(--ion-color-light);;
     position: relative; 
     #boosted-lst-icon {
         position: absolute;
@@ -130,14 +130,14 @@
     }
 
     ion-label {
-        color: var(--Colors-Text-text-disabled, #697586);
+        color:  var(--ion-light-gray);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
     }
 
     ion-text {
-        color: var(--colors-text-text-primary-900, #121926);
+        color: var(--ion-color-light);;
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;

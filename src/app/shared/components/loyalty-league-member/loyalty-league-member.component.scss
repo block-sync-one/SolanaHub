@@ -1,13 +1,13 @@
 #ll-member-wrapper {
     border-radius: 8px;
-    border: 1px solid var(--Gray-Modern-200, #E3E8EF);
-    background: var(--ion-color-light);
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding: 16px;
     position: relative;
 }
 
 ion-label {
-    color: #101828;
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -26,7 +26,7 @@ ion-img {
     
 }
 ion-text {
-    color: #101828;
+    color: var(--ion-color-dark);
     font-size: 20px;
     font-weight: 600;
     line-height: 32px;
@@ -57,7 +57,7 @@ ion-skeleton-text {
     line-height: 18px; 
 }
 a {
-    color: var(--ion-color-secondary);
+    color: var(--ion-color-primary);
     font-size: 13px;
     font-weight: 600;
     line-height: 18px;

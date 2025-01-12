@@ -12,7 +12,7 @@
     ion-input {
         box-shadow: 0 0 0 0;
         font-size: 2.5vh;
-        color: var(--ion-color-hard-hard);;
+        color: var(--ion-color-dark);;
         display: flex;
         align-items: center;
         width: 100%;
@@ -36,7 +36,7 @@
     }
 
     ion-button {
-        --background:var(--ion-color-menu);;
+        --background:var(--ion-color-light);;;
         min-width: 120px;
         margin-inline-start: 20px;
         position: absolute;
@@ -51,7 +51,7 @@
         --padding-bottom: 0;
         --padding-top: 0;
         font-weight: 600;
-        --color: var(--ion-color-hard-hard);
+        --color: var(--ion-color-dark);
     }
 
     ion-icon {
@@ -82,5 +82,5 @@
 }
 
 .readonly{
-    background-color:var(--ion-color-app-bg-2) ;
+    background-color:var(--ion-background-color) ;
 }

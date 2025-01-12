@@ -4,6 +4,7 @@ import { IonImg, IonLabel, IonRow, IonCol, IonSkeletonText } from '@ionic/angula
 import { Gov, Proposal } from 'src/app/models/dao.model';
 import { ModalController } from '@ionic/angular';
 import {  ProposalPopupComponent } from './proposal-popup/proposal-popup.component';
+import { JsonPipe } from '@angular/common';
 @Component({
   selector: 'dao-group',
   templateUrl: './dao-group.component.html',
@@ -15,8 +16,8 @@ import {  ProposalPopupComponent } from './proposal-popup/proposal-popup.compone
     IonLabel,
     IonRow,
     IonCol,
-    IonSkeletonText
-    
+    IonSkeletonText,
+    JsonPipe
   ]
 })
 export class DaoGroupComponent implements OnInit {

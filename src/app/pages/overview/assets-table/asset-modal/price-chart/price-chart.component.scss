@@ -5,7 +5,7 @@
 }
 
 #price-chart{
-    border-radius: var(--radius-2xl, 16px);
-border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
-background: var(--Colors-Gray-modern-25, #FCFCFD);
+    border-radius: 16px;
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-background-color);
 }

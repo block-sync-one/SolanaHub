@@ -1,20 +1,23 @@
 import { Injectable } from "@angular/core";
-import { Observable, shareReplay, Subject } from "rxjs";
+import { Subject } from "rxjs";
+
+interface PortfolioFetch {
+  shouldRefresh: boolean;
+  fetchType: 'full' | 'partial'
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class PortfolioFetchService {
 
-  private refetchSubject = new Subject<{shouldRefresh: boolean, fetchType: 'full' | 'partial'}>();
+  private refetchSubject = new Subject<PortfolioFetch>();
 
-  refetchPortfolio() {
+  syncMainAddressPortfolio() {
     return this.refetchSubject.asObservable();
   }
 
   triggerFetch(fetchType: 'full' | 'partial' = 'partial') {
     this.refetchSubject.next({shouldRefresh: true, fetchType});
   }
-
-
 }

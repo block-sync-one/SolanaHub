@@ -1,6 +1,6 @@
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -17,11 +17,11 @@ ion-avatar {
 
 ion-segment {
     border-radius: 10px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid var(--ion-color-border);
     padding: 4px;
     flex-wrap: wrap;
     display: flex;
-    --background: #F8FAFC;
+    --background: var(--ion-background-color);
 }
 
 .tooltip-icon {
@@ -33,7 +33,7 @@ ion-segment {
 }
 
 ion-label {
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -41,14 +41,14 @@ ion-label {
 }
 
 ion-text {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-align: center;
     font-size: 12px;
     margin-block-end: 8px;
 }
 ion-chip{
     font-weight: 600;
-    border: 1px solid #F1D5EB;
+    border: 1px solid var(--ion-color-primary-bg);
     margin: 0;
     scale: 0.71;
 }
@@ -62,7 +62,7 @@ ion-segment-button {
     --border-radius: 6px;
     --border-width: 2px;
     --border-style: solid;
-    --indicator-box-shadow: 0px 0px 0px 0px #B84794;
+    --indicator-box-shadow: 0px 0px 0px 0px var(--ion-color-primary);
     .pool-profile{
         width: 100%;
         display: flex;
@@ -85,10 +85,10 @@ ion-segment-button {
 #boosted{
     position: absolute;
     left: 0;
-    border: 1px solid var(--ion-color-secondary);
+    border: 1px solid var(--ion-color-primary);
     padding: 2px 5px;
     border-radius: 4px;
-    color: var(--ion-color-secondary);
+    color: var(--ion-color-primary);
     font-size: 11px;
     opacity: 0.8;
 }

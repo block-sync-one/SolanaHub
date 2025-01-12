@@ -30,7 +30,7 @@ export class PortfolioMenuComponent {
   }
 
   protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
-  public canAddWallet = computed(() => this.walletsPortfolio().length < 4);
+  public canAddWallet = computed(() => this.walletsPortfolio().length < this._portfolioService.MAX_LINKED_WALLETS);
   public connectedWalletAddress =  this._shs?.getCurrentWallet()?.publicKey?.toBase58()
   public walletsPortfolio = computed(() =>
     this._portfolioService.portfolio().map(

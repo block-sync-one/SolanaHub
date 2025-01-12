@@ -5,7 +5,7 @@
 
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -27,7 +27,7 @@
     }
     #wallet-info {
         text-align: right;
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         text-align: right;
         font-size: 12px;
         line-height: 14px;
@@ -36,15 +36,15 @@
         ion-skeleton-text {
             width: 50px;
         }
-        ion-img {
-            height: 12px;
+        ion-icon {
+            font-size: 12px;
             margin-inline-end: 4px;
-            width: 12px;
+            color: var(--ion-color-dark);
         }
 
         ion-button {
             text-transform: uppercase;
-            --color: var(--ion-color-medium);
+            --color: var(--ion-color-dark);
             text-align: center;
             font-size: 10px;
             font-weight: 600;
@@ -55,7 +55,7 @@
             --padding-top: 3px;
             --border-style: solid;
             --border-radius: 16px;
-            --border-color: var(--ion-color-border);
+            --border-color:  var(--ion-color-border);
             --border-width: 1px;
             height: 18px;
             margin: 0;

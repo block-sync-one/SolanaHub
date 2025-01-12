@@ -15,6 +15,8 @@ import {
 
 import { API, APIDefinition, Config, DefaultConfig } from 'ngx-easy-table';
 import { Platform } from '@ionic/angular';
+import { arrowForwardOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 @Component({
   selector: 'app-mft',
   templateUrl: './mft.component.html',
@@ -134,6 +136,7 @@ export class MftComponent implements OnInit, OnChanges {
 
   }
   constructor(private _platform: Platform) {
+    addIcons({arrowForwardOutline})
     effect(() => {
       const { isLoading, paginationEnabled } = this.configurationState();
       this.configuration.isLoading = isLoading;

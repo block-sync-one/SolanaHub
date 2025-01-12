@@ -117,7 +117,7 @@ interface JupiterTerminal {
 @Component({
   selector: 'float-jup',
   template: '<div id="integrated-terminal"></div>',
-  styles: `#integrated-terminal{overflow-y:auto !important;}; #jupiter-terminal-instance  button{    background: var(--ion-color-secondary) !important;color:white !important;}`,
+  styles: `#integrated-terminal{overflow-y:auto !important;}; #jupiter-terminal-instance  button{    background: var(--ion-color-primary) !important;color:white !important;}`,
   standalone: true,
   encapsulation: ViewEncapsulation.None
 })
@@ -208,7 +208,7 @@ export class FloatJupComponent implements OnInit {
       defaultExplorer: 'solscan',
       widgetStyle: {
         position: "bottom-right",
-        size: 'default'
+        size: 'small'
       }
     });
 

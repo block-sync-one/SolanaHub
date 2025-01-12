@@ -39,7 +39,7 @@
 }
 
 .item-light {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
 
     font-size: 12px;
     font-weight: 400;
@@ -63,7 +63,7 @@
     border-radius: 50%;
     margin-inline-end: 4px;
     overflow: hidden;
-    background-color: var(--ion-color-border);
+    background-color:  var(--ion-color-border);
     object-fit: cover;
 
     ion-img {
@@ -87,7 +87,7 @@
 
 .collection-name {
     text-transform: capitalize;
-    color: #101828;
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-weight: 500;
     margin-inline-start: 12px;
@@ -106,7 +106,7 @@
     }
 
     .nft-remaining {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         text-align: center;
         font-size: 11px;
         font-weight: 500;
@@ -116,7 +116,7 @@
         align-items: center;
         justify-content: center;
         border-radius: 100px;
-        background: var(--ion-color-app-bg-2);
+        background: var(--ion-background-color);
     }
 }
 
@@ -130,7 +130,7 @@ ion-chip {
 
     &.primary {
         border: 1px solid #FDD1EE;
-        background: var(--ion-color-btn-bg);
+        background: var(--ion-color-primary-bg);
         ;
         color: var(--ion-color-primary);
     }

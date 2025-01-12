@@ -1,6 +1,6 @@
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -37,7 +37,7 @@ ion-radio{
 .stake-type {
     padding: 16px;
     border-radius: 12px;
-    border: 2px solid #E3E8EF;
+    border: 2px solid var(--ion-color-border);
     transition: 0.3s ease all;
     cursor: pointer;
     height: 100%;
@@ -46,7 +46,7 @@ ion-radio{
 
   
     .icon-wrapper {
-        background-color: white;
+        background-color: var(--ion-color-light);
         display: flex;
         padding: 10px;
         width: 40px;
@@ -54,17 +54,17 @@ ion-radio{
         justify-content: center;
         align-items: center;
         border-radius: 8px;
-        border: 1px solid #E3E8EF;
+        border: 1px solid var(--ion-color-border);
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
-        ion-img {
-            width: 20px;
-            height: 20px;
+        ion-icon {
+            font-size: 20px;
+            color: var(--ion-color-dark);
         }
     }
 
     .type-title {
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -75,7 +75,7 @@ ion-radio{
 }
 
 .type-desc {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

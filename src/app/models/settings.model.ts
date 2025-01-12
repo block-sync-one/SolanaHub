@@ -3,6 +3,7 @@
 export interface Config {
   name: string,
   imageURL: string,
+  icon?: string,
   value: string | number,
 }
 

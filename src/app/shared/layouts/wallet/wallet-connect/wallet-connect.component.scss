@@ -8,16 +8,16 @@ ion-button {
 
 #wallet {
   height: 52.7px;
-  color: var(--ion-color-hard-hard);
+  color: var(--ion-color-dark);
   cursor: pointer;
   display: flex;
-  padding: var(--spacing-lg, 10px);
+  padding: 10px;
   flex-direction: row;
   align-items: center;
-  gap: var(--spacing-none, 0px);
+  gap: 0px;
   align-self: stretch;
-  border-radius: var(--radius-md, 8px);
-  border: 1px solid var(--gray-modern-200, #E3E8EF);
+  border-radius: 8px;
+  border: 1px solid  var(--ion-color-border);
   position: relative;
   transition: 0.3s ease;
 
@@ -39,7 +39,7 @@ ion-button {
   }
 
   ion-label {
-    color: var(--ion-color-hard-hard);
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-style: normal;
     font-weight: 600;
@@ -48,7 +48,7 @@ ion-button {
   }
 
   #wallet-address {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-style: normal;
     font-weight: 400;
@@ -112,7 +112,7 @@ ion-chip{
   scale: 0.8;
   z-index: 10;
   opacity: 1;
-  color: white;
+  color: var(--ion-color-light);
   background: var(--ion-color-primary);
 
 }

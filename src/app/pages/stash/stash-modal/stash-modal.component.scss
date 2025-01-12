@@ -7,7 +7,7 @@
         width: 48px;
         height: 48px;
         border-radius: var(--radius-lg, 10px);
-        border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
+        border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, var(--ion-color-border));
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
         display: flex;
         align-items: center;
@@ -23,7 +23,7 @@
 
     #title {
         text-transform: capitalize;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 18px;
         font-weight: 600;
         line-height: 28px;
@@ -31,7 +31,7 @@
 
     #desc {
         text-transform: capitalize;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
         line-height: 18px;
         /* 138.462% */
@@ -57,7 +57,7 @@
     padding-block: 10px;
 
     ion-label {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         margin-block-end: 8px;
@@ -68,12 +68,12 @@
 
 #burn-calc {
     border-radius: 8px;
-    border: 1px solid #E3E8EF;
-    background: #F8FAFC;
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-background-color);
     padding: 16px;
     font-size: 12px;
     text-transform: capitalize;
-    color: #101828;
+    color: var(--ion-color-dark);
 
     .item {
         &:not(:last-child) {
@@ -123,7 +123,7 @@
     align-items: center;
     align-self: stretch;
     border-radius: 12px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid var(--ion-color-border);
     margin-block-end: 8px;
     cursor: pointer;
 
@@ -139,7 +139,7 @@
 }
 
 ion-label {
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -154,7 +154,7 @@ ion-text {
 }
 
 ion-text {
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     line-height: 16px;
 }
@@ -166,8 +166,8 @@ ion-text {
     text-align: center;
     font-size: 12px;
     border-radius: var(--radius-sm, 6px);
-    border: 1px solid  var(--ion-color-border);
-    background: var(--ion-color-light);
+    border: 1px solid   var(--ion-color-border);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     font-weight: 600;
     line-height: 14px;
@@ -177,7 +177,7 @@ ion-text {
 #modal-controls {
     margin-top: 10px;
     padding: 24px 0;
-    border-top: 1px solid #E3E8EF;
+    border-top: 1px solid var(--ion-color-border);
 
     ion-button {
         width: 100%;
@@ -189,7 +189,7 @@ ion-text {
 
         &.button-clear {
             color: var(--ion-color-dark);
-            border: 1px solid var(--ion-color-border);
+            border: 1px solid  var(--ion-color-border);
         }
 
         &.ion-color-primary {

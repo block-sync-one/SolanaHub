@@ -1,8 +1,8 @@
 // Variables
-$color-dark: #121926;
+$color-dark: var(--ion-color-dark);
 $color-gray: #697586;
-$color-light-gray: #4B5565;
-$color-border: var(--ion-color-border);
+$color-light-gray: var(--ion-light-gray);
+$color-border:  var(--ion-color-border);
 $color-separator: #EEF2F6;
 
 // Typography
@@ -109,7 +109,7 @@ ion-input {
   font-weight: 600;
   text-transform: capitalize;
   --color: var(--ion-color-dark);
-  --background: var(--ion-color-light);
+  --background: var(--ion-color-light);;
   --background-hover: var(--ion-color-page-top);
   --padding-bottom: var(--spacing-lg, 8px);
   --padding-top: var(--spacing-lg, 12px);
@@ -118,7 +118,7 @@ ion-input {
   --border-radius: 6px;
   --border-style: solid;
   --border-width: 1px;
-  --border-color: var(--ion-color-border);
+  --border-color:  var(--ion-color-border);
   --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
   ion-icon {

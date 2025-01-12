@@ -1,4 +1,4 @@
-:host {
+:host{
   position: fixed;
   top: 0;
   right: 0;
@@ -8,13 +8,14 @@
 }
 
 #freemium-ad {
-  height: inherit;
-  font-weight: 500;
-  background: #FFF3FB;
-  color: var(--ion-color-primary);
-  font-size: 14px;
+    height: inherit;
+    border: 1px solid #FDD1EE;
+    font-weight: 500;
+    background: var(--ion-color-primary-bg);
+    color: var(--ion-color-primary);
+    font-size: 14px;
 
-  #ad-text {
+   #ad-text {
     // flex: 10;
     height: inherit;
     text-align: center;

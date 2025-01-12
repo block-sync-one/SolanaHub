@@ -1,5 +1,5 @@
 :host{
-    background: white;
+    background: var(--ion-color-light);
     padding: 12px;
 }
 ion-label{
@@ -19,9 +19,9 @@ ion-text{
 }
 ion-segment-button {
     --border-radius: 4px;
-    --background: white;
+    --background: var(--ion-color-light);
     --indicator-color: var(--ion-color-primary);
-    --color-checked: white;
+    --color-checked: var(--ion-color-light);
     width: 45px;
     min-width: 45px;
 }

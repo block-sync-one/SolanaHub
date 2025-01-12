@@ -196,7 +196,7 @@ export class PortfolioBreakdownComponent {
             // Calculate total
             const total = groupValue.reduce((sum: number, value: number) => sum + value, 0);
             const formattedTotal = `$${this.utilService.formatBigNumbers(total)}`;
-
+            // const platformTheme = this.utilService.theme
             ctx.font = '13px Inter';
             ctx.color = '#B84794'
             ctx.fontWeight = '500'

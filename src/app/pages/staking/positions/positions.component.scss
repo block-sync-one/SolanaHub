@@ -2,12 +2,12 @@
     display: block;
     height: 100%;
     border-radius: 0px 12px 12px 0px;
-    background: #F8FAFC;
-    border-left: 1px solid #E3E8EF;
+    background: var(--ion-color-light);;
+    border-left: 1px solid var(--ion-color-border);
 }
 
 #title {
-    color: #101828;
+    color: var(--ion-color-dark);
     font-size: 16px;
     font-weight: 600;
     line-height: 28px;
@@ -16,7 +16,7 @@
 }
 
 #sub {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     text-transform: capitalize;
     margin-block-end: 20px;
@@ -34,8 +34,8 @@
         margin-inline-end: 4px;
         width: 48%;
         &.button-solid{
-            --color:var(--ion-color-btn);
-            --background:  var(--ion-color-card-bg);
+            --color:var(--ion-color-primary);
+            --background:  var(--ion-color-primary-bg);
     
         }
     }
@@ -46,12 +46,14 @@
     overflow-y: auto;
 }
 
-
+.no-positions{
+    color: var(--ion-color-dark);
+}
 
 @media only screen and (max-width: 992px) {
     :host{
         border-radius: 0 0 12px 12px;
-        border-top: 1px solid #E3E8EF;
+        border-top: 1px solid var(--ion-color-border);
         border-left: 0;
     }
 }

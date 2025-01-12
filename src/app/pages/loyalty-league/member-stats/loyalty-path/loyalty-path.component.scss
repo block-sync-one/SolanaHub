@@ -1,5 +1,5 @@
 #loyalty-path-header-title {
-    color: var(--colors-text-text-primary-900, #101828);
+    color: var(--colors-text-text-primary-900, var(--ion-color-dark));
     font-size: 16px;
     font-weight: 600;
     line-height: 100%;
@@ -14,7 +14,7 @@
     flex-wrap: wrap;
 }
 #days-remaining {
-    color: var(--colors-text-text-primary-900, #101828);
+    color: var(--colors-text-text-primary-900, var(--ion-color-dark));
     font-size: 36px;
     font-weight: 600;
     line-height: 100%;
@@ -31,7 +31,7 @@
 
 #to {
     text-transform: capitalize;
-    color: var(--colors-foreground-fg-quinary-400, #9AA4B2);
+    color:  var(--ion-light-gray);
     font-size: 13px;
     font-style: italic;
     font-weight: 500;
@@ -115,7 +115,7 @@ $color-diamond-hands: #2E90FA;
         line-height: 18px; 
     }
     .tier-points {
-        color: #121926;
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px; 
@@ -130,7 +130,7 @@ ion-button {
     line-height: 18px;
     text-transform: capitalize;
     --color: var(--ion-color-dark);
-    --background: var(--ion-color-light);
+    --background: var(--ion-color-light);;
     --background-hover: var(--ion-color-page-top);
     --padding-bottom: var(--spacing-lg, 12px);
     --padding-top: var(--spacing-lg, 12px);
@@ -139,7 +139,7 @@ ion-button {
     --border-radius: 6px;
     --border-style: solid;
     --border-width: 1px;
-    --border-color: var(--ion-color-border);
+    --border-color:  var(--ion-color-border);
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
     ion-img {
@@ -149,6 +149,13 @@ ion-button {
     }
 }
 
+#referral-btn{
+    ion-icon{
+        color: var(--ion-color-dark);
+        font-size: 16px;
+        margin-inline-end: 4px;
+    }
+}
 
 @media only screen and (max-width: 992px) {
     #days-remaining{

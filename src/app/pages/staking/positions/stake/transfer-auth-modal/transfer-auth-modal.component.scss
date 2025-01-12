@@ -9,7 +9,7 @@
 }
 
 #current-auth {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 700;
 
@@ -17,8 +17,8 @@
         padding-inline: 16px;
         padding-block: 8px;
         border-radius: var(--radius-md, 8px);
-        border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-        background: var(--Colors-Gray-modern-50, #F8FAFC);
+        border: 1px solid var(--Colors-Border-border-secondary, var(--ion-color-border));
+        background: var(--Colors-Gray-modern-50, var(--ion-background-color));
     }
 
     .auth-values {
@@ -46,7 +46,7 @@
 
 ion-label {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -82,7 +82,7 @@ ion-checkbox {
     // display: flex;
     padding: 16px;
     border-radius: 12px;
-    border: 2px solid #E3E8EF;
+    border: 2px solid var(--ion-color-border);
     width: 49%;
     transition: 0.3s ease all;
     cursor: pointer;
@@ -97,7 +97,7 @@ ion-checkbox {
         justify-content: center;
         align-items: center;
         border-radius: 8px;
-        border: 1px solid #E3E8EF;
+        border: 1px solid var(--ion-color-border);
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
         ion-img {
@@ -107,7 +107,7 @@ ion-checkbox {
     }
 
     .type-title {
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -118,7 +118,7 @@ ion-checkbox {
 }
 
 .type-desc {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

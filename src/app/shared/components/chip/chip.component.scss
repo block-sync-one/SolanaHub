@@ -6,23 +6,24 @@
 .badge {
     cursor: pointer;
     padding: 1px 7px 2px;
-    border-radius: var(--radius-full, 9999px);
-    border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
-    background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
+    border-radius:  9999px;
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-background-color);
     text-align: center;
     font-size: 11px;
     text-transform: capitalize;
     font-weight: 500;
     width: fit-content;
+    color: var(--ion-color-dark);
     &.primary {
         border: 1px solid #FDD1EE;
-        background: #FFF3FB;
-        color: #763261;
+        background: var(--ion-color-primary-bg);
+        color: var(--ion-color-primary);
     }
     &.secondary {
-        border: 1px solid  var(--ion-color-secondary);
+        border: 1px solid  var(--ion-color-primary);
         background: #f5f2f9;
-        color: var(--ion-color-secondary);
+        color: var(--ion-color-primary);
     }
     &.active {
 

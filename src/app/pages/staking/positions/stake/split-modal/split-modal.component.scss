@@ -1,5 +1,5 @@
 ion-label {
-    color: var(--Gray-700, var(--ion-color-medium));
+    color: var(--Gray-700, var(--ion-color-dark));
     font-size: 13px;
     font-weight: 500;
     margin-block-end: 8px;
@@ -11,7 +11,7 @@ ion-label {
     margin-block-end: 16px;
 
     #balance {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 12px;
         font-weight: 400;
         line-height: 14px;
@@ -39,13 +39,13 @@ ion-label {
 
 #splitting-calc {
     border-radius:  8px;
-    border: 1px solid  #E3E8EF;
-    background:  #F8FAFC;
+    border: 1px solid  var(--ion-color-border);
+    background:  var(--ion-background-color);
     padding: 16px;
     font-size: 12px;
     line-height: 20px;
     text-transform: capitalize;
-    color:  #101828;
+    color:  var(--ion-color-dark);
     .account{
         font-weight: 400;
         display: flex;

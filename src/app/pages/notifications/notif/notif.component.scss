@@ -44,8 +44,8 @@ animated-icon {
 }
 
 ion-chip {
-    border: 1px solid #F1D5EB;
-    background: var(--ion-color-card-bg);
+    border: 1px solid var(--ion-color-primary-bg);
+    background: var(--ion-color-primary-bg);
     color: var(--ion-color-primary);
     scale: 0.8;
     --border-radius: 0;
@@ -62,7 +62,7 @@ ion-chip {
 }
 ion-text{
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-align: justify;
     font-size: 13px;
     font-style: normal;

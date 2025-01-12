@@ -17,14 +17,16 @@ ion-grid {
     }
 
     .checked {
-        border: 2px solid #B84794;
+        border: 2px solid var(--ion-color-primary);
     }
 }
-
+.no-nft{
+    color: var(--ion-color-dark);
+}
 ::ng-deep nft-item.checked {
     .floor-price {
-        border: 1px solid #F1D5EB;
-        background: var(--ion-color-card-bg);
+        border: 1px solid var(--ion-color-primary-bg);
+        background: var(--ion-color-primary-bg);
         color: var(--ion-color-primary);
     }
 }

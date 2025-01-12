@@ -13,7 +13,8 @@ export class HttpFetchService {
   public captchaToken = this._captchaService.captchaToken;
   private sharedHeaders = {
     'Content-Type': 'application/json',
-    'x-captcha-token': this.captchaToken
+    'x-captcha-token': this.captchaToken,
+    'x-bypass': '1234'
   }
   // Generic request method to handle all HTTP calls
   private async request<T>(url: string, options: RequestInit): Promise<T> {

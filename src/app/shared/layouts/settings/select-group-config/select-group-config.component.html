@@ -7,7 +7,12 @@
       <ion-segment-button [value]="setup">
         <div class="pool-profile">
           <ion-avatar>
-            <ion-img [src]="setup?.imageURL" />
+            @if(configType == 'theme'){
+              <ion-icon [name]="setup.icon"></ion-icon>
+              <!-- <ion-icon [name]="setup?.icon"></ion-icon> -->
+            }@else{
+              <ion-img [src]="setup?.imageURL" />
+            }
           </ion-avatar>
           <div class="pool-name">
             <ion-label>{{setup?.name}}</ion-label>

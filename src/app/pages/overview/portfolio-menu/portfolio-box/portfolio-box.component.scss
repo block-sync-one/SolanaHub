@@ -1,8 +1,7 @@
 .portfolio-box {
   padding: 16px 20px;
-  background-color: #fff;
   height: 100%;
-  border-top: 1px solid #E3E8EF;
+  border-top: 1px solid  var(--ion-color-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -29,6 +28,7 @@
 }
 
 .portfolio-box-wallet-text {
+  color: var(--ion-color-dark);
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -37,6 +37,9 @@
 .portfolio-box-body {
   text-transform: capitalize;
   font-size: 12px;
+  ion-text{
+    color: var(--ion-color-dark);
+  }
 }
 
 .portfolio-box-empty {
@@ -59,8 +62,8 @@
 
 #actions-wrapper {
   border-radius: 12px;
-  border: 1px solid #E3E8EF;
-  background: white;
+  border: 1px solid  var(--ion-color-border);
+  background: var(--ion-color-light);
 
   ion-button {
 

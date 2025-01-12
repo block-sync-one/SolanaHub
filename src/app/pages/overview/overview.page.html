@@ -1,13 +1,15 @@
 <ion-content [fullscreen]="true">
   <ion-grid style="position: relative;">
-
     <ion-row class="ion-justify-content-between data-set">
-      <ion-col id="portfolio-breakdown" class="gap" size="12" sizeMd="8">
+      <ion-col id="portfolio-breakdown" class="gap" size="12" [sizeMd]="(isFreemium() && !watchMode() ) ? 8 : 12">
         <portfolio-breakdown chartText="Total net worth" [assets]="allWalletsAssets" #portfolioBreakdown />
       </ion-col>
-      <ion-col id="portfolio-menu" style="border-left: 1px solid var(--colors-gray-light-mode-200, #E3E8EF);" size="12" sizeMd="3.6">
+      @if(isFreemium() && !watchMode()){
+      <ion-col id="portfolio-menu" size="12" sizeMd="3.6">
         <portfolio-menu/>
       </ion-col>
+      }
+
     </ion-row>
     <ion-row class="ion-margin-vertical">
       <ion-col class=" data-set" size="12">

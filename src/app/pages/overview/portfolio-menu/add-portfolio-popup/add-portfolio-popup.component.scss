@@ -12,13 +12,12 @@
   gap: .5rem;
 
   &__wallet-image {
-    color: black;
-    width: 48px;
-    height: 48px;
-    padding: 12px;
+    padding: 11px;
+    font-size: 24px;
+    color: var(--ion-color-dark);
     gap: 0;
     border-radius: .5rem;
-    border: 1px solid #E3E8EF;
+    border: 1px solid  var(--ion-color-border);
   }
 }
 
@@ -29,7 +28,7 @@
   margin-bottom: 1rem;
 
   &__title {
-    color: #121926;
+    color: var(--ion-color-dark);
     font-size: 18px;
     font-weight: 600;
     line-height: 28px;

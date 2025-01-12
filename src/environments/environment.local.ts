@@ -8,6 +8,6 @@ export const environment: EnvironmentConfig = {
   solanaEnv: 'mainnet-beta',
   solanaCluster: 'https://carole-l8ne8x-fast-mainnet.helius-rpc.com',
   apiUrl: "http://localhost:3000",
-  turnStile: '0x4AAAAAAA4WsX8UNv6UugTf',
+  turnStile: '1x00000000000000000000AA',
   ...getBaseConfig()
 };

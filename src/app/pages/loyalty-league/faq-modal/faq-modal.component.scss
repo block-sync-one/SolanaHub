@@ -9,24 +9,24 @@ ion-accordion-group {
 
 ion-accordion {
     border-radius: var(--radius-xl, 12px);
-    border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
-    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-background-color);
     margin-block-end: 8px;
 
     ion-item {
         --border-color: transparent;
-        --background: var(--Colors-Gray-modern-50, #F8FAFC);
+        --background: var(--ion-background-color);
 
         ::ng-deep {
             ion-icon {
-                color: #9AA4B2;
+                color: var(--ion-light-gray);
                 font-size: 20px;
             }
         }
     }
 
     ion-label {
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-weight: 500;
         line-height: 18px;
     }
@@ -49,8 +49,8 @@ ion-text {
 ion-button {
     --color: var(--ion-color-dark);
     border-radius: var(--radius-sm, 6px);
-    border: 1px solid  var(--ion-color-border);
-    --background: var(--ion-color-light);
+    border: 1px solid   var(--ion-color-border);
+    --background: var(--ion-color-light);;
     font-size: 13px;
     font-weight: 600;
 

@@ -7,7 +7,7 @@ declare global {
 }
 @Component({
   selector: 'turnstile-captcha',
-  template: `<div class="cf-turnstile" #turnstileElement></div>`,
+  template: `<div class="cf-turnstile"  #turnstileElement></div>`,
   standalone: true,
   styles: [
     `
@@ -26,8 +26,6 @@ export class TurnstileCaptchaComponent implements OnInit {
   turnStileKey = environment.turnStile;
   constructor(private captchaService: CaptchaService) { }
   _turnstileCb() {
-    console.log('_turnstileCb called');
-
     (window as any).turnstile.render(this.turnstileElement.nativeElement, {
       sitekey: this.turnStileKey,
       callback: (token: string) => {

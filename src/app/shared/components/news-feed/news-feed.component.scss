@@ -13,7 +13,7 @@
     div {
         position: absolute;
         bottom: 0;
-        background: white;
+        background: var(--ion-color-light);
         width: 100%;
         opacity: 0.9;
         font-weight: bold;
@@ -54,13 +54,13 @@
     font-weight: 500;
 
     span {
-        color: var(--ion-color-border);
+        color:  var(--ion-color-border);
     }
 }
 
 .feed-item {
     padding-block: 20px;
-    border-bottom: 1px solid var(--ion-color-border);
+    border-bottom: 1px solid  var(--ion-color-border);
 
     // hide border for last item
     &:last-child {

@@ -5,13 +5,13 @@
 
 .stake-card {
     ion-icon {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         cursor: pointer;
     }
 
     border-radius: 12px;
-    border: 1px solid #E3E8EF;
-    background: var(--ion-color-light);
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding: 16px;
     display: flex;
     justify-content: space-between;
@@ -43,7 +43,7 @@
             bottom: 0;
             right: 0;
             border-radius: var(--radius-full, 1000px);
-            border: 1.5px solid var(--ion-color-light);
+            border: 1.5px solid var(--ion-color-light);;
             background: #C4C4C4;
 
             //     activating,deactivating,active,inactive
@@ -52,11 +52,11 @@
             }
 
             &.activating {
-                background: #17B26A;
+                background: var(--ion-color-success);
             }
 
             &.deactivating {
-                background: #F79009;
+                background: var(--ion-color-warning);
             }
             &.directStake {
                 background: var(--ion-color-primary);
@@ -65,7 +65,7 @@
     }
 
     .validator-name {
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
@@ -73,7 +73,7 @@
     }
 
     .account-address {
-        color: var(--colors-text-text-tertiary-600, #4B5565);
+        color:  var(--ion-light-gray);
         font-size: 12px;
         line-height: 12px;
         margin-block-end: 8px;
@@ -93,12 +93,12 @@
         display: flex;
         flex-wrap: wrap;
         .sol-amount {
-            color: var(--ion-color-text-2);
+            color: var(--ion-color-dark);
             margin-inline-end: 2px;
         }
 
         .usd-value {
-            color: var(--ion-color-medium);
+            color: var(--ion-color-dark);
             font-weight: 400;
         }
 
@@ -116,8 +116,8 @@
         ion-chip {
             margin-block: 0;
             border-radius: var(--radius-full, 1000px);
-            border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #E3E8EF);
-            background: var(--Component-colors-Utility-Gray-utility-gray-50, #F8FAFC);
+            border: 1px solid  var(--ion-color-border);
+            background: var(--ion-color-light);;
             color:  var(--ion-color-dark);
             text-align: center;
             font-size: 12px;

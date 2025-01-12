@@ -5,7 +5,7 @@
 
 #container {
     border-radius: 12px;
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     display: flex;
     justify-content: center;
@@ -28,10 +28,11 @@
 ion-img {
     margin-bottom: 20px;
     width: 250px;
+
 }
 
 ion-label {
-    color: var(--Gray-900, #101828);
+    color: var(--Gray-900, var(--ion-color-dark));
     text-align: center;
     width: 100%;
     font-size: 19px;
@@ -41,7 +42,7 @@ ion-label {
 }
 
 ion-text {
-    color: var(--Gray-600, #475467);
+    color: var(--ion-color-dark);
     font-size: 16px;
     font-weight: 400;
     line-height: 25px;
@@ -75,7 +76,9 @@ ion-text {
         border-radius: 4px;
     }
 }
-
+.text-primary{
+    color: var(--ion-color-dark);
+}
 @media only screen and (max-width: 1000px) {
     #container {
         transform: translateY(-42px);

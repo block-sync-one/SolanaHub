@@ -7,7 +7,7 @@
       width: 48px;
       height: 48px;
       border-radius: var(--radius-lg, 10px);
-      border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
+      border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, var(--ion-color-border));
       box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
       display: flex;
       align-items: center;
@@ -23,7 +23,7 @@
 
     #title {
       text-transform: capitalize;
-      color: var(--ion-color-text-2);
+      color: var(--ion-color-dark);
       font-size: 18px;
       font-weight: 600;
       line-height: 28px;
@@ -31,7 +31,7 @@
 
     #desc {
       text-transform: capitalize;
-      color: #4B5565;
+      color: var(--ion-light-gray);
       font-size: 13px;
       line-height: 18px;
       /* 138.462% */
@@ -51,8 +51,8 @@
     display: flex;
     height: 85px;
     align-items: center;
-    background: white;
-    border-top: 1px solid #E3E8EF;
+    background: var(--ion-color-light);
+    border-top: 1px solid var(--ion-color-border);
     margin-block-start: 16px;
     ion-button {
       width: 100%;
@@ -63,7 +63,7 @@
       text-transform: capitalize;
       &.button-clear{
         color: var(--ion-color-dark);
-        border: 1px solid var(--ion-color-border);
+        border: 1px solid  var(--ion-color-border);
       }
       &.ion-color-primary {
         border: 1px solid var(--ion-color-primary);

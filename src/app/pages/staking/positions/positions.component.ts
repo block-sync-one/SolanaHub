@@ -31,7 +31,7 @@ export class PositionsComponent implements OnInit, OnChanges {
     }
   ]
   // private _LSTs = ['msol', 'bsol', 'jitosol']
-  public stakeAccounts = signal(null)//this._portfolio.staking
+  public stakeAccounts = this._nss.stakeAccounts
   public liquidStake = signal(null);
   public nativeStake = computed(() => this.stakeAccounts() ? this.stakeAccounts() : null)
   public positionGroup = signal('native');
@@ -80,10 +80,7 @@ export class PositionsComponent implements OnInit, OnChanges {
  
   }
   async ngOnInit(): Promise<void> {
-    const nativeStake = await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
-    console.log('nativeStake', nativeStake);
-    
-    this.stakeAccounts.set(nativeStake)
+    await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
     // this.stakePosition.set(this.nativeStake)
     // const { publicKey } = this._shs.getCurrentWallet()
     // const directStake = await this._lss.getDirectStake(publicKey.toBase58())

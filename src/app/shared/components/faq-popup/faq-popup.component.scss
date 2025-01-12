@@ -13,7 +13,7 @@
         width: 48px;
         height: 48px;
         border-radius: var(--radius-lg, 10px);
-        border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, #E3E8EF);
+        border: 1px solid var(--Component-colors-Components-Icons-Featured-icons-Modern-featured-icon-modern-border, var(--ion-color-border));
         box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
         display: flex;
         align-items: center;
@@ -29,7 +29,7 @@
 
     #title {
         text-transform: capitalize;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 18px;
         font-weight: 600;
         line-height: 28px;
@@ -37,7 +37,7 @@
 
     #desc {
         text-transform: capitalize;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
         line-height: 18px;
         /* 138.462% */
@@ -59,8 +59,8 @@
     left: 0;
     padding: 0 24px;
     align-items: center;
-    background: white;
-    border-top: 1px solid #E3E8EF;
+    background: var(--ion-color-light);
+    border-top: 1px solid var(--ion-color-border);
 
     ion-button {
         width: 100%;
@@ -72,7 +72,7 @@
 
         &.button-clear {
             color: var(--ion-color-dark);
-            border: 1px solid var(--ion-color-border);
+            border: 1px solid  var(--ion-color-border);
         }
 
         &.ion-color-primary {
@@ -91,24 +91,24 @@ ion-accordion-group {
 
 ion-accordion {
     border-radius: var(--radius-xl, 12px);
-    border: 1px solid var(--Colors-Gray-modern-200, #E3E8EF);
-    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    border: 1px solid var(--Colors-Gray-modern-200, var(--ion-color-border));
+    background: var(--Colors-Gray-modern-50, var(--ion-background-color));
     margin-block-end: 8px;
 
     ion-item {
         --border-color: transparent;
-        --background: var(--Colors-Gray-modern-50, #F8FAFC);
+        --background: var(--Colors-Gray-modern-50, var(--ion-background-color));
 
         ::ng-deep {
             ion-icon {
-                color: #9AA4B2;
+                color: var(--ion-light-gray);
                 font-size: 20px;
             }
         }
     }
 
     ion-label {
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-weight: 500;
         line-height: 18px;
     }
@@ -131,8 +131,8 @@ ion-text {
 ion-button {
     --color: var(--ion-color-dark);
     border-radius: var(--radius-sm, 6px);
-    border: 1px solid  var(--ion-color-border);
-    --background: var(--ion-color-light);
+    border: 1px solid   var(--ion-color-border);
+    --background: var(--ion-color-light);;
     font-size: 13px;
     font-weight: 600;
 

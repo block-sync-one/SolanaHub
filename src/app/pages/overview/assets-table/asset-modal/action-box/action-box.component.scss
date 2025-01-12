@@ -1,7 +1,7 @@
 #action-box {
     padding: 40px 20px 20px;
     border-radius: 8px;
-    border: 1px solid var(--colors-gray-light-mode-200, #E3E8EF);
+    border: 1px solid  var(--ion-color-border);
 }
 
 #title {
@@ -81,10 +81,10 @@ ion-segment {
 
     ion-toggle {
 
-        --track-background: var(--ion-color-app-bg-2);
-        --track-background-checked: var(--ion-color-app-bg-2);
+        --track-background: var(--ion-background-color);
+        --track-background-checked: var(--ion-background-color);
 
-        --handle-background: var(--ion-color-light);
+        --handle-background: var(--ion-color-light);;
         --handle-background-checked: var(--ion-color-primary);
 
         --handle-width: 16px;
@@ -104,7 +104,7 @@ ion-segment {
         /* Required for iOS handle to overflow the height of the track */
         overflow: visible;
         border-radius: var(--radius-full, 1000px);
-        background: var(--Colors-Background-bg-tertiary, var(--ion-color-app-bg-2));
+        background: var(--ion-background-color);
     }
 
 
@@ -112,11 +112,11 @@ ion-segment {
 
 ion-segment-button {
     text-transform: capitalize;
-    --border-color: #B84794;
+    --border-color: var(--ion-color-primary);
     --indicator-height: 2px;
     --border-width: 1px;
     --border-radius: none;
-    border-bottom: 1px solid #e3e8ef;
+    border-bottom: 1px solid  var(--ion-color-border);
     font-size: 14px;
     font-weight: 600;
 }

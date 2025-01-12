@@ -45,7 +45,7 @@ ion-grid{
 }
 
 .item-light {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
 
     font-size: 12px;
     font-weight: 400;
@@ -57,7 +57,7 @@ ion-button{
     display: block;
     text-transform: capitalize;
     span{
-        color: white;
+        color: var(--ion-color-light);
     }
 }
 a{

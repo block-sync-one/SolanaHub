@@ -6,16 +6,16 @@ import {
   IonRadioGroup,
   IonRadio,
   IonRow,
-  IonCol
-} from '@ionic/angular/standalone';
+  IonCol, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { lockClosedOutline, waterOutline } from 'ionicons/icons';
 @Component({
   selector: 'stake-path',
   templateUrl: './stake-path.component.html',
   styleUrls: ['./stake-path.component.scss'],
   standalone: true,
-  imports: [
+  imports: [IonIcon, 
     IonImg,
-    IonItem,
     IonLabel,
     IonRadioGroup,
     IonRadio,
@@ -28,7 +28,7 @@ export class StakePathComponent implements OnInit, OnChanges {
   @Input() stakePath: string = 'native'
   @Output() onSelectPath = new EventEmitter()
   constructor() {
-
+    addIcons({lockClosedOutline,waterOutline});
   }
 
   ngOnInit() {

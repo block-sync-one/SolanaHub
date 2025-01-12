@@ -7,8 +7,8 @@
 .prop-head,
 .prop-body {
     cursor: pointer;
-    background-color: #F8FAFC;
-    border: 1px solid #E3E8EF;
+    background-color: var(--ion-background-color);
+    border: 1px solid  var(--ion-color-border);
 }
 
 .prop-body {
@@ -18,7 +18,7 @@
 .prop-info {
     justify-content: space-between;
     display: flex;
-    color: #101828;
+    color: var(--ion-color-dark);
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
@@ -51,7 +51,7 @@ ion-chip {
     &.voting {
         border: 1px solid #E9D7FE;
         background: #F9F5FF;
-        color: var(--ion-color-secondary);
+        color: var(--ion-color-primary);
     }
 
 
@@ -67,8 +67,8 @@ ion-button {
     width: fit-content;
     text-transform: capitalize;
     --border-radius: 6px;
-    --border-color: var(--ion-color-border);
-    --background: var(--ion-color-light);
+    --border-color:  var(--ion-color-border);
+    --background: var(--ion-color-light);;
     --border-width: 1px;
     --border-style: solid;
     --color: var(--ion-color-dark);
@@ -94,7 +94,7 @@ ion-button {
     text-transform: capitalize;
     ion-label {
 
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
 
         font-weight: 500;
@@ -109,7 +109,7 @@ ion-button {
     }
 
     small {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         margin-inline-start: 2px;
         font-size: 11px;
 

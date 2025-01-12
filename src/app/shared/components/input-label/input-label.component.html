@@ -4,7 +4,8 @@
 
     <div id="wallet-info">
       <div>
-        <ion-img src="assets/images/wallet-icon.svg" />
+        <ion-icon name="wallet-outline"></ion-icon>
+        <!-- <ion-img src="assets/images/wallet-icon.svg" /> -->
       </div>
       @if(asset){
         <span>{{utils.formatBigNumbers(asset?.balance) || 0}} {{asset?.symbol}}</span>

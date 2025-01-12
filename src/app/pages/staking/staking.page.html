@@ -13,7 +13,7 @@
         @for (stat of validatorsData; track $index) {
         <ion-col size="5.5" sizeLg="2.9" class="staking-stat">
           <div class="icon-wrapper ion-hide-lg-down">
-            <ion-img [src]="stat.logoURI" />
+            <ion-icon [name]="stat.icon" />
           </div>
           <div class="stat-title">{{stat.title}}</div>
           <div class="stat-desc">

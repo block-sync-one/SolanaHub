@@ -34,7 +34,8 @@ export class OptionsPopoverComponent implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log('stake', this.stake);
+    
   }
   private  async openValidatorModal(btnText: string) {
     let config = {
@@ -68,7 +69,10 @@ export class OptionsPopoverComponent implements OnInit {
   }
   public async unStake() {
     const walletOwner = this._shs.getCurrentWallet()
-    await this._nss.deactivateStakeAccount(this.stake.address, walletOwner as WalletExtended)
+    const res = await this._nss.deactivateStakeAccount(this.stake.address, walletOwner as WalletExtended)
+    if(res){
+      this.reloadStakeAccounts()
+    }
   }
   public async reStake() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
@@ -83,12 +87,19 @@ export class OptionsPopoverComponent implements OnInit {
     console.log(validatorVoteIdentity);
     
     if(validatorVoteIdentity){
-      await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
+      const res = await this._nss.reStake(this.stake,validatorVoteIdentity,walletOwner)
+      if(res){
+        this.reloadStakeAccounts()
+      }
     }
   }
   public async withdraw() {
     const walletOwner = this._shs.getCurrentWallet().publicKey
-    await this._nss.withdraw([this.stake], walletOwner , this.stake.accountLamport)
+    const res = await this._nss.withdraw([this.stake], walletOwner , this.stake.accountLamport)
+    if(res){
+      this.reloadStakeAccounts()
+    }
+  
   }
   public async setDirectStakevSOL() {
     const walletOwner = this._shs.getCurrentWallet()
@@ -167,5 +178,12 @@ export class OptionsPopoverComponent implements OnInit {
     modal.present();
     // const { data, role } = await modal.onWillDismiss();
 
+  }
+
+  async reloadStakeAccounts() {
+    // refetch stake accounts
+   const nativeStake = await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
+   console.log('nativeStake', nativeStake);
+   
   }
 }

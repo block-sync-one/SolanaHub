@@ -1,6 +1,6 @@
 .config-label{
     margin-block-end: 10px;
-    color:  var(--ion-color-medium);
+    color:  var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -19,13 +19,16 @@ ion-avatar {
 
 ion-segment {
     border-radius: 10px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid var(--ion-color-border);
     padding: 4px;
     flex-wrap: wrap;
     display: flex;
-    --background: #F8FAFC;
+    --background: var(--ion-background-color);
 }
-
+ion-icon {
+    font-size: 24px;
+    color: var(--ion-color-dark);
+}
 ion-segment-button {
     flex: 1;
     --border-color: transparent;
@@ -36,7 +39,8 @@ ion-segment-button {
     --border-radius: 6px;
     --border-width: 2px;
     --border-style: solid;
-    --indicator-box-shadow: 0px 0px 0px 0px #B84794;
+    --indicator-box-shadow: 0px 0px 0px 0px var(--ion-color-primary);
+    --indicator-color: var(--ion-color-light);
     .pool-profile{
         width: 100%;
         display: flex;
@@ -47,7 +51,7 @@ ion-segment-button {
         display: flex;
         text-transform: capitalize;
         flex-direction: column;
-        color: var(--colors-text-text-primary-900, var(--ion-color-text-2));
+        color:  var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;

@@ -1,5 +1,5 @@
 #summary {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 500;
     line-height: 20px;
@@ -8,8 +8,8 @@
 
 #apy-wrapper {
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: var(--Colors-Gray-modern-50, #F8FAFC);
+    border: 1px solid var(--Colors-Border-border-secondary, var(--ion-color-border));
+    background: var(--Colors-Gray-modern-50, var(--ion-background-color));
     padding: 16px;
     font-size: 12px;
     font-weight: 600;

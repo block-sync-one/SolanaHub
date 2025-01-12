@@ -4,7 +4,7 @@
 
     .light-title {
         text-transform: capitalize;
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
@@ -24,7 +24,7 @@
     }
 
     ion-toggle {
-        --track-background: var(--ion-color-app-bg-2);
+        --track-background: var(--ion-background-color);
         --handle-border-radius: 1000px;
         --border-radius: 1000px;
         --handle-height: 20px;
@@ -38,8 +38,8 @@
 
     #custom-validator-selection {
         border-radius:  8px;
-        border: 1px solid  #E3E8EF;
-        background: #F8FAFC;
+        border: 1px solid  var(--ion-color-border);
+        background: var(--ion-background-color);
         padding-block-end: 4px;
         padding-block-start: 16px;
         padding-inline: 16px;

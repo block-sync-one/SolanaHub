@@ -1,13 +1,15 @@
 import { DecimalPipe, NgClass, NgFor, NgStyle } from '@angular/common';
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, ElementRef, ViewChild, AfterViewInit } from '@angular/core';
 import { Tier } from 'src/app/models';
-import { IonImg, IonButton, IonSkeletonText } from "@ionic/angular/standalone";
+import { IonImg, IonButton, IonSkeletonText, IonIcon } from "@ionic/angular/standalone";
+import { addIcons } from 'ionicons';
+import { personAddOutline } from 'ionicons/icons';
 @Component({
   selector: 'loyalty-path',
   templateUrl: './loyalty-path.component.html',
   styleUrls: ['./loyalty-path.component.scss'],
   standalone: true,
-  imports: [DecimalPipe ,IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
+  imports: [IonIcon, DecimalPipe ,IonSkeletonText, IonButton, IonImg, NgStyle,NgClass, NgFor],
 })
 export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   @ViewChild('loyaltyPathBody') loyaltyPathBody: ElementRef;
@@ -20,7 +22,9 @@ export class LoyaltyPathComponent  implements OnChanges, AfterViewInit {
   @Output() openReferAFriendModal: EventEmitter<void> = new EventEmitter<void>();
   public nextTier: Tier | null = null;
   public daysRemainingToNextTier: number = 0
-
+  constructor(){
+    addIcons({personAddOutline})  
+  }
 ngAfterViewInit() {
     this.initDragToScroll();
   }

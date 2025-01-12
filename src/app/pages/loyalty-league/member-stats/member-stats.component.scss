@@ -7,15 +7,10 @@
   .loyal-member {
     text-transform: capitalize;
     border-radius: var(--radius-xl, 12px);
-    background: var(--ion-color-light);
+    background: var(--ion-color-card-bg);
+    border: 1px solid var(--ion-color-border);
     padding: 32px;
   }
-  .quest-title {
-    text-decoration: underline;
-    cursor: pointer;
-    color: var(--ion-color-primary);
-}
-
 
   .member-stats {
     display: flex;
@@ -32,7 +27,7 @@
       &__title {
         display: flex;
         align-items: center;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 16px;
         font-weight: 600;
         letter-spacing: 0.16px;
@@ -49,7 +44,7 @@
 
       &__value {
         justify-content: space-between;
-        color: var(--ion-color-text-2);
+        color: var(--ion-color-dark);
         font-size: 36px;
         font-weight: 600;
         letter-spacing: 0.36px;
@@ -76,7 +71,7 @@
     }
     .divider{
        height: 100%;
-       background-color: #E3E8EF;
+       background-color: var(--ion-color-border);
        width: 1px;
        margin-inline:  50px;
     }
@@ -98,7 +93,7 @@
 
     .points-category {
       &__title {
-        color: var(--colors-text-text-tertiary-600, #4B5565);
+        color: var(--ion-color-dark);
         font-size: 11px;
         font-weight: 500;
         line-height: 16px;
@@ -112,6 +107,7 @@
       }
 
       &__value {
+        color: var(--ion-color-dark);
         display: flex;
         gap: 5px;
         line-height: 24px;

@@ -2,7 +2,7 @@
 <!-- <ngx-turnstile #turnStile [siteKey]="turnStileKey" (errored)="log($event)" (resolved)="sendCaptchaResponse($event)" theme="auto"
   [tabIndex]="0" /> -->
   <!-- <turnstile-captcha /> -->
-  {{isReady$}}
+  <div class="ion-hide">{{isReady$ | async}}</div>
 <ion-header mode="md" [translucent]="true">
   <app-menu />
 
@@ -30,31 +30,41 @@
                 <ion-list-header *ngIf="g.group">{{g.group}}</ion-list-header>
                 @for (p of g.pages; track $index) {
 
-                <ion-item [disabled]="!p.active || (watchMode$ | async) && p.title !== 'Overview'" style="opacity: 1;"
-                  routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" routerLinkActive="selected">
+                <ion-item
+                #rla="routerLinkActive"
+                 [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'"
+                  style="opacity: 1;"
+                  routerDirection="root"
+                   [routerLink]="[p.url]"
+                   lines="none"
+                   detail="false"
+                   routerLinkActive="selected"
+                   >
                   @if(p.title === 'hubSOL'){
                   <ion-img src="/assets/images/hubSOL.svg" />
                   }@else {
-                  <animated-icon aria-hidden="true" slot="start" [icon]="p.icon" />
+                  <animated-icon
+
+                  aria-hidden="true" slot="start" [icon]="p.icon" />
                   }
 
                   <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
                   <ion-label>{{ p.title }}</ion-label>
                   @if((watchMode$ | async)){
-                  @if (p.title !== 'Overview') {
-                  <ion-chip color="secondary">
+                  @if (p.title != 'Overview') {
+                  <ion-chip color="primary">
                     Disabled
                   </ion-chip>
                   }
                   }@else{
 
                   @if (!p.active) {
-                  <ion-chip color="secondary">
+                  <ion-chip color="primary">
                     Soon
                   </ion-chip>
                   }
-                  @if(p.title === 'Notifications' && notifIndicator()){
-                  <ion-chip color="secondary">
+                  @if(p.title == 'Notifications' && notifIndicator()){
+                  <ion-chip color="primary">
                     {{notifIndicator()}}
                   </ion-chip>
                   }
@@ -68,18 +78,17 @@
           </div>
           <div id="social">
             <div id="title">Join the Hub</div>
-            <div>
-              <a href="https://github.com/Avaulto/SolanaHub" target="_blank">
-                <img src="https://github.githubassets.com/assets/GitHub-Mark-ea2971cee799.png" />
+            <div id="social-icons">
+              <a href="https://github.com/block-sync-one/SolanaHub" target="_blank">
+                <ion-icon name="logo-github"></ion-icon>
               </a>
               <a href="https://x.com/SolanaHubApp" target="_blank">
-                <img
-                  src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'%3e%3c!--!Font%20Awesome%20Free%206.5.1%20by%20@fontawesome%20-%20https://fontawesome.com%20License%20-%20https://fontawesome.com/license/free%20Copyright%202024%20Fonticons,%20Inc.--%3e%3cpath%20d='M389.2%2048h70.6L305.6%20224.2%20487%20464H345L233.7%20318.6%20106.5%20464H35.8L200.7%20275.5%2026.8%2048H172.4L272.9%20180.9%20389.2%2048zM364.4%20421.8h39.1L151.1%2088h-42L364.4%20421.8z'/%3e%3c/svg%3e"
-                  >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" color="currentColor" class="text-color"><path d="M3 21L10.5484 13.4516M21 3L13.4516 10.5484M13.4516 10.5484L8 3H3L10.5484 13.4516M13.4516 10.5484L21 21H16L10.5484 13.4516" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+                <!-- <ion-icon name="logo-twitter"></ion-icon> -->
               </a>
               <a href="https://discord.gg/w9gRgd3vsc" target="_blank">
-                <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAACXBIWXMAAAHYAAAB2AH6XKZyAAAAGXRFWHRTb2Z0d2FyZQB3d3cuaW5rc2NhcGUub3Jnm+48GgAABFBJREFUeJzt2luIVVUcx/HPbCsveEnMIq0cwyyGQi2tpOhKVC9JvRRZVlCSJFkUFFQEPUREET0U3aSIngpCEXrIwqKil7KiSOgm3aw0UWfwUs44PaxzcHs4x7P3XtuZ02F/4c8Mm7V/6/9fZ++1/+u/FhUVFRUVFRUlczKWYFwJWhNwDU4qQeuIcQZWYR3+xHDN7i5B+96U3h9Yi5WYW4J2FOfhGfzsoION9pu4p2Acfj+M/mY8jYVFO+jJ2f4E3IHbcGrGe1bidZxSsxk4BpNrf4exH7vwL7bgl5otw3MZ+/ker+IVbMt4T2Z68Qb+0frXaGUHCtxTt6EC9+xzcMBLoQfvRwQxWvaB/E94U27pgGCK2rLY4Kfirw4IpKj9jekxA/BCBwQRa6uLBr9AsUmo02wIZxUZgLUd4HxZtiZv8AvEfb460c7PMwBrOsDhsm191uC78dev29mNwSZNBuAeJSUQHchdjRcaA50i5OITRsSdkWevsFTfXr/Q+AQs1b3Bw3jcergGG43+e3qkbVOr4Od3gHMjZX31oNOvwJJWI9OFXFf/Jz0AV4+CI6PFtY0XpovP+zcJk+h0YWB7cZ8w4xbV3IEHherTGEzDDfg60tcDmJUegJsjBd/G2BajPaOgw981OpniaKFCFePzIbWC1RFCX2lf+OzFzhyau4VK8+E4Cp9G+P18WuyLCKGr2jha59Ecmk9l1Lwgwu+NdZGxQjW2iMg2zdPpZszJoTs/oyb8VND3QUxMcKbwThXhM2FCycIPQum7HfuF1yorn+dom2YM5iXC6q8oWQJK05+xzXDJmq2YnWg902bhuBxtk4ztjxUmuKwcn6NtI7MTzIwQWCT76zNfWIy0Y4zs1ZtE2KIrSm8ibtd1Mq7P2Pb2HLpZ2y4RV/aeRXxW9av2j/Yi+bbVBnFxG81Jwn5gjO/fELacY0SGha/BiS0cXejQLfOsth0XttCchg9L8PtH4nL1tO3AY0JychquwIvCZ62o5iBeE5KtuViMR7C1JJ+39GAAE1uMdLezM1E8CeoGxifyfXO7jeEEe0bbi1GkPxGXSv7fGUjkz+e7if5EKFQUYQ+WC4eg8qzeymIjVgi7PfsKagzATQ6uwPImEZenxM7FS8r7RjezrcKhjXNS/V4pnCjLq7ULN9ZFehU/CPUeLko5lAjZ30P4SHhSiga8Fx/j4ZpmuvhyKTYU1H1XbR2Q3hvswZ14UrHE6Es8jrcarieYLWxG9Amrz8k1m1Trtz9lW/BtzTYL1eo0S/GAYqc+BnA/XhYGoikzhRR2UP6RfaKAU3l5toBfQ3hTztpHn3D2N8/7OSUmsoxMFU5/ZfVrPebFdHgZ3tH+0MSKmE5ysqqNL0PCj3dJmZ3OER6/3U06/ESo5IwUiTDBNvpRPybb1/rWeKYIuyrrhKXubmH5O9KcLnxhhoQvxXJhYh1RZoirycWyWDjBXlFRUVFRUZGf/wBQo/P2LolQAAAAAABJRU5ErkJggg==">
+                <ion-icon name="logo-discord"></ion-icon>
+
               </a>
 
             </div>
@@ -99,3 +108,6 @@
 
   </ion-split-pane>
 </ion-app>
+
+
+

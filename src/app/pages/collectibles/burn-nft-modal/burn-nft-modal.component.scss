@@ -7,7 +7,7 @@
     height: 200px;
     padding-block: 10px;
     ion-label {
-        color:  var(--ion-color-medium);
+        color:  var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         margin-block-end: 8px;
@@ -17,12 +17,12 @@
 }
 #burn-calc {
     border-radius: 8px;
-    border: 1px solid #E3E8EF;
-    background: #F8FAFC;
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding: 16px;
     font-size: 12px;
     text-transform: capitalize;
-    color: #101828;
+    color: var(--ion-color-dark);
 
     .item {
         &:not(:last-child){
@@ -43,6 +43,6 @@
     }
 
     .item-value {
-        color: #475467;
+        color: var(--ion-light-gray);
     }
 }

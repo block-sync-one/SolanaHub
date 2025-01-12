@@ -9,7 +9,7 @@ a{
     display: flex;
     align-items: center;
     justify-content: space-between;
-    border-bottom: 1px solid #E3E8EF;
+    border-bottom: 1px solid  var(--ion-color-border);
     text-transform: capitalize;
     .gov-total-prop {
         color:  var(--ion-color-dark);

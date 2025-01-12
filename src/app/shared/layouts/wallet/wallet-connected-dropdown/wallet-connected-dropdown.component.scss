@@ -1,13 +1,13 @@
 #wallet-connected-actions {
     border-radius: 0px 0px 12px 12px;
-    border: 1px solid #E3E8EF;
-    background: white;
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding-block: 4px;
 }
 #action-wrapper {
     margin-block-start: 2px;
     padding-block-end: 10px;
-    border-bottom: 1px solid #E3E8EF;
+    border-bottom: 1px solid var(--ion-color-border);
 }
 ion-button {
     font-size: 13px;

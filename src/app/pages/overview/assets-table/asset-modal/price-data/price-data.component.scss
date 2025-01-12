@@ -24,7 +24,7 @@
 }
 
 #price {
-    color: var(--gray-900, #101828);
+    color: var(--gray-900, var(--ion-color-dark));
     font-size: 30px;
     font-style: normal;
     font-weight: 600;
@@ -32,7 +32,7 @@
 }
 
 #name {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-style: normal;
     font-weight: 400;

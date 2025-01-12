@@ -14,10 +14,11 @@ import {
   IonLabel,
   IonRouterOutlet,
   IonChip,
-  IonHeader
+  IonHeader,
+  IonIcon
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline } from 'ionicons/icons';
+import { home, diamond, images, fileTrayFull, notifications, barcode, cog, swapHorizontal, chevronDownOutline, logoDiscord, logoGithub } from 'ionicons/icons';
 import { ModalController } from '@ionic/angular';
 
 
@@ -73,7 +74,8 @@ import { CaptchaService } from './services/captcha.service';
     IonImg,
     LoyaltyLeagueMemberComponent,
     FloatJupComponent,
-    FreemiumModule
+    FreemiumModule,
+    IonIcon
   ],
 })
 export class AppComponent implements OnInit {
@@ -113,7 +115,7 @@ export class AppComponent implements OnInit {
       this.openNewsFeedModal()
     }
 
-    addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications });
+    addIcons({ home, diamond, images, fileTrayFull, barcode, cog, swapHorizontal, chevronDownOutline, notifications, logoGithub, logoDiscord });
   }
 
   async openNewsFeedModal(){
@@ -123,11 +125,8 @@ export class AppComponent implements OnInit {
       cssClass: 'news-feed-modal'
     });
     modal.present();
-    va.track('news feed', { event: 'open' })
-
     modal.onDidDismiss().then(() => {
       this._vrs.localStorage.saveData('newsFeedClosed', JSON.stringify({date: new Date().toISOString()}))
-      va.track('news feed', { event: 'close' })
     })
   }
 

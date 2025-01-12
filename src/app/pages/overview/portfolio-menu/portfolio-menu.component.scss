@@ -10,7 +10,7 @@
 }
 
 #portfolio-menu-header-title {
-  color: var(--ion-color-text-2);
+  color: var(--ion-color-dark);
   font-size: 16px;
   font-weight: 600;
   line-height: 24px;
@@ -26,12 +26,11 @@
     align-items: center;
     justify-content: center;
     border-radius: var(--radius-full, 9999px);
-    border: 1px dashed var(--Colors-Border-border-primary, #CDD5DF);
-    background: #FFF;
+    border: 1px dashed var(--ion-light-gray);
   }
 
   ion-icon {
-    color: #9AA4B2;
+    color: var(--ion-light-gray);
   }
 }
 

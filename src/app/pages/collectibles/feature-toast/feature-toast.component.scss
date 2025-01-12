@@ -1,5 +1,5 @@
 #nft-feature-toast {
-    background-color: white;
+    background-color: var(--ion-color-light);
     padding: 12px 2vw;
     display: flex;
     justify-content: space-between;
@@ -17,8 +17,8 @@
         line-height: 18px;
         margin-inline-end: 12px;
         border-radius: var(--radius-sm, 6px);
-        --border-color: var(--ion-color-border);
-        --background: var(--ion-color-light);
+        --border-color:  var(--ion-color-border);
+        --background: var(--ion-color-light);;
         --border-width: 1px;
         --border-style: solid;
         --border-radius: 6px;
@@ -28,7 +28,7 @@
         }
 
         &#burn-nfts {
-            color: white;
+            color: var(--ion-color-light);
             --ion-color-contrast: white !important;
             --border-color:#B42318;
         }
@@ -40,8 +40,8 @@
 #nfts-alert {
     text-transform: capitalize;
     --border-radius: 6px;
-    --border-color: var(--ion-color-border);
-    --background: var(--ion-color-light);
+    --border-color:  var(--ion-color-border);
+    --background: var(--ion-color-light);;
     --border-width: 1px;
     --border-style: solid;
     --color: var(--ion-color-dark);

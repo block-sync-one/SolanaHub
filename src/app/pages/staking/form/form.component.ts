@@ -176,6 +176,9 @@ export class FormComponent implements OnInit, AfterViewInit {
         }
       }else{ 
         const liquidStake = await this._lss.stake(pool, lamportsToDelegate, walletOwner, validatorVoteIdentity)
+        if(liquidStake){
+          await this._nss.getOwnerNativeStake(this._shs.getCurrentWallet().publicKey.toBase58())
+        }
         // add stakers to loyalty league referee program
         if (liquidStake && stakeReferer && this.solanaHubVoteKey === validatorVoteIdentity) {
           this._loyaltyLeagueService.addReferral(stakeReferer, participantAddress)

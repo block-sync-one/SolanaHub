@@ -42,7 +42,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 ::selection {
     background: var(--ion-color-primary);
-    color: white;
+    color: var(--ion-color-light);
 }
 ion-grid {
     padding-block-start: 20px;
@@ -56,7 +56,12 @@ ion-col {
     margin: 0;
     padding: 0;
 }
-
+.dark-theme .invert-color{
+    filter: invert(1) !important;
+}
+.dark-theme .platform ion-img, .dark-theme .tier-container:after{
+    filter: brightness(0.5) invert(1) !important;
+  }
 ion-button {
     // --color: var(--ion-color-primary-contrast);
     --transition: 0.3s ease all;
@@ -67,19 +72,24 @@ ion-button {
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
 
     &.button-disabled {
-        --background: var(--ion-color-card-bg);
-        --color: var(--ion-color-btn);
+        --background: var(--ion-color-primary-bg);
+        --color: var(--ion-color-primary);
 
         opacity: 1;
     }
 }
 ion-skeleton-text{
 
-    --background-rgb: 188, 0, 255;
+    --background-rgb: var(--ion-color-skeleton);
 }
-
+ion-checkbox {
+    --border-color: var(--ion-color-primary);
+}
+.text-color{
+    color: var(--ion-color-dark);
+}
 .header-md{
-    background: var(--ion-color-light);
+    background: var(--ion-color-light);;
     box-shadow: none;
 }
 .backdrop-no-scroll ion-header{
@@ -87,8 +97,9 @@ ion-skeleton-text{
 }
 .data-set {
     border-radius: var(--radius-xl, 12px);
-    background: var(--ion-color-menu);
+    background: var(--ion-color-card-bg);
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    border: 1px solid var(--ion-color-border);
 }
 
 .gap {
@@ -117,19 +128,22 @@ ion-skeleton-text{
     padding-inline-start: 35px !important;
 }
 
-
+ion-segment-button{
+    --indicator-color: var(--ion-color-light);
+}
 ion-input {
 
     overflow: hidden;
-    --color: var(-ion-color-dark);
+    color: var(--ion-color-dark) !important;
+    --color: var(--ion-color-dark) !important;
     --placeholder-color: var(--ion-light-gray) !important;
     text-overflow: ellipsis;    
     font-weight: 400;
     line-height: 18px;
     font-size: 13px;
     border-radius: var(--radius-md, 8px);
-    border: 1px solid var(--ion-color-border);
-    background: var(--ion-color-menu);
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-color-light);;
     box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
     --background: transparent;
     --padding-start: 12px !important;
@@ -151,7 +165,7 @@ ion-input {
 }
 
 .table-sub {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-overflow: ellipsis;
     // font-family: Inter;
     font-size: 13px;
@@ -178,6 +192,7 @@ ion-spinner {
 
 
 .wallet-adapter-options {
+    --background: var(--ion-color-light);
     --width: 480px;
     --max-width: 95%;
     --border-radius: 12px;
@@ -189,11 +204,11 @@ ion-spinner {
     --height: 800px;
     --max-height: 90%;
     --max-width: 95%;
-    --background: white;
+    --background: var(--ion-color-light);;
     overflow: auto;
 }
 .faq-modal {
-
+    --background: var(--ion-color-light);;
     --height: fit-content;
     overflow: auto;
 }
@@ -212,7 +227,7 @@ ion-spinner {
     --max-width: 95%;
     // --max-height: 90%;
     // --overflow: auto;
-    --background: white;
+    --background: var(--ion-color-light);;
     // >.ion-page {
     //     position: static;
     //     contain: initial;
@@ -231,13 +246,13 @@ ion-spinner {
 .quests-modal{
     --width: 445px;
     --max-width: 97%;
-    --background: white;
+    --background: var(--ion-color-light);
 }
 
 .multi-wallet-modal {
   --max-width: 420px;
   --width: 100%;
-  --background: white;
+  --background: var(--ion-color-light);
 }
 
 .nft-modal {
@@ -245,6 +260,7 @@ ion-spinner {
     --border-radius: 12px;
     --max-width: 95%;
     --max-height: 90%;
+    --background: var(--ion-color-light);
 }
 .freemium-popup{
     --background: var(--ion-color-light);
@@ -263,14 +279,14 @@ ion-spinner {
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: white;
+    --background: var(--ion-color-light);;
 }
 .refer-a-friend-modal{
     --width: 550px;
     --height: auto;
     --max-width: 95%;
     --border-radius: 12px;
-    --background: white;
+    --background: var(--ion-color-light);;
 }
 .wallet-connect-dropdown {
     --width: 238px;

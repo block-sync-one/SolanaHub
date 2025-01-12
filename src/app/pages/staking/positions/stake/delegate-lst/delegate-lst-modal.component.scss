@@ -1,5 +1,5 @@
 ion-label {
-    color: var(--Gray-700, var(--ion-color-medium));
+    color: var(--Gray-700, var(--ion-color-dark));
     font-size: 13px;
     font-weight: 500;
     margin-block-end: 8px;
@@ -8,7 +8,7 @@ ion-label {
 }
 #table-head {
     text-transform: capitalize;
-    color: #4B5565;
+    color: var(--ion-light-gray);
     font-size: 11px;
     font-weight: 500;
     display: flex;
@@ -30,15 +30,15 @@ div#pools-wrapper{
     align-items: center;
     align-self: stretch;
     border-radius: 12px;
-    border: 1px solid #E3E8EF;
+    border: 1px solid var(--ion-color-border);
     margin-block-end: 8px;
   
     &.selected {
       border: 2px solid var(--ion-color-primary);
   
       ion-chip {
-        border: 1px solid #F1D5EB !important;
-        background: var(--ion-color-card-bg) !important;
+        border: 1px solid var(--ion-color-primary-bg) !important;
+        background: var(--ion-color-primary-bg) !important;
         color: var(--ion-color-primary) !important;
       }
     }
@@ -69,14 +69,14 @@ div#pools-wrapper{
         margin: 0;
     }
       ion-label {
-        color:  var(--ion-color-text-2);
+        color:  var(--ion-color-dark);
         font-size: 13px;
         font-weight: 500;
         line-height: 18px;
       }
   
       ion-text {
-        color:  #4B5565;
+        color:  var(--ion-light-gray);
         font-size: 11px;
         line-height: 16px;
         /* 145.455% */
@@ -92,7 +92,7 @@ div#pools-wrapper{
   
       .commission, .exchange-rate {
         padding-inline-start: 24px;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         font-size: 13px;
         line-height: 18px;
         /* 138.462% */
@@ -105,8 +105,8 @@ div#pools-wrapper{
   
       ion-chip {
         border-radius: var(--radius-full, 1000px);
-        border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #E3E8EF);
-        background: var(--Component-colors-Utility-Gray-utility-gray-50, #F8FAFC);
+        border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, var(--ion-color-border));
+        background: var(--Component-colors-Utility-Gray-utility-gray-50, var(--ion-background-color));
         color: var(--Component-colors-Utility-Gray-utility-gray-700, var(--ion-color-dark));
         text-align: center;
         font-size: 12px;
@@ -122,13 +122,13 @@ div#pools-wrapper{
 }
 #delegate-calc {
     border-radius:  8px;
-    border: 1px solid  #E3E8EF;
-    background:  #F8FAFC;
+    border: 1px solid  var(--ion-color-border);
+    background:  var(--ion-background-color);
     padding: 16px;
     font-size: 12px;
     line-height: 20px;
     text-transform: capitalize;
-    color:  #101828;
+    color:  var(--ion-color-dark);
     .delegate{
         font-weight: 400;
         display: flex;

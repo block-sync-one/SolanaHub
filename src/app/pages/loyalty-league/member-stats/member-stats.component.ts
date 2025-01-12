@@ -75,8 +75,8 @@ export class MemberStatsComponent implements OnChanges {
   public member$: Observable<loyaltyLeagueMember> = this._loyaltyLeagueService.member$.pipe(
 
     map(member => {
-      console.log(member, Object.keys(member.hubSOLBreakdown).length > 0);
-      
+      console.log(member);
+      if(member.hubSOLBreakdown){
        member.hubSOLBreakdown = Object.entries(member.hubSOLBreakdown)
         .filter(([_, value]) => Number(value) >= 0.001)
         .reduce((acc, [key, value]) => ({
@@ -88,7 +88,7 @@ export class MemberStatsComponent implements OnChanges {
       if(Object.keys(member.hubSOLBreakdown).length > 0){
      this.pointCategories.push({title: 'Snapshot', key:'hubSOLBreakdown', tooltip: 'Your current hubSOL holding according to last snapshot.'})
       }
-
+      }
       return member
     }),
     shareReplay(1),

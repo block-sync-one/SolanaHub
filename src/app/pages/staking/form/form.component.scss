@@ -1,7 +1,7 @@
 :host{
     border-radius: 12px 0 0 12px;
     display: block;
-    background-color:var(--ion-color-menu)
+    background-color:var(--ion-color-light);
 }
 
 #stake-intro {
@@ -18,7 +18,7 @@
     }
 
     #desc {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 400;
     }
@@ -26,7 +26,7 @@
 
 .light-title {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
     line-height: 18px;
@@ -45,7 +45,7 @@
 
 
     #wallet-info {
-        color: var(--ion-color-medium);
+        color: var(--ion-color-dark);
         text-align: right;
         font-family: Inter;
         font-size: 12px;
@@ -63,7 +63,7 @@
 
         ion-button {
          
-            color: var(--ion-color-medium);
+            color: var(--ion-color-dark);
             text-align: center;
             font-size: 10px;
             font-weight: 600;
@@ -74,7 +74,7 @@
             --padding-start: 6px;
             --padding-end: 6px;
             --padding-top: 0px;
-            border: 1px solid var(--ion-color-border);
+            border: 1px solid  var(--ion-color-border);
             border-radius: 6px;
             height: 18px;
             margin: 0;
@@ -91,8 +91,8 @@
 
 #input-control {
     border-radius: 12px;
-    border: 1px solid #E3E8EF;
-    background: var(--ion-color-menu);
+    border: 1px solid var(--ion-color-border);
+    background: var(--ion-color-light);;
     text-align: center;
     padding: 24px;
 
@@ -123,7 +123,7 @@
 
     div {
         margin-top: 4px;
-        color: #4B5565;
+        color: var(--ion-light-gray);
         text-align: center;
         font-size: 13px;
         line-height: 18px;
@@ -134,7 +134,7 @@
 
 
 .type-desc {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     font-size: 12px;
     font-weight: 400;
     line-height: 130%;

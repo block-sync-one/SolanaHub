@@ -1,6 +1,6 @@
 #app-settings{
     padding: 3.5% 0;
-    background: var(--ion-color-menu);
+    background: var(--ion-color-light);;
 }
 .config-padding{
     padding: 0 3.5%;
@@ -26,7 +26,7 @@
 }
 .sub {
     text-transform: capitalize;
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
     text-overflow: ellipsis;
     font-size: 13px;
     font-style: normal;

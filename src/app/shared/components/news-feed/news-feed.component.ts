@@ -25,13 +25,19 @@ export class NewsFeedComponent implements OnInit {
    }
 
   mainFeed = {
-    title: "Stash page alive",
-    type: "promotion",
-    color: "active",
-    image: "https://pbs.twimg.com/media/Ge7aUTBXUAAOB8W?format=jpg&name=medium",
-    description: `Extract your SOL in 1 click <a href='/stash'>get it a try</a>`
+    title: "DARK MODE ON",
+    type: "feature",
+    color: "secondary",
+    image: "/assets/images/dm-intro.png",
+    description: `DARK MODE ON.<br/> You can now switch to dark mode via settings box`
   }
   feed = [
+    {
+      title: "Stash page alive",
+      type: "promotion",
+      color: "active",
+      description: `Extract your SOL in 1 click <a href='/stash'>get it a try</a>`
+    },
     {
       title: "hubSOL on kamino",
       description: "hubSOL now available on Kamino multiply and lending product",
@@ -51,13 +57,6 @@ export class NewsFeedComponent implements OnInit {
       description: "Priority fees are now automatically adjusted to your transactions base on network congestion",
       type: "feature",
       color: "secondary",
-      image: "assets/images/news-feed/news-1.png"
-    },
-    {
-      title: "Loyalty league Points update",
-      description: "Our points system is now static and updated once per day",
-      type: "informative",
-      color: "focus",
       image: "assets/images/news-feed/news-1.png"
     },
     

@@ -27,8 +27,8 @@
 
 
 .nft-body {
-    border-top: 1px solid var(--Colors-Border-border-secondary, #E3E8EF);
-    background: var(--ion-color-light);
+    border-top: 1px solid  var(--ion-color-border);
+    background: var(--ion-color-light);;
     padding: 12px;
     div {
         display: flex;
@@ -49,7 +49,7 @@ ion-text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: var(--ion-color-text-2);
+    color: var(--ion-color-dark);
     font-size: 14px;
     font-weight: 600;
     margin-block-end: 8px;
@@ -62,8 +62,8 @@ ion-text {
     padding: 4px;
     border-radius: 6px;
     color: var(--ion-color-dark);
-    border: 1px solid #E3E8EF;
-    background: #F8FAFC;
+    border: 1px solid  var(--ion-color-border);
+    background: var(--ion-background-color);
     height: 20px;
     font-size: 11px;
     font-weight: 500;
@@ -71,5 +71,5 @@ ion-text {
 
 }
 ion-icon {
-    color: var(--ion-color-medium);
+    color: var(--ion-color-dark);
 }

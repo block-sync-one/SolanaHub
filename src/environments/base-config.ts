@@ -4,11 +4,6 @@ export const getBaseConfig = (): BaseConfig => {
   return {
     platformFeeCollector:'HUBpmKPsZaXWCDoWh1SScYMneVSQJve99NamntdsEovP',
     rpcs: [
-      // {
-      //   name: "QuickNode",
-      //   imageURL: "../assets/images/quicknode-icon.png",
-      //   value: "https://evocative-aged-wish.solana-mainnet.discover.quiknode.pro"
-      // },
       {
         name: 'Helius',
         imageURL: '../assets/images/helius-icon.png',
@@ -48,11 +43,13 @@ export const getBaseConfig = (): BaseConfig => {
       {
         name: 'Light',
         imageURL: '../assets/images/sun-icon.svg',
+        icon: 'sunny-outline',
         value: 'light'
       },
       {
         name: 'Dark',
         imageURL: '../assets/images/moon-icon.svg',
+        icon: 'moon-outline',
         value: 'dark'
       }
     ]

@@ -4,13 +4,13 @@
 }
 .divider{
   height: 1px;
-  background-color:#E3E8EF;
+  background-color:--ion-color-border;
 }
 #afr-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--ion-color-medium);
+  color: var(--ion-color-dark);
   font-size: 13px;
 }
 #afr-header-title{
@@ -34,7 +34,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: var(--ion-color-medium);
+  color: var(--ion-color-dark);
   font-size: 13px;
   line-height: 18px;
 }
@@ -60,7 +60,7 @@
   align-items: center;
   background: 
     radial-gradient(closest-side, white 70%, transparent 70% 100%),
-    conic-gradient(var(--ion-color-secondary) calc(var(--progress-value) * 1%), #f5f2f9 0);
+    conic-gradient(var(--ion-color-primary) calc(var(--progress-value) * 1%), #f5f2f9 0);
   position: relative;
   animation: progress .5s ease-out forwards;
 }
@@ -72,5 +72,5 @@
 .progress-value {
   position: absolute;
   font-size: 12px;
-  color: var(--ion-color-medium);
+  color: var(--ion-color-dark);
 }
