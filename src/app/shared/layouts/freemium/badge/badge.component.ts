@@ -3,7 +3,7 @@ import { ModalController } from '@ionic/angular';
 import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
 import { FreemiumService } from '../freemium.service';
 import { addIcons } from 'ionicons';
-import { starOutline } from 'ionicons/icons';
+import { flash } from 'ionicons/icons';
 
 @Component({
   selector: 'freemium-badge',
@@ -16,7 +16,7 @@ export class BadgeComponent {
   public isPremium = this._freemiumService.isPremium;
 
   constructor() {
-    addIcons({starOutline})
+    addIcons({ flash })
    }
 
   async openFreemiumAccessPopup(){
