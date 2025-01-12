@@ -2,6 +2,7 @@
   position: relative;
   text-align: center;
   padding-top: 0;
+  color: var(--ion-color-dark);
 }
 
 .plan-container {
@@ -22,7 +23,7 @@
 .modal-description {
   font-size: 13px;
   margin-bottom: 1rem;
-  color: #4B5565;
+  color: var(--ion-color-dark);
 }
 
 .divider {
@@ -63,6 +64,7 @@
   gap: 1.5rem;
   padding-block: 1.5rem;
   margin-block: 1.5rem;
+  color: var(--ion-color-dark);
 
   &__hubSol {
     font-size: 2rem;
