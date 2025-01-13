@@ -20,7 +20,7 @@ import {
 const { struct, u32, u8 } = require('@solana/buffer-layout');
 import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
-import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
+import { Stake, Stake2, StakeAccountShyft, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
 
 @Injectable({
@@ -147,7 +147,17 @@ export class NativeStakeService {
     // }
     return null
   }
+public async getNativeStakeAccounts(walletAddress: string): Promise<Stake2[]> {
 
+    try {
+      return await (await fetch(`${this._utils.serverlessAPI}/api/portfolio/nativeStakeAccounts?address=${walletAddress}`)).json()
+    } catch (error) {
+      console.error(error);
+
+      return []
+    }
+  
+}
   public async deactivateStakeAccount(stakeAccountAddress: string, walletOwner: WalletExtended): Promise<string> {
     try {
       const deactivateTx: Transaction = StakeProgram.deactivate({

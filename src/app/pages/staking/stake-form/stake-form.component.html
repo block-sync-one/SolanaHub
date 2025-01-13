@@ -1,6 +1,7 @@
+<div id="stake-container">
 <div id="stake-form">
   <div id="segment-stake-wrapper">
-    <ion-segment value="stake" mode="ios">
+    <ion-segment value="stake" mode="ios" #segmentedView>
       <ion-segment-button value="stake">
         <ion-label>Stake
           <chip color="primary" name="7% APY" />
@@ -11,20 +12,32 @@
       </ion-segment-button>
     </ion-segment>
   </div>
-  <ion-segment-view>
-    <ion-segment-content id="stake">
+  @if(segmentedView.value === 'stake') {
       <div id="convert-to-hubSOL-wrapper">
         @if(true) {
         <convert-to-hub-sol-box />
         }
       </div>
-      <div id="stake-form-wrapper">
-        stake
-      </div>
-    </ion-segment-content>
-    <ion-segment-content id="unstake">
+      <form [formGroup]="stakeForm" id="stake-form-wrapper">
+        <!-- <stake-input 
+        [assetControl]="stakeForm.controls['asset']"
+        [amountControl]="stakeForm.controls['amount']"
+        [stakeAbleAssets]="stakeAbleAssets"
+        /> -->
+      </form>
+  }
+  @if(segmentedView.value === 'unstake') {
+    <form [formGroup]="unstakeForm" id="unstake-form-wrapper">
       unstake
-    </ion-segment-content>
-  </ion-segment-view>
+    </form>
+  }
 </div>
-  
+  <div id="validator-insights">
+    <div class="insight-item">
+      <ion-img src="assets/images/staking-check-icon.svg" /> MEV Bonus
+    </div>
+    <div class="insight-item">
+      <ion-img src="assets/images/staking-check-icon.svg" /> Paladin - sandwich Protection validator
+    </div>
+  </div>
+</div>

@@ -1,0 +1,33 @@
+<input-label 
+[label]="readonly ? 'Receive' : 'Stake'"
+ [showBtns]="!readonly" 
+ (onSetSize)="valueChange($event)" 
+[asset]="assetControl.value" />
+<div class="token-input">
+  <ion-button fill="clear" class="token-select" (click)="openTokensModal()">
+    <div>
+      <ion-img [src]="assetControl?.logoURI" />
+    </div>
+    {{assetControl?.symbol}}
+    <div>
+      <ion-icon name="chevron-down-outline" />
+    </div>
+  </ion-button>
+  <ion-input 
+  (ionInput)="valueChange($event)"
+  [readonly]="readonly" 
+  inputmode="decimal" 
+  [value]="visibleValue() | number: '1.0-7'"
+  [class.readonly]="readonly"
+    class="currency-amount" />
+  @if(amountControl?.value || outValue){
+    <small>{{tokenPrice() * visibleValue() | currency}}</small>
+  }
+  @if(waitForBestRoute()){
+    <ion-skeleton-text animated />
+    }
+</div>
+@if(readonly){
+
+  <div class="ion-margin-bottom"></div>
+}

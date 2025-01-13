@@ -284,7 +284,6 @@ export class PortfolioService {
 
   private async fetchPortfolioData(walletAddress: string, fetchType: FetchType = 'full') {
     const response: any  = await this._httpFetchService.get(`/api/portfolio/holdings?address=${walletAddress}&fetchType=${fetchType}`);
-    console.log(response);
     // data.elements = data.elements.filter(e => e?.platformId !== WalletDataKeys.NFTs);
     return response;
   }

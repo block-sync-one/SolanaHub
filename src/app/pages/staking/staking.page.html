@@ -1,48 +1,41 @@
-
 <ion-content [fullscreen]="true">
-  <page-header
-  title="staking"
-  description="Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous source of passive income"
-  >
+  <page-header title="staking"
+    description="Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous source of passive income">
 
-  <ion-row id="stat-wrapper" class="ion-justify-content-between ion-margin-top">
-    @for (stat of validatorData; track $index) {
-    <ion-col size="5.5" sizeLg="3.5" class="staking-stat">
-      <div class="stat-title">{{stat.title}}</div>
-      <div class="stat-desc">
+    <ion-row id="stat-wrapper" class="ion-justify-content-between ion-margin-top">
+      @for (stat of validatorData; track $index) {
+      <ion-col size="5.5" sizeLg="3.5" class="staking-stat">
+        <div class="stat-title">{{stat.title}}</div>
+        <div class="stat-desc">
 
-        {{stat.desc()}}
-        
-        @if (stat.desc() === null) {
-        <ion-skeleton-text [animated]="true" />
-        }
-      </div>
+          {{stat.desc()}}
 
-    </ion-col>
-    }
+          @if (stat.desc() === null) {
+          <ion-skeleton-text [animated]="true" />
+          }
+        </div>
 
-  </ion-row>
+      </ion-col>
+      }
+
+    </ion-row>
   </page-header>
 
-  
+
   <ion-grid>
 
-  
+
 
 
 
     <div>
 
-      <ion-row id="stake-box">
-    <stake-form />
-        <!-- <ion-col size="12" sizeXl="8">
-          <stake-form [stakePools]="stakePools" />
-        </ion-col>
-        <ion-col size="12" sizeXl="4">
-          <stake-positions [stakePools]="stakePools"/>
-        </ion-col> -->
+      <ion-row class="ion-justify-content-center">
+        <stake-form />
       </ion-row>
-
+      <ion-row class="ion-justify-content-center">
+        <stake-positions />
+      </ion-row>
     </div>
   </ion-grid>
 </ion-content>

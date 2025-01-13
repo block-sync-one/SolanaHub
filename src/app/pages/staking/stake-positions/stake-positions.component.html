@@ -1,3 +1,56 @@
-<p>
-  stake-positions works!
-</p>
+<div id="positions-container">
+  @if((positions$ | async) === null){
+    <div class="group-container">
+      <div class="group-header">
+        <div class="group-header-left">
+          <div class="group-title"><ion-skeleton-text style="width: 100px;" animated /></div>
+          <div class="group-subtitle"><ion-skeleton-text style="width: 300px;" animated /></div>
+        </div>
+        <div class="group-header-right">
+          <div class="group-item">
+            <div class="group-item-title">total value</div>
+            <div class="group-item-value"><ion-skeleton-text style="width: 100px;" animated /></div>
+          </div>
+        </div>
+      </div>
+      <position [stake]="" />
+      <position [stake]="" />
+      <position [stake]="" />
+    </div>
+  }@else{
+
+  @for (group of positions$ | async; track $index) {
+  <div class="group-container">
+    <div class="group-header">
+      <div class="group-header-left">
+        <div class="group-title">{{group.state}} <chip [name]="group.positions.length"/></div>
+        <div class="group-subtitle">{{group.description}}</div>
+      </div>
+      <div class="group-header-right">
+        <div class="group-item">
+          <div class="group-item-title">total value</div>
+          <div class="group-item-value">{{group.totalValue | currency}}</div>
+        </div>
+        @if(group.state === 'active'){
+        <div class="group-item">
+          <div class="group-item-title">avg APY</div>
+          <div class="group-item-value">{{group.avgAPY}}%</div>
+        </div>
+        }
+      </div>
+    </div>
+    
+    @for (position of group.positions; track $index) {
+      <position [stake]="position" />
+    }
+  </div>
+  }@empty {
+
+  <div class="no-positions">
+    No positions found
+  </div>
+
+  }
+  }
+
+</div>

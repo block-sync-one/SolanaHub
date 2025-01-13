@@ -30,7 +30,7 @@ export class HelpersService {
         const { publicKey } = this.shs.getCurrentWallet()
         try {
             // const onlyEmptyAccounts = true
-            const unknownAssets = await (await fetch(`${this.utils.serverlessAPI}/api/stash/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
+            const unknownAssets = await (await fetch(`${this.utils.serverlessAPI}/api/portfolio/get-assets?walletAddress=${publicKey.toBase58()}`)).json()
             // remove token with no symbol
             // const unknownAssetsFiltered = unknownAssets.filter(acc => acc.symbol !== '')
             this.dasAssets.set(unknownAssets)

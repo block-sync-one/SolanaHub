@@ -41,6 +41,21 @@ export interface StakeAccountShyft{
     }
     pubkey: string
   }
+  export interface Stake2{
+    amount: number
+    role: Array<string>
+    status: string
+    type: string
+    voter: string
+    deactivationEpoch: number
+    active_stake_amount: number
+    delegated_stake_amount: number
+    sol_balance: number
+    total_reward: string
+    stake_account: string
+    activation_epoch: number
+    stake_type: number
+  }
   
 export interface DirectStake {
 

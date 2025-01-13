@@ -1,0 +1,19 @@
+<svg width="17" height="18" viewBox="0 0 17 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Check icon">
+<rect x="0.5" y="1" width="16" height="16" rx="8" fill="#F3F4F6"/>
+<rect x="0.5" y="1" width="16" height="16" rx="8" stroke="url(#paint0_linear_4431_17982)"/>
+<path id="Icon" fill-rule="evenodd" clip-rule="evenodd" d="M11.8967 5.92327C11.8967 5.9254 11.8958 5.92745 11.8943 5.92893L8.45715 9.24605C7.72384 9.95376 6.5531 9.924 5.85669 9.17994C5.62336 8.95994 5.25669 8.94661 4.99003 9.13328C4.73003 9.32661 4.65669 9.66661 4.81669 9.93994L6.31669 12.3799C6.46336 12.6066 6.71669 12.7466 7.00336 12.7466C7.27669 12.7466 7.53669 12.6066 7.68336 12.3799C7.90404 12.0918 11.7942 7.45215 12.419 6.70718C12.4771 6.63795 12.5378 6.57594 12.5924 6.50388C13.0215 5.93669 12.3521 5.48119 11.8991 5.91758C11.8976 5.91905 11.8967 5.92114 11.8967 5.92327Z" fill="url(#paint1_linear_4431_17982)"/>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4431_17982" x1="0.500101" y1="16.9999" x2="19.7669" y2="7.97216" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF50C8"/>
+<stop offset="1" stop-color="#7100FF"/>
+<stop offset="1" stop-color="#8E00FF"/>
+</linearGradient>
+<linearGradient id="paint1_linear_4431_17982" x1="4.73247" y1="12.7466" x2="13.863" y2="7.86057" gradientUnits="userSpaceOnUse">
+<stop stop-color="#FF50C8"/>
+<stop offset="1" stop-color="#7100FF"/>
+<stop offset="1" stop-color="#8E00FF"/>
+</linearGradient>
+</defs>
+</svg>

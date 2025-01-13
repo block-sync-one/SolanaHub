@@ -62,18 +62,10 @@ export class SolanaHelpersService {
     return this._walletExtended$.value
   }
 
-  private featureValidator(validators: Validator[], vote_identity: string, position?: number) {
-    let index = validators.findIndex(obj => obj.vote_identity === vote_identity);
-    if (index !== -1) {
-      let removedObject = validators.splice(index, 1)[0];
-      validators.splice(1, 0, removedObject);
-    }
-    return validators
-  }
+
   private _validatorsList: Validator[] =  []
   
   public async getValidatorsList(): Promise<Validator[]> {
-    this.featureValidator(this._validatorsList, 'B1w6SZcyvjyp6zEyStcc8u9AxXAh2AbYvNzMmP9rRKE9')
     if (this._validatorsList.length > 0) {
 
 
@@ -116,6 +108,7 @@ export class SolanaHelpersService {
       return []
     }
   }
+
   // public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
   //   pubkey: PublicKey;
   //   account: AccountInfo<Buffer | ParsedAccountData | any>;

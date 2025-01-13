@@ -1,10 +1,9 @@
-:host {
-    display: flex;
-    justify-content: center;
-    width: 100%;
+:host{
+        max-width: 100%;
 }
-
 #stake-form {
+    width: 542px;
+    max-width: 100%;
     padding: 16px 16px 8px 16px;
     border: 1px solid var(--ion-color-border);
     background-color: var(--ion-color-light);
@@ -12,6 +11,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 16px;
 }
 
 ion-segment {
@@ -34,5 +34,29 @@ ion-segment-button {
         font-size: 13px;
         font-weight: 600;
         line-height: 18px;
+    }
+}
+
+#validator-insights {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    margin-bottom: 16px;
+    ion-img {
+        width: 16px;
+        height: 16px;
+    }
+
+    .insight-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: var(--ion-color-dark);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 18px;
+        text-transform: capitalize;
     }
 }

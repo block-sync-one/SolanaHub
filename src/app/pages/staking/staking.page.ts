@@ -15,13 +15,15 @@ import {
   IonContent,
   IonIcon
 } from '@ionic/angular/standalone';
-import { JupStoreService, NativeStakeService,  UtilService } from 'src/app/services';
+import { JupStoreService, NativeStakeService,  SolanaHelpersService,  UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { StakeFormComponent } from './stake-form/stake-form.component';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 
 import { addIcons } from 'ionicons';
 import { gitBranchOutline, hourglassOutline, leafOutline, statsChartOutline } from 'ionicons/icons';
+import { StakeService } from './stake.service';
+import { StakePositionsComponent } from './stake-positions/stake-positions.component';
 
 interface ValidatorDataItem {
   title: string;
@@ -41,7 +43,8 @@ interface ValidatorDataItem {
     IonCol,
     IonContent,
     IonSkeletonText,
-    StakeFormComponent
+    StakeFormComponent,
+    StakePositionsComponent
   ]
 })
 export class StakingPage implements OnInit {
@@ -64,7 +67,9 @@ export class StakingPage implements OnInit {
     private _util: UtilService,
     private _jupStore: JupStoreService,
     private _lss: LiquidStakeService,
-    private _nst: NativeStakeService
+    private _nst: NativeStakeService,
+    private _stakeService: StakeService,
+    private _shs: SolanaHelpersService
   ) {
     addIcons({
       gitBranchOutline,
@@ -77,9 +82,9 @@ export class StakingPage implements OnInit {
   public stakePools = signal([])
 
   ngOnInit() {
+    const {publicKey} = this._shs.getCurrentWallet();
+    this._stakeService.updateStakePositions(publicKey.toBase58());
     this._nst.getSolanaHubValidatorInfo().then(info => {
-      console.log(info);
-      
       this.validatorData[1].desc.set(
         this._util.formatBigNumbers(info.activated_stake) + ' SOL'
       );

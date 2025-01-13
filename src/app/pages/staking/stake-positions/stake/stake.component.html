@@ -1,0 +1,82 @@
+<div class="stake-card">
+  <div class="stake-info">
+    <div class="validator-profile">
+      @if(stake){
+        
+      <ion-img [src]="getLogoURI(stake)" />
+      }@else{
+      <ion-skeleton-text animated />
+      }
+      @if(stake?.type === 'native'){
+      <ion-icon name="lock-closed-outline" class="account-type"></ion-icon>
+      }
+      @if(stake?.type === 'liquid'){
+        <ion-icon name="water-outline" class="account-type"></ion-icon>
+        }
+
+
+
+    </div>
+
+     <span>
+      
+      <div>
+      @if(stake){
+
+       
+      <div class="validator-info">
+        <div class="validator-name">
+           
+              {{getStakeName(stake)}}
+            
+        </div>
+      </div>
+      }@else{
+        <ion-skeleton-text style="width: 150px;" animated />
+        }
+
+ 
+          <div class="account-address">
+           
+
+                {{getAccountShortAddress(stake)}}
+                <ion-icon appCopyText [copyText]="stake?.address" name="copy-outline" />
+            </div>
+          
+         
+        </div>
+
+    </span>
+  </div>
+  <div class="stake-details">
+    
+      @if(stake?.state === 'active'){
+
+        @if(stake){
+            <chip class="stake-apy" color="primary" [name]="'APY ' + getStakeApy(stake) + '%'"/>
+          }@else{
+            <ion-skeleton-text style="width: 30px;" animated />
+          }
+
+      }
+
+      <div class="account-value">
+
+        @if(stake){
+  
+        <div class="sol-amount">{{stake?.balance >  0.001  ? stake?.balance.toFixedNoRounding(3) :  '> 0.001'}} {{stake.symbol}}</div>
+        <div class="usd-value">{{stake?.balance * solPrice() * stake.exchangeRate | currency}}</div>
+        }@else{
+        <ion-skeleton-text animated />
+        }
+  
+      </div>
+      <ion-icon name="sparkles-outline"></ion-icon>
+      <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"></ion-icon>
+  
+    
+  </div> 
+</div>
+
+
+

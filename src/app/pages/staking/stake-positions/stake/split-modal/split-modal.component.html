@@ -1,0 +1,30 @@
+<div id="split-stake-account">
+  <ion-label>from target account</ion-label>
+  <stake-position [stake]="stake"/>
+
+  <div id="input-control">
+    <div>
+      <ion-label>Amount to split</ion-label>
+      <div id="balance">
+        <span id="balance-label">Balance</span>
+        <span>{{stake.balance | number: '1.3'}} SOL</span>
+      </div>
+    </div>
+    <ion-input (ionInput)="setAmount($event)" type="number"/>
+  </div>
+  <div id="splitting-summary">
+    <ion-label>splitting summary</ion-label>
+    <div id="splitting-calc">
+      <div style=" margin-block-end: 8px;" class="account">
+        <div class="account-id">account 1</div>
+        <div class="account-address">{{stake.shortAddress}}</div>
+        <div class="account-value">{{stake.balance - amount | number: '1.3'}} SOL</div>
+      </div>
+      <div class="account">
+        <div class="account-id">account 2</div>
+        <div class="account-address">{{utils.addrUtil(newStakeAccount.publicKey.toBase58()).addrShort}}</div>
+        <div class="account-value">{{amount || 0 | number: '1.3'}} SOL</div>
+      </div>
+    </div>
+  </div>
+</div>
