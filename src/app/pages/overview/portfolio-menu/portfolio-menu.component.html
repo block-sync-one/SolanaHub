@@ -17,10 +17,10 @@
     }
   </div>
   @for (wallet of walletsPortfolio(); let i = $index; track i) {
-  <portfolio-box 
-  [isPrimary]="wallet.walletAddress === connectedWalletAddress" 
-  [wallet]="wallet" 
-  (delete)="delete($event)" 
+  <portfolio-box
+  [isPrimary]="wallet.walletAddress === connectedWalletAddress"
+  [wallet]="wallet"
+  (delete)="delete($event)"
   (toggle)="toggle($event)"
    (update)="openPortfolioSetup($event)"
    (reload)="reload($event)" />

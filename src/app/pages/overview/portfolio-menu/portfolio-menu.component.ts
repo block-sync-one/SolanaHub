@@ -1,12 +1,12 @@
-import { Component, computed, effect, inject } from '@angular/core';
-import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
-import { IonButton, IonIcon, IonImg, IonInput, IonLabel, IonRippleEffect, IonText, IonSpinner, IonSkeletonText } from "@ionic/angular/standalone";
+import { Component, computed, inject } from '@angular/core';
+import { IonIcon} from "@ionic/angular/standalone";
+import { ModalController, PopoverController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addOutline } from 'ionicons/icons';
-import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from 'src/app/services';
-import { PopoverController } from '@ionic/angular';
-import { JsonPipe } from '@angular/common';
+import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from '@app/services';
+import { FreemiumService, PopupPlanComponent } from "@app/shared/layouts/freemium";
 import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-popup.component";
+import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
 
 @Component({
   selector: 'portfolio-menu',
@@ -20,18 +20,21 @@ import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-
 })
 export class PortfolioMenuComponent {
   protected readonly spinnerState = inject(WalletBoxSpinnerService).spinner;
+
   constructor(
     private _portfolioService: PortfolioService,
     private _popover: PopoverController,
     private _utils: UtilService,
-    private _shs: SolanaHelpersService
+    private _shs: SolanaHelpersService,
+    private _freemiumService: FreemiumService,
+    private _modalCtrl: ModalController
   ) {
     addIcons({ addOutline });
   }
 
   protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
   public canAddWallet = computed(() => this.walletsPortfolio().length < this._portfolioService.MAX_LINKED_WALLETS);
-  public connectedWalletAddress =  this._shs?.getCurrentWallet()?.publicKey?.toBase58()
+  public connectedWalletAddress = this._shs?.getCurrentWallet()?.publicKey?.toBase58()
   public walletsPortfolio = computed(() =>
     this._portfolioService.portfolio().map(
       ({ walletAddress, portfolio }) => ({
@@ -48,10 +51,26 @@ export class PortfolioMenuComponent {
     })
   )
 
-  async openPortfolioSetup(walletAddress?: string) {
+  openPortfolioSetup(walletAddress?: string) {
     if (this.walletBoxSpinnerService.spinner())
       return;
 
+    if (this._freemiumService.isPremium()) {
+      this.openAddPortfolioPopup(walletAddress);
+    } else {
+      this.openFreemiumAccessPopup();
+    }
+  }
+
+  async openFreemiumAccessPopup() {
+    const modal = await this._modalCtrl.create({
+      component: PopupPlanComponent,
+      cssClass: 'freemium-popup'
+    });
+    modal.present();
+  }
+
+  async openAddPortfolioPopup(walletAddress?: string) {
     const modal = await this._popover.create({
       component: AddPortfolioPopupComponent,
       mode: 'ios',
@@ -62,14 +81,14 @@ export class PortfolioMenuComponent {
       }
     });
     await modal.present();
-    const { data } = await modal.onDidDismiss()
+    const {data} = await modal.onDidDismiss()
     if (data?.address) {
       // walletAddress present, delete the old one and fetch the new one
       if (walletAddress) {
         this.delete(walletAddress)
       }
       console.log('data', data);
-      this._portfolioService.syncPortfolios(data.address,null, data?.nickname);
+      this._portfolioService.syncPortfolios(data.address, null, data?.nickname);
       this._portfolioService.updateLinkedWallets({address: data.address, nickname: data?.nickname})
     }
   }
