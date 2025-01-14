@@ -1,49 +1,63 @@
 .ripple-parent {
-    position: relative;
-    overflow: hidden;
-    border-radius: 1px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1px;
 }
+
 .badge {
-    cursor: pointer;
-    padding: 1px 7px 2px;
-    border-radius:  9999px;/*
-    border: 1px solid var(--ion-color-border);
-    background: var(--ion-background-color);*/
+  cursor: pointer;
+  padding: 1px 7px 2px;
+  border-radius: 9999px;
+  /*
+      border: 1px solid var(--ion-color-border);
+      background: var(--ion-background-color);*/
 
   border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
   background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
 
   text-align: center;
-    font-size: 11px;
-    text-transform: capitalize;
-    font-weight: 500;
-    width: fit-content;
-    color: var(--ion-color-light-contrast);
-    &.primary {
-        border: 1px solid #FDD1EE;
-        background: var(--ion-color-primary-bg);
-        color: var(--ion-color-primary);
-    }
-    &.secondary {
-        border: 1px solid  var(--ion-color-primary);
-        background: #f5f2f9;
-        color: var(--ion-color-primary);
-    }
-    &.active {
+  font-size: 11px;
+  text-transform: capitalize;
+  font-weight: 500;
+  width: fit-content;
+  color: var(--ion-color-light-contrast);
 
-        border: 1px solid #ABEFC6;
-        background: #ECFDF3;
-        color: var(--ion-color-success);
+  &.pro {
+    background-image: linear-gradient(64.89deg, #FF50C8 0%, #7100FF 100%, #8E00FF 100%);
+    background-clip: text;
+    color: transparent;
+    font-size: 1rem;
+    font-weight: 600;
+  }
 
-    }
-    &.focus {
-        border: 1px solid var(--Component-colors-Utility-Blue-utility-blue-200, #B2DDFF);
-        background: var(--Component-colors-Utility-Blue-utility-blue-50, #EFF8FF);
-        color: #175CD3;
-    }
-    &.danger {
-        border: 1px solid var(--Component-colors-Utility-Red-utility-red-200, #FECDCA);
-        background: var(--Component-colors-Utility-Red-utility-red-50, #FEF3F2);
-        color: #B42318;
-    }
+  &.primary {
+    border: 1px solid #FDD1EE;
+    background: var(--ion-color-primary-bg);
+    color: var(--ion-color-primary);
+  }
+
+  &.secondary {
+    border: 1px solid var(--ion-color-primary);
+    background: #f5f2f9;
+    color: var(--ion-color-primary);
+  }
+
+  &.active {
+    border: 1px solid #ABEFC6;
+    background: #ECFDF3;
+    color: var(--ion-color-success);
+
+  }
+
+  &.focus {
+    border: 1px solid var(--Component-colors-Utility-Blue-utility-blue-200, #B2DDFF);
+    background: var(--Component-colors-Utility-Blue-utility-blue-50, #EFF8FF);
+    color: #175CD3;
+  }
+
+  &.danger {
+    border: 1px solid var(--Component-colors-Utility-Red-utility-red-200, #FECDCA);
+    background: var(--Component-colors-Utility-Red-utility-red-50, #FEF3F2);
+    color: #B42318;
+  }
 }

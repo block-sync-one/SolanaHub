@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
+import {Router} from "@angular/router";
 import { ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { checkmarkOutline, closeOutline } from 'ionicons/icons';
-import { FreemiumService } from "../freemium.service";
-import {Router} from "@angular/router";
-import {RoutingPath} from "../../../constants";
+import { FreemiumService } from "@app/shared/layouts/freemium";
+import { RoutingPath } from "@app/shared/constants";
+import { UtilService } from "@app/services";
 
 @Component({
   selector: 'freemium-popup-plan',
@@ -13,6 +14,7 @@ import {RoutingPath} from "../../../constants";
 })
 export class PopupPlanComponent  {
   public stake = inject(FreemiumService).stake;
+  public utils = inject(UtilService);
   private _modalCtrl= inject(ModalController);
   private _router= inject(Router);
 
