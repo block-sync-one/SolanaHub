@@ -76,9 +76,7 @@ export class SolanaHelpersService {
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
-        validatorsList = result.sort((x, y) => { return x.vote_identity === this.SolanaHubVoteKey ? -1 : y.vote_identity === this.SolanaHubVoteKey ? 1 : 0; });
-
-        validatorsList[0].total_apy = (validatorsList[0].total_apy * (1)).toFixedNoRounding(2)
+        validatorsList = result
       } catch (error) {
         console.error(error);
       }
@@ -165,7 +163,8 @@ export class SolanaHelpersService {
         const { remaining_seconds, elapsed_seconds, duration_seconds } = data
         const days = Math.floor(remaining_seconds / 86400);
         const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
-        data.ETA = `ETA ${days} Days and ${hours} Hours`
+        const minutes = Math.floor(remaining_seconds / 60) - (days * 1440) - (hours * 60);
+        data.ETA = `ETA ${days}d ${hours}h ${minutes}m`
         data.timepassInPercentgae = elapsed_seconds / duration_seconds
         return data
       }),

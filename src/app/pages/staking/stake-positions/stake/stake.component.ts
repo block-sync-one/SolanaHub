@@ -82,8 +82,6 @@ getStakeName(stake: any): string {
 }
 
 getAccountShortAddress(stake: any): string {
-  console.log(stake);
-  
   return this._utilService.addrUtil(stake.address).addrShort;
 }
 getStakeApy(stake: any): number {

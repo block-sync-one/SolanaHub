@@ -27,27 +27,7 @@
     }
  
     
-    
-    
-    <!-- @if(stake.state === 'active'){
-      <ion-button (click)="openModal('instant-unstake-modal')" expand="block" fill="clear">
-        <div class="ion-text-left">
-          <ion-icon name="flash"></ion-icon>
-          Instant UnStake
-        </div>
-      </ion-button>
-    } -->
-    @if(stake.state === 'active'){
-      
-      <ion-button (click)="openModal('delegate-lst-modal')" expand="block" fill="clear">
-        <div class="ion-text-left">
-          <span>
-            <ion-icon name="water"></ion-icon>
-          </span>
-          delegate to liquid stake 
-        </div>
-      </ion-button>
-    }
+
     <ion-button (click)="openModal('merge-modal')" expand="block" fill="clear">
       <div class="ion-text-left">
         <span>
@@ -72,30 +52,5 @@
         transfer account Authority
       </div>
     </ion-button>
-  }@else {
-    <!-- <ion-button [routerLink]="'/swap/'+stake.symbol+'-SOL'" expand="block" fill="clear">
-      <div class="ion-text-left">
-        <ion-icon name="swap-vertical"></ion-icon>
-        Immediately swap for SOL
-      </div>
-    </ion-button> -->
-    @if(stake.pool.poolName != 'marinade'){
-
-      <ion-button (click)="openModal('unstake-lst-modal')" expand="block" fill="clear">
-        <div class="ion-text-left">
-          <ion-icon name="arrow-up"></ion-icon>
-          unstake
-        </div>
-      </ion-button>
-    }
-    @if(stake.pool.poolName.toLowerCase() == 'the vault'){
-
-      <ion-button (click)="setDirectStakevSOL()"  expand="block" fill="clear">
-        <div class="ion-text-left">
-          <ion-icon name="navigate-outline"></ion-icon>
-          set direct stake validator
-        </div>
-      </ion-button>
-    }
   }
   </div>

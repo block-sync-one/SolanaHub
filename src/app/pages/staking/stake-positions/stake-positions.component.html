@@ -1,4 +1,8 @@
+<stake-epoch/>
 <div id="positions-container">
+  <div id="positions-header">
+    <ion-label>Positions</ion-label>
+  </div>
   @if((positions$ | async) === null){
   <div class="group-container">
     <div class="group-header">
@@ -22,7 +26,7 @@
       <div class="header-item">
         <div class="group-title">
           <ion-label>{{group.state}} </ion-label>
-          <chip [name]="group.positions.length + ' • ' + (group.totalValue | currency)" />
+          <chip [name]="group.positions.length + ' • ' + (group.totalValue | currency)" [color]="getGroupColor(group.state)" />
         </div>
         <ion-text>{{group.description}}</ion-text>
       </div>

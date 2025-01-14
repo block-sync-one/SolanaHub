@@ -99,6 +99,7 @@ export class FormComponent implements OnInit, AfterViewInit {
 
     // this.stakeForm.valueChanges.subscribe(v=> console.log(v))
     this._shs.getValidatorsList().then(vl => this.validatorsList.set(vl));
+    console.log('running from form component')
   }
 
   setStakePath = 'native'

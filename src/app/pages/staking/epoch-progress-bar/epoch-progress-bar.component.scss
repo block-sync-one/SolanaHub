@@ -1,0 +1,31 @@
+ion-progress-bar{
+  height: 4px;
+  margin-block-end: 8px;
+}
+ion-progress-bar::part(track) {
+  background: var(--ion-color-border);
+}
+ion-progress-bar::part(progress) {
+    background-image: linear-gradient(65deg, #FF50C8 0%, #7100FF 100%, #8E00FF 100%);
+  }
+
+  ion-text{
+    color: var(--ion-light-gray);
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px; /* 138.462% */
+}
+
+.animate {
+  animation: progress-indeterminate 1s linear infinite;
+}
+
+.error {
+  color: var(--ion-color-danger);
+}
+
+@keyframes progress-indeterminate {
+  from { opacity: 0.4; }
+  to { opacity: 1; }
+}

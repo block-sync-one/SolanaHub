@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { InstantUnstakeModalComponent } from './instant-unstake-modal.component';
+import { ProInsightsComponent } from './pro-insights.component';
 
-describe('InstantUnstakeModalComponent', () => {
-  let component: InstantUnstakeModalComponent;
-  let fixture: ComponentFixture<InstantUnstakeModalComponent>;
+describe('ProInsightsComponent', () => {
+  let component: ProInsightsComponent;
+  let fixture: ComponentFixture<ProInsightsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ InstantUnstakeModalComponent ],
+      declarations: [ ProInsightsComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(InstantUnstakeModalComponent);
+    fixture = TestBed.createComponent(ProInsightsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

@@ -4,15 +4,16 @@ import { map, ReplaySubject, shareReplay } from 'rxjs';
 import { PositionComponent } from './stake/stake.component';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { IonSkeletonText, IonButton, IonImg, IonLabel, IonText } from "@ionic/angular/standalone";
+import { IonSkeletonText,  IonLabel, IonText } from "@ionic/angular/standalone";
 import { JupStoreService } from 'src/app/services';
+import { StakeEpochComponent } from './stake-epoch/stake-epoch.component';
 
 @Component({
   selector: 'stake-positions',
   templateUrl: './stake-positions.component.html',
   styleUrls: ['./stake-positions.component.scss'],
   standalone: true,
-  imports: [IonText, IonLabel, IonImg, IonButton, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe]
+  imports: [StakeEpochComponent, IonText, IonLabel, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe]
 })
 export class StakePositionsComponent implements OnInit {
   public solPrice = this._jupStore.solPrice;
@@ -25,10 +26,10 @@ export class StakePositionsComponent implements OnInit {
 
       const states = ['active', 'inactive', 'deactivating', 'activating'];
       const stateDesc = {
-        active: 'Your stake earn rewards every epoch.',
-        inactive: 'Your stake is ready to withdraw.',
-        deactivating: 'Your stake will be ready to withdraw next epoch.',
-        activating: 'Your stake will earn rewards next epoch.'
+        active: "Your stake earns stake rewards every epoch",
+        inactive: "Your stake is ready for withdrawal",
+        deactivating: "Your stake will be withdrawable next epoch",
+        activating: "Your stake starts earning rewards next epoch"
       }
       const groups = states.map(state => {
         const nativePositions = positions?.native.filter(position => position.state === state);
@@ -75,4 +76,17 @@ export class StakePositionsComponent implements OnInit {
     }),
     shareReplay(1)
   );
+
+  getGroupColor(state: string): string {
+    switch (state) {
+      case 'active':
+        return 'focus';
+      case 'deactivating':
+        return 'danger';
+      case 'activating':
+        return 'active';
+      default:
+        return '';
+    }
+  }
 }

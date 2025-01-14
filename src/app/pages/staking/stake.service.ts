@@ -29,6 +29,10 @@ export interface LiquidStakeToken {
 
 
 export interface StakeAccount {
+  authorities:{
+    staker: string,
+    withdrawer: string,
+  },
     amount: number
     role: Array<string>
     state: string
@@ -75,10 +79,11 @@ export class StakeService {
   public readonly stakePositions$ = this._stakePositions$.asObservable().pipe(
     switchMap(async positions => {
       if (!positions) return null;
+      const validators = await this._shs.getValidatorsList();
       const nativePositionExtended = await Promise.all(
         positions.native.map(async position => {
           const {addrShort} = this._util.addrUtil(position.address);
-          const validator = (await this._shs.getValidatorsList()).find(v => v.vote_identity === position.voter);
+          const validator = validators.find(v => v.vote_identity === position.voter);
           return { ...position, validator, shortAddress: addrShort };
         })
       );

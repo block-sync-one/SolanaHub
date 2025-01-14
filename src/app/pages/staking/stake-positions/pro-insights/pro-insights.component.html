@@ -1,0 +1,28 @@
+<div id="pro-insights">
+  <div id="pro-insights-header">
+    <ion-label>Insights</ion-label>
+    <!-- <pro-badge/> -->
+  </div>
+  <div id="pro-chart">
+    <div id="pro-chart-header">
+      <ion-label>reward history</ion-label>
+      <ion-segment>
+        <ion-segment-button value="1d">YTD</ion-segment-button>
+        <ion-segment-button value="7d">1Y</ion-segment-button>
+      </ion-segment>
+    </div>
+    <div #stakeRewardsChart></div>
+  </div>
+  <div id="total-rewards">
+    <ion-label>Total rewards</ion-label>
+    <ion-text>$500.54</ion-text>
+  </div>
+  <div id="start-date">
+    <ion-label>Start date</ion-label>
+    <ion-text>2024-01-01 <span>EPOCH 550</span></ion-text>
+  </div>
+  <div id="account-status">
+    <ion-label>Account status</ion-label>
+    <chip name="locked"/> <ion-text>locked until 2025-01-01</ion-text>
+  </div>
+</div>
