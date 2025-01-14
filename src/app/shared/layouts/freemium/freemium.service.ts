@@ -1,7 +1,7 @@
-import { computed, effect, Injectable, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 import { SolanaHelpersService, VirtualStorageService } from 'src/app/services';
 import va from '@vercel/analytics';
-import { PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
+import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 
 interface Account {
@@ -17,23 +17,44 @@ export class FreemiumService {
   public readonly stake = computed(() => this._account()?.stake ?? null);
   private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];
-  private _platformFee: number | null = null;
-  private _hideAd = signal(this.getAdConfig());
+  static DEFAULT_PLATFORM_FEE = 3000000;
+  private _platformFee = signal(FreemiumService.DEFAULT_PLATFORM_FEE); // Default to 0.003 SOL if platform fee is not set
+  private _showAd = signal(this.getAdStatus());
   private _isPremiumCache = new Map<string, Account>();
+
 
   constructor(
     private _shs: SolanaHelpersService,
-      private _vrs: VirtualStorageService,
+    private _vrs: VirtualStorageService,
   ) {
     this._initializeService();
     // effect(() => {
     setTimeout(() => {
-      
+
       this._updateAccount();
     }, 4000);
 
     // });
   }
+
+  /**
+   * Checks if the user's action is a premium action.
+   *
+   * @param {string} name - The name of the premium action to check.
+   * @returns {boolean} True if the premium action exists, false otherwise.
+   */
+  public isPremiumAction(name: string): boolean {
+    return this._premiumServices.includes(name);
+  }
+
+  /**
+   * Gets the platform fee in SOL.
+   *
+   * @public
+   * @returns {WritableSignal<number>} The platform fee signal divided by 1 billion LAMPORTS.
+   * @default 3000000
+   */
+  public getPlatformFeeInSOL = computed(() => this._platformFee() / LAMPORTS_PER_SOL);
 
   private async _initializeService(): Promise<void> {
     await Promise.all([
@@ -56,7 +77,7 @@ export class FreemiumService {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-platform-fee`);
       const data = await response.json();
-      this._platformFee = data.platformFee;
+      this._platformFee.set(data.platformFee ?? FreemiumService.DEFAULT_PLATFORM_FEE);
     } catch (error) {
       console.error('Error fetching platform fee:', error);
     }
@@ -67,11 +88,10 @@ export class FreemiumService {
       return null;
     }
 
-    const fee = this._platformFee ?? 3000000; // Default to 0.003 SOL if platform fee is not set
     return SystemProgram.transfer({
       fromPubkey: walletPk,
       toPubkey: new PublicKey(environment.platformFeeCollector),
-      lamports: fee,
+      lamports: this._platformFee(),
     });
   }
 
@@ -79,7 +99,7 @@ export class FreemiumService {
     if (this._isPremiumCache.has(walletAddress)) {
       return this._isPremiumCache.get(walletAddress)!;
     }
-  
+
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
       const data: Account = await response.json();
@@ -107,30 +127,30 @@ export class FreemiumService {
     const expirationDate = new Date();
     expirationDate.setMonth(expirationDate.getMonth() + 1);
     this._vrs.localStorage.saveData('hideFreemiumAd', expirationDate.toISOString());
-    this._hideAdEvent();
-    this._hideAd.set(true);
+    this._showAdEvent();
+    this._showAd.set(false);
   }
 
-  public getAdConfig(): boolean {
+  public getAdStatus(): boolean {
     const savedDate = this._vrs.localStorage.getData('hideFreemiumAd');
     if (savedDate) {
       const expirationDate = new Date(savedDate);
       if (expirationDate > new Date()) {
-        return true;
+        return false;
       } else {
         this._vrs.localStorage.removeData('hideFreemiumAd');
       }
     }
-    return false;
+    return true;
   }
 
-  public readonly adShouldShow = computed(() => {
+  public readonly isAdEnabled = computed(() => {
     const isPremium = this.isPremium();
     if (isPremium === null) return null;
-    return !isPremium && !this._hideAd();
+    return !isPremium && this._showAd();
   });
 
-  private _hideAdEvent(): void {
+  private _showAdEvent(): void {
     va.track('hide freemium ad');
   }
 }

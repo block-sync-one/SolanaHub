@@ -35,16 +35,16 @@
                  [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'"
                   style="opacity: 1;"
                   routerDirection="root"
-                   [routerLink]="[p.url]" 
-                   lines="none" 
-                   detail="false" 
+                   [routerLink]="[p.url]"
+                   lines="none"
+                   detail="false"
                    routerLinkActive="selected"
                    >
                   @if(p.title === 'hubSOL'){
                   <ion-img src="/assets/images/hubSOL.svg" />
                   }@else {
-                  <animated-icon 
-                  
+                  <animated-icon
+
                   aria-hidden="true" slot="start" [icon]="p.icon" />
                   }
 
@@ -88,7 +88,7 @@
               </a>
               <a href="https://discord.gg/w9gRgd3vsc" target="_blank">
                 <ion-icon name="logo-discord"></ion-icon>
-              
+
               </a>
 
             </div>
@@ -97,7 +97,7 @@
       </ion-content>
     </ion-menu>
     <ion-content class="ion-page" id="main-content" [class.ad-offset]="false">
-      <!-- <freemium-ad/> -->
+       <freemium-ad/>
        @if((isCaptchaVerified$ | async) == false){
       <turnstile-captcha />
        }@else{
@@ -108,5 +108,6 @@
 
   </ion-split-pane>
 </ion-app>
+
 
 

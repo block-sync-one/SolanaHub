@@ -1,15 +1,14 @@
-<!-- 
-@if(isPremium() != null) {
+@if(isPremium() !== null) {
+  <chip
+    (click)="openFreemiumAccessPopup()"
+    [color]="isPremium() ? 'primary' : ''" >
+    @if(isPremium()) {
+      <div id="chip-content">
+        <ion-icon name="flash"></ion-icon><span>PRO</span>
+      </div>
+    }@else {
+      <span>Freemium</span>
+    }
+  </chip>
 
-  <chip (click)="openFreemumAccessPopup()"
-  [color]="isPremium() ? 'primary' : ''" >
-  @if(isPremium()) {
-    <div id="chip-content">  
-      <span>Premium</span> <ion-icon name="star-outline"/>
-    </div>
-  }@else {
-    <span>Freemium</span>
-  }
-</chip>
-
-} -->
+}

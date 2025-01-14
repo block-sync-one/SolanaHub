@@ -1,0 +1,41 @@
+ion-chip {
+  --color: var(--ion-color-primary);
+}
+
+.upgrade-wrapper {
+  color: var(--ion-color-dark);
+
+  &__upgrade {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    border-top: 1px solid #E3E8EF;
+    padding-block-start: 1rem;
+  }
+
+  &__pro {
+    display: inline-flex;
+    flex-direction: column;
+    gap: .8rem;
+  }
+
+  &__pro-description {
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  &__learn-more ion-button {
+    font-size: 13px;
+    text-transform: capitalize;
+    --color: var(--ion-color-dark);
+    --background: var(--ion-color-light);;
+    --background-hover: var(--ion-color-page-top);
+    --border-style: solid;
+    --border-width: 1px;
+    --border-color: var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
+    --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+  }
+}
+

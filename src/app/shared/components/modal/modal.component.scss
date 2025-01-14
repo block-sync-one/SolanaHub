@@ -2,7 +2,7 @@
     display: flex;
     justify-content: space-between;
     margin-block-end: 20px;
-  
+
     .icon-wrapper {
       width: 48px;
       height: 48px;
@@ -13,14 +13,14 @@
       align-items: center;
       justify-content: center;
       margin-block-end: 12px;
-  
+
     }
-  
+
     ion-img {
       width: 24px;
       height: 24px;
     }
-  
+
     #title {
       text-transform: capitalize;
       color: var(--ion-color-dark);
@@ -28,7 +28,7 @@
       font-weight: 600;
       line-height: 28px;
     }
-  
+
     #desc {
       text-transform: capitalize;
       color: var(--ion-light-gray);
@@ -36,7 +36,7 @@
       line-height: 18px;
       /* 138.462% */
     }
-  
+
     #close-modal {
       cursor: pointer;
     }
@@ -46,7 +46,7 @@
     display: flex;
     flex-direction: column;
   }
-  
+
   #modal-controls {
     display: flex;
     height: 85px;
@@ -59,7 +59,7 @@
       font-size: 16px;
       font-weight: 600;
       height: 44px;
-      
+
       text-transform: capitalize;
       &.button-clear{
         color: var(--ion-color-dark);
@@ -69,7 +69,7 @@
         border: 1px solid var(--ion-color-primary);
       }
     }
-  
+
   }
 
   :host ::ng-deep merge-modal stake-position,
@@ -102,4 +102,5 @@
         display: none !important;
     }
 }
+
 

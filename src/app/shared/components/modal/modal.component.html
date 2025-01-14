@@ -62,4 +62,11 @@
     <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
   </div>
   }
+
+  @if(!_freemiumService.isPremium()) {
+    <ng-container *appIsPremiumAction="componentName">
+      <app-modal-message />
+    </ng-container>
+  }
+
 </div>
