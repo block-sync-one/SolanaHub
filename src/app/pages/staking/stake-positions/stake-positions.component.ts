@@ -4,7 +4,7 @@ import { map, ReplaySubject, shareReplay } from 'rxjs';
 import { PositionComponent } from './stake/stake.component';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { IonSkeletonText, IonButton, IonImg } from "@ionic/angular/standalone";
+import { IonSkeletonText, IonButton, IonImg, IonLabel, IonText } from "@ionic/angular/standalone";
 import { JupStoreService } from 'src/app/services';
 
 @Component({
@@ -12,7 +12,7 @@ import { JupStoreService } from 'src/app/services';
   templateUrl: './stake-positions.component.html',
   styleUrls: ['./stake-positions.component.scss'],
   standalone: true,
-  imports: [IonImg, IonButton, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe]
+  imports: [IonText, IonLabel, IonImg, IonButton, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe]
 })
 export class StakePositionsComponent implements OnInit {
   public solPrice = this._jupStore.solPrice;
@@ -58,10 +58,11 @@ export class StakePositionsComponent implements OnInit {
 
         const totalNativeValue = nativePositions.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0);
         const totalLiquidValue = positions?.liquid?.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0);
+        const totalValue = Number(totalNativeValue) + Number(totalLiquidValue);
         return {
           state,
           description: stateDesc[state],
-          totalValue: totalNativeValue + totalLiquidValue,
+          totalValue,
           avgAPY,
           positions: nativePositions
         }

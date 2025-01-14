@@ -82,9 +82,14 @@ getStakeName(stake: any): string {
 }
 
 getAccountShortAddress(stake: any): string {
+  console.log(stake);
+  
   return this._utilService.addrUtil(stake.address).addrShort;
 }
 getStakeApy(stake: any): number {
   return  (stake.validator?.total_apy || stake?.apy) ;
+}
+getStakeBalance(stake: any): string {
+  return this._utilService.fixedNumber(stake?.balance);
 }
 }

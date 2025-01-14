@@ -1,101 +1,122 @@
 :host {
     display: block;
+
     &:not(:last-child) {
         border-bottom: 1px solid var(--ion-color-border);
     }
 }
 
 .stake-card {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+
     ion-icon {
         color: var(--ion-color-dark);
         cursor: pointer;
     }
+}
 
-
-    padding: 16px;
+.stake-info {
     display: flex;
-    justify-content: space-between;
+    align-items: flex-start;
+}
 
-    .stake-info {
-        display: flex;
-        align-items: flex-start;
+.identifier-profile {
+    margin-inline-end: 12px;
+    position: relative;
+
+    ion-img,
+    ion-skeleton-text {
+        margin: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 1000px;
+        border: 0.75px solid rgba(0, 0, 0, 0.08);
+        overflow: hidden;
     }
 
-    .validator-profile {
-        margin-inline-end: 12px;
-        position: relative;
-
-        ion-img,
-        ion-skeleton-text {
-            margin: 0;
-            overflow: hidden;
-            width: 40px;
-            height: 40px;
-            border-radius: 1000px;
-            border: 0.75px solid rgba(0, 0, 0, 0.08);
-        }
-
-        .account-type {
-            width: 12px;
-            height: 12px;
-            padding: 1px;
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            border-radius: 50%;
-            border: 1px solid var(--ion-color-border);
-            background: var(--ion-color-light);
-        }
-
-        
+    .account-type {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 12px;
+        height: 12px;
+        padding: 1px;
+        border-radius: 50%;
+        border: 1px solid var(--ion-color-border);
+        background: var(--ion-color-light);
     }
+}
 
-    .validator-name {
+.identifier-name {
+    color: var(--ion-color-dark);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 18px;
+    margin-block-end: 2px;
+    text-transform: capitalize;
+    max-width: 200px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.account-address {
+    color: var(--ion-light-gray);
+    font-size: 12px;
+    line-height: 12px;
+    margin-block-end: 8px;
+    display: flex;
+    align-items: center;
+
+    ion-icon {
+        margin-inline-start: 4px;
+    }
+}
+
+.account-value {
+    text-align: right;
+
+    .sol-amount {
         color: var(--ion-color-dark);
         font-size: 13px;
         font-weight: 600;
-        line-height: 18px;
-        margin-block-end: 2px;
+        margin-inline-start: 5px;
+        min-width: 110px;
     }
 
-    .account-address {
+    .usd-value {
         color: var(--ion-light-gray);
         font-size: 12px;
-        line-height: 12px;
-        margin-block-end: 8px;
-        display: flex;
-        align-items: center;
-
-        ion-icon {
-            margin-inline-start: 4px;
-
-        }
     }
+}
 
-    .account-value {
+.stake-info-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
 
-        display: block !important;
-        text-align: right;
-        .sol-amount {
-            color: var(--ion-color-dark);
-            margin-inline-end: 2px;
-            font-size: 13px;
-            font-weight: 600;
-        }
+.stake-details {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+}
 
-        .usd-value {
-            color: var(--ion-light-gray);
-            font-weight: 400;
-            font-size: 12px;
-        }
+.action-icons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
+.skeleton-name {
+    width: 150px;
+}
+
+@media only screen and (max-width: 992px) {
+    .identifier-name {
+        max-width: 100px;
     }
-
-    .stake-details {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-
-
 }

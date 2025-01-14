@@ -7,38 +7,50 @@
     background: var(--ion-color-primary-bg);
     padding: 16px;
 }
+
 #asset-detection {
     max-width: 80%;
 }
+
 #asset-detection-wrapper {
     display: flex;
     align-items: center;
     gap: 8px;
+
     #asset-detection-icons {
         display: flex;
+
         ion-avatar {
             margin-right: -4px;
+
             &:last-child {
                 margin-right: 0;
             }
         }
     }
+
     ion-avatar {
         width: 12px;
         height: 12px;
     }
 }
-.promo{
+
+.promo {
     color: var(--ion-color-dark);
     font-size: 13px;
     font-weight: 500;
-    line-height: 18px; 
+    line-height: 18px;
 }
 
-#promo-bonus{
+#promo-bonus {
     color: var(--ion-color-primary);
 }
 
-ion-button span{
-text-transform: capitalize;
+ion-button {
+    --padding-end: 8px;
+    --padding-start: 8px;
+
+    span {
+        text-transform: none;
+    }
 }
