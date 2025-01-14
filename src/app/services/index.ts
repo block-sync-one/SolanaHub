@@ -15,3 +15,5 @@ export * from './virtual-storage.service'
 export * from "./address-validator.service"
 export * from "./portfolio-breakdown.service";
 export * from "./wallet-box-spinner.service";
+export * from './captcha.service';
+export * from './notifications.service'
