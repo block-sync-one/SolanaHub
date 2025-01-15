@@ -21,6 +21,7 @@ ion-label {
   padding-block: 10px;
 }
 
+
 #merge-calc {
   border-radius: 8px;
   border: 1px solid var(--ion-color-border);
@@ -31,10 +32,11 @@ ion-label {
   color: var(--ion-color-dark);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .5rem;
 
   .summary {
     display: flex;
+    align-items: center;
     justify-content: space-between;
 
     &__label {
@@ -44,7 +46,8 @@ ion-label {
 
     &__value {
       display: inline-flex;
-      gap: .5rem;
+      align-items: center;
+      gap: 4px;
       color: var(--ion-light-gray);
 
       &--line-through {

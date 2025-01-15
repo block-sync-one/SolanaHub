@@ -11,6 +11,7 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DecimalPipe, NgClass } from '@angular/common';
 import { FreemiumService } from "../../../../../shared/layouts/freemium/freemium.service";
 import { ChipComponent } from "../../../../../shared/components/chip/chip.component";
+import {FreemiumModule} from "@app/shared/layouts/freemium/freemium.module";
 
 @Component({
   selector: 'merge-modal',
@@ -26,7 +27,8 @@ import { ChipComponent } from "../../../../../shared/components/chip/chip.compon
     ScrollingModule,
     NgClass,
     DecimalPipe,
-    ChipComponent
+    ChipComponent,
+    FreemiumModule
   ]
 })
 export class MergeModalComponent implements OnInit {

@@ -1,11 +1,10 @@
-@if(adShouldShow()) {
 <div id="freemium-ad">
   <div id="ad-text">
     <div class="ion-hide-md-down">Get PRO: Enjoy SolanaHub with no limits, no fees, and growing community.</div>
-    <ion-button size="small" (click)="openFreemiumAccessPopup()">Learn more</ion-button>
+    <ion-button size="small" fill="outline" (click)="openFreemiumAccessPopup()">Learn more</ion-button>
   </div>
   <div class="close-ad">
-    <ion-img (click)="closeAd()" id="close-modal" src="assets/images/close-icon.svg" />
+    <ion-icon (click)="closeAd()" id="close-modal" name="close-outline"></ion-icon>
   </div>
 </div>
-}
+

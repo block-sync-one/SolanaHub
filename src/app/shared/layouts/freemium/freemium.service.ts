@@ -14,7 +14,7 @@ interface Account {
 })
 export class FreemiumService {
   public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
-  public readonly stake = computed(() => this._account()?.stake ?? null);
+  public readonly stake = computed(() => this._account()?.stake ?? 0);
   private _account = signal<Account | null>(null);
   private _premiumServices: string[] = [];
   static DEFAULT_PLATFORM_FEE = 3000000;

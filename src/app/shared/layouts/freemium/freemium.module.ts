@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {IonIcon, IonImg, IonButton, IonLabel} from '@ionic/angular/standalone';
+import {IonIcon, IonImg, IonButton, IonLabel, IonContent} from '@ionic/angular/standalone';
 import {
   PopupPlanComponent,
   BadgeComponent,
@@ -25,7 +25,8 @@ import {RouterLink} from "@angular/router";
         IonButton,
         IonImg,
         IonLabel,
-        RouterLink
+        RouterLink,
+        IonContent
     ],
   exports: [
     PopupPlanComponent,

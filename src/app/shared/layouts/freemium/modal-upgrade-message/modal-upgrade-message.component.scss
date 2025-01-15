@@ -4,6 +4,12 @@ ion-chip {
 
 .upgrade-wrapper {
   color: var(--ion-color-dark);
+  position: relative;
+
+  ion-img {
+    position: absolute;
+    right: 0;
+  }
 
   &__upgrade {
     display: flex;
@@ -24,18 +30,24 @@ ion-chip {
   &__pro-description {
     font-size: 13px;
     font-weight: 500;
+    max-width: 346px;
+    width: 100%;
   }
 
   &__learn-more ion-button {
     font-size: 13px;
-    text-transform: capitalize;
+    text-transform: initial;
     --color: var(--ion-color-dark);
     --background: var(--ion-color-light);;
     --background-hover: var(--ion-color-page-top);
     --border-style: solid;
     --border-width: 1px;
     --border-color: var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
-    --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    --box-shadow: 0 1px 2px 0 rgba(16, 24, 40, 0.05);
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --padding-start: 14px;
+    --padding-end: 14px;
   }
 }
 

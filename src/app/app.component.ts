@@ -1,5 +1,15 @@
 import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  signal,
+  inject
+} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonApp,
@@ -44,6 +54,7 @@ import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 
 import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
+import {FreemiumService} from "@app/shared/layouts/freemium";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -95,6 +106,7 @@ export class AppComponent implements OnInit {
 
   public notifIndicator = this._notifService.notifIndicator;
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
+  public adShouldShow = inject(FreemiumService).isAdEnabled;
 
   constructor(
     // private _freemiumService: FreemiumService,

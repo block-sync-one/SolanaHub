@@ -1,9 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
+import { PopupPlanComponent } from '@app/shared/layouts/freemium';
 import { FreemiumService } from '../freemium.service';
-import { addIcons } from 'ionicons';
-import { flash } from 'ionicons/icons';
 
 @Component({
   selector: 'freemium-badge',
@@ -15,9 +13,6 @@ export class BadgeComponent {
   private _modalCtrl= inject(ModalController);
   public isPremium = this._freemiumService.isPremium;
 
-  constructor() {
-    addIcons({ flash })
-   }
 
   async openFreemiumAccessPopup(){
     const modal = await this._modalCtrl.create({

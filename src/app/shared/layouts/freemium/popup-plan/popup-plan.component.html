@@ -2,11 +2,16 @@
   <div class="modal-header">
     <ion-img class="energy" src="assets/images/freemium-energy.svg"></ion-img>
     <div class="d-flex">
-      <div class="modal-header__title">Stake to join SolanaHub</div>
+      <div class="modal-header__title">
+        @if (freemiumService.isPremium()) {
+          You are a pro member!
+        } @else {
+          Stake to join SolanaHub
+        }</div>
       <chip color="pro">PRO</chip>
     </div>
     <div class="close-ad" (click)="closeModal()">
-      <ion-img id="close-modal" src="assets/images/close-icon.svg" />
+      <ion-img id="close-modal" src="assets/images/close-icon.svg"/>
     </div>
   </div>
   <div class="modal-body">
@@ -18,28 +23,28 @@
       </div>
     </div>
     <div class="modal-body__plan">
-        <div class="modal-description">Enjoy SolanaHub with no limits, no fees, and growing community:</div>
-        <div class="service">
-          <ion-img src="/assets/images/ll/check.svg"></ion-img>
-          <ion-label class="service__description">Multi Wallet Support</ion-label>
-        </div>
-        <div class="service">
-          <ion-img src="/assets/images/ll/check.svg"></ion-img>
-          <ion-label class="service__description">No platform fees</ion-label>
-        </div>
-        <div class="service">
-          <ion-img src="/assets/images/ll/check.svg"></ion-img>
-          <ion-label class="service__description">Access to staking insight</ion-label>
-        </div>
-        <div class="service">
-          <ion-img src="/assets/images/ll/check.svg"></ion-img>
-          <ion-label class="service__description">Enjoy Stake boost</ion-label>
-        </div>
-        <div class="service">
-          <ion-img src="/assets/images/ll/check.svg"></ion-img>
-          <ion-label class="service__description">Alpha discord access</ion-label>
-        </div>
+      <div class="modal-description">Enjoy SolanaHub with no limits, no fees, and growing community:</div>
+      <div class="service">
+        <ion-img src="/assets/images/ll/check.svg"></ion-img>
+        <ion-label class="service__description">Multi Wallet Support</ion-label>
       </div>
+      <div class="service">
+        <ion-img src="/assets/images/ll/check.svg"></ion-img>
+        <ion-label class="service__description">No platform fees</ion-label>
+      </div>
+      <div class="service">
+        <ion-img src="/assets/images/ll/check.svg"></ion-img>
+        <ion-label class="service__description">Access to staking insight</ion-label>
+      </div>
+      <div class="service">
+        <ion-img src="/assets/images/ll/check.svg"></ion-img>
+        <ion-label class="service__description">Enjoy Stake boost</ion-label>
+      </div>
+      <div class="service">
+        <ion-img src="/assets/images/ll/check.svg"></ion-img>
+        <ion-label class="service__description">Alpha discord access</ion-label>
+      </div>
+    </div>
   </div>
   <div class="modal-footer">
     <ion-button expand="block" (click)="gotoStakingPage()">Stake total of 20 hubSOL to Upgrade</ion-button>

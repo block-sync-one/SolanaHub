@@ -24,15 +24,11 @@
 
 
   <div id="merge-summary">
-    <ion-label>Cleanup summary</ion-label>
+    <ion-label>Merge summary</ion-label>
     <div id="merge-calc">
       <div class="summary">
-        <div class="summary__label">Item selected</div>
-        <div class="summary__value">{{ accountsToMerge()?.length ?? 0 }}</div>
-      </div>
-
-      <div class="summary">
-        <div class="summary__label">Get From Cleaning Up</div>
+        <div class="summary__label">Account 1</div>
+        <div class="summary_value">{{targetStake.shortAddress}}</div>
         <div class="summary__value">{{ mergedBalance() + targetStake.balance | number: '1.3' }} SOL</div>
       </div>
 
@@ -40,7 +36,7 @@
         <div class="summary__label">Platform Fee</div>
         <div class="summary__value">
           @if (isPremium()) {
-            <chip color="primary">Covered by PRO</chip>
+            <freemium-badge />
           }
           <span [ngClass]="{ 'summary__value--line-through': isPremium()}">
               {{ _freemiumService.getPlatformFeeInSOL() }} SOL

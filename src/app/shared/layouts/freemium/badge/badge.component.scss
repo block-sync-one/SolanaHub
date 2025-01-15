@@ -1,5 +1,18 @@
-#chip-content{
-    display: flex;
-    align-items: center;
-    gap: 4px;
+#chip-content {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  gap: 2px;
+
+  ion-img {
+    width: 13px;
+    height: 13px;
+  }
 }
+
+.pro {
+  background: white;
+  border-radius: 9999px;
+}
+
+
