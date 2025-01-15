@@ -239,4 +239,7 @@ export class ProInsightsComponent implements AfterViewInit {
     console.log('date', date);
     return date
   }
+  public getProInsights() {
+    this._stakeService.getProInsights(this.stakePosition.address)
+  }
 }

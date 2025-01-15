@@ -56,7 +56,12 @@ export interface StakePositions {
   native: StakeAccount[];
   liquid: LiquidStakeToken[];
 }
-
+export interface ProInsights {
+  startDate: string
+  startEpoch: number
+  stakeRewards: any[]
+  
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -121,5 +126,10 @@ export class StakeService {
       console.error('Error withdrawing excessive balance', error);
       return null
     }
+  }
+
+  public async getProInsights(position: StakeAccount) {
+    const response: ProInsights = await this._httpFetchService.get(`/api/portfolio/get-pro-insights?address=${position.address}`) as ProInsights;
+    return response;
   }
 }
