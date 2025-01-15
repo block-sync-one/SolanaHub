@@ -101,7 +101,7 @@ async openProInsightsPopover(e: Event, stake: any): Promise<void> {
   console.log('openProInsights', stake);
   const modal = await this._popoverController.create({
     component: ProInsightsComponent,
-    componentProps: {stake: stake},
+    componentProps: {stakePosition: stake},
     event: e,
     alignment: 'center',
     side: 'end',

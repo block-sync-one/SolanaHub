@@ -1,28 +1,54 @@
 <div id="pro-insights" class="ion-padding">
   <div id="pro-insights-header">
-    <ion-label>Insights</ion-label>
+    <ion-text>Insights</ion-text>
     <!-- <pro-badge/> -->
   </div>
   <div id="pro-chart">
-    <div id="pro-chart-header">
+    <div class="pro-group" id="pro-chart-header">
       <ion-label>reward history</ion-label>
-      <ion-segment>
-        <ion-segment-button value="1d">YTD</ion-segment-button>
-        <ion-segment-button value="7d">1Y</ion-segment-button>
-      </ion-segment>
+      <div>
+
+        <ion-segment>
+          <ion-segment-button value="1d">YTD</ion-segment-button>
+          <ion-segment-button value="7d">1Y</ion-segment-button>
+        </ion-segment>
+      </div>
     </div>
-    <div #stakeRewardsChart></div>
+    <div style="margin: 0 auto;width: 100%;height: 110px;">
+      <canvas #chartEl></canvas>
+    </div>
   </div>
-  <div id="total-rewards">
-    <ion-label>Total rewards</ion-label>
-    <ion-text>$500.54</ion-text>
+  <div class="pro-group">
+    <ion-label >Total rewards</ion-label>
+    <ion-text>{{ totalRewards }} SOL</ion-text>
   </div>
-  <div id="start-date">
+  @if(stakePosition.inactive_stake > 0){
+  <div class="pro-group">
+    <ion-label>inactive balance(MEV)</ion-label>
+    <ion-text>{{ stakePosition.inactive_stake }} SOL <ion-button fill="clear" size="small" (click)="withdraw()">withdraw</ion-button></ion-text>
+  </div>
+  }
+  <div  class="pro-group">
     <ion-label>Start date</ion-label>
-    <ion-text>2024-01-01 <span>EPOCH 550</span></ion-text>
+    <ion-text id="pro-start-date">
+      @if(epochDate$ | async ){ {{ epochDate$ | async | date }} }
+     
+      <ion-label>EPOCH {{ stakePosition.activation_epoch }}</ion-label>
+    </ion-text>
   </div>
-  <div id="account-status">
+  <div  class="pro-group" id="pro-authorities">
+    <ion-label>Authorities</ion-label>
+    <ion-label>{{shortAddress(stakePosition.authorities.staker)}} <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.staker" appCopyText></ion-icon> <chip name="staker"/></ion-label>
+    <ion-label>{{shortAddress(stakePosition.authorities.withdrawer)}} <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.withdrawer" appCopyText></ion-icon> <chip name="withdrawer"/></ion-label>
+  </div>
+  <div  class="pro-group">
     <ion-label>Account status</ion-label>
-    <chip name="locked"/> <ion-text>locked until 2025-01-01</ion-text>
+    @if(stakePosition.locked){
+    <chip name="locked"/> 
+    <ion-text>locked until {{stakePosition.lockedDue | date}}</ion-text>
+    }
+    @else{
+    <chip name="unlocked" color="focus"/> 
+    }
   </div>
 </div>

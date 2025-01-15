@@ -1,19 +1,77 @@
-#pro-insights-header{
-    margin-block-end: 16px;
-    ion-label{
+:host {
+    text-transform: capitalize;
+}
+
+#pro-chart {
+    margin-block-end: 8px;
+}
+
+#pro-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 0;
+    margin-block-end: 19px;
+
+    div {
+        width: 88px;
+    }
+
+    ion-segment-button {
         color: var(--ion-color-dark);
-        font-size: 16px;
+        font-size: 11px;
         font-weight: 600;
-        line-height: 24px; /* 150% */
+        line-height: 16px;
     }
 
 }
 
-#pro-chart-header{
-    ion-label{
-        color: var(--ion-light-gray);
-        font-size: 13px;
-        font-weight: 500;
-        line-height: 18px; 
+ion-icon {
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.pro-group {
+    border-bottom: 1px solid var(--ion-color-border);
+    padding-block: 8px;
+}
+
+ion-label {
+    color: var(--ion-light-gray);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+ion-text {
+    color: var(--ion-color-dark);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+}
+
+#pro-start-date {
+
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+
+    ion-label {
+        font-size: 11px;
+        font-weight: 400;
+
     }
+}
+
+#pro-authorities {
+    ion-label {
+        margin-block-end: 8px;
+    }
+}
+
+ion-button {
+    --box-shadow: 0 0;
 }

@@ -46,6 +46,7 @@
     "@sonarwatch/portfolio-core": "^0.8.115",
     "@vercel/analytics": "^1.2.2",
     "chart.js": "^4.4.6",
+    "chartjs-plugin-zoom": "^2.2.0",
     "ionicons": "^7.2.1",
     "lottie-web": "^5.12.2",
     "ngx-easy-table": "^15.5.0",
