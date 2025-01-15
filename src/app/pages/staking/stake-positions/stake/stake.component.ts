@@ -3,11 +3,13 @@ import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical, lockClosedOutline, sparklesOutline, waterOutline } from 'ionicons/icons';
 import {
   IonSkeletonText,
-
+  IonPopover,
+  IonContent,
   IonImg,
   IonChip,
   IonIcon,
 } from '@ionic/angular/standalone';
+
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { JupStoreService, UtilService } from 'src/app/services';
 import { PopoverController } from '@ionic/angular';
@@ -18,6 +20,7 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { LiquidStakeToken, StakeAccount } from '../../stake.service';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
 @Component({
   selector: 'position',
   templateUrl: './stake.component.html',
@@ -35,7 +38,11 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
     CopyTextDirective,
     TooltipModule,
     DatePipe,
-    ChipComponent
+    ChipComponent,
+    ProInsightsComponent,
+    IonPopover,
+    IonContent,
+    IonIcon
   ]
 })
 export class PositionComponent implements OnInit{
@@ -89,5 +96,23 @@ getStakeApy(stake: any): number {
 }
 getStakeBalance(stake: any): string {
   return this._utilService.fixedNumber(stake?.balance);
+}
+async openProInsightsPopover(e: Event, stake: any): Promise<void> {
+  console.log('openProInsights', stake);
+  const modal = await this._popoverController.create({
+    component: ProInsightsComponent,
+    componentProps: {stake: stake},
+    event: e,
+    alignment: 'center',
+    side: 'end',
+    backdropDismiss: true,
+    showBackdrop: false,
+    animated: true,
+    cssClass:'pro-insights-modal',
+    mode: 'ios',
+    arrow: false,
+    keyboardClose: true,
+  });
+  await modal.present();
 }
 }

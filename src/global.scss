@@ -111,6 +111,13 @@ ion-checkbox {
     --height: 90vh;
     align-items: flex-end;
 }
+.pro-insights-modal {
+    --width:224px;
+    --max-width: 97%;
+    --height: fit-content;
+    --background: var(--ion-color-light);
+    margin-inline-start: 51px;
+}
 
 #multipliers-modal {
     --width: 40vw;
@@ -360,3 +367,10 @@ ion-spinner {
     // --background: transparent;
 }
 
+
+
+@media (max-width: 768px) {
+    .pro-insights-modal {
+        margin-inline-start: auto;
+    }
+}
