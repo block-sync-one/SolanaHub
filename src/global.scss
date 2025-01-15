@@ -137,7 +137,7 @@ ion-input {
     color: var(--ion-color-dark) !important;
     --color: var(--ion-color-dark) !important;
     --placeholder-color: var(--ion-light-gray) !important;
-    text-overflow: ellipsis;    
+    text-overflow: ellipsis;
     font-weight: 400;
     line-height: 18px;
     font-size: 13px;
@@ -264,10 +264,9 @@ ion-spinner {
 }
 .freemium-popup{
     --background: var(--ion-color-light);
-    --width: 600px;
+    --width: 540px;
+    --height: 592px;
     --border-radius: 12px;
-    --max-width: 95%;
-    --max-height: 90%;
 }
 .swap-setting-modal {
     --width: 340px;

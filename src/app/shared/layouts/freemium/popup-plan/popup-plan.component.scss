@@ -1,15 +1,12 @@
 .freemium-access-popup {
   position: relative;
   text-align: center;
-  padding: 0 1.5rem;
+  padding: 0 24px;
   color: var(--ion-color-dark);
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
-
-.plan-container {
-  display: inline-grid;
-  grid-template-rows: auto;
-  gap: 1.2rem;
-  }
 
 .d-flex {
   display: flex;
@@ -22,14 +19,11 @@
   font-size: 13px;
   color: var(--ion-color-dark);
   grid-column: span 2;
+  margin-bottom: 4px;
 
   &--mb {
-    margin-bottom: 1rem;
+    margin-bottom: .5rem;
   }
-}
-
-.divider {
-  border-bottom: 1px solid #E3E8EF;
 }
 
 .modal-header {
@@ -51,9 +45,10 @@
 
   .close-ad ion-img {
     position: absolute;
-    right: 1.5rem;
-    top: 1.5rem;
-    width: 25px;
+    right: 22px;
+    top: 22px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
   }
 }
@@ -61,20 +56,28 @@
 .modal-body {
   border: 1px solid #E3E8EF;
   border-radius: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  padding-block: 1.5rem;
-  margin-block: 1.5rem;
   color: var(--ion-color-dark);
 
+  &__header {
+    padding-block: 1rem;
+    border-bottom: 1px solid #E3E8EF;
+  }
+
   &__hubSol {
-    font-size: 2rem;
+    font-size: 36px;
     font-weight: 500;
   }
+
   &__hubSol-icon {
-    width: 2rem;
-    height: 2rem;
+    width: 26px;
+    height: 26px;
+  }
+
+  &__plan {
+    display: inline-grid;
+    grid-template-rows: auto;
+    gap: 12px;
+    padding-block: 24px;
   }
 }
 
