@@ -25,6 +25,7 @@ export interface LiquidStakeToken {
   poolPublicKey: string
   tokenMint: string
   state: string
+  proInsights?: NativeProInsights | LiquidProInsights
 }
 
 
@@ -56,11 +57,26 @@ export interface StakePositions {
   native: StakeAccount[];
   liquid: LiquidStakeToken[];
 }
-export interface ProInsights {
+export interface NativeProInsights {
+  startDate: string
+  startEpoch: number
+  stakeRewards: {
+    epoch: number
+    effective_slot: number
+    effective_time_unix: number
+    effective_time: string
+    reward_amount: number
+    change_percentage: number
+    post_balance: number
+    commission: number
+  }
+  
+}
+
+export interface LiquidProInsights {
   startDate: string
   startEpoch: number
   stakeRewards: any[]
-  
 }
 @Injectable({
   providedIn: 'root'
@@ -129,7 +145,7 @@ export class StakeService {
   }
 
   public async getProInsights(position: StakeAccount) {
-    const response: ProInsights = await this._httpFetchService.get(`/api/portfolio/get-pro-insights?address=${position.address}`) as ProInsights;
+    const response: NativeProInsights | LiquidProInsights = await this._httpFetchService.get(`/api/portfolio/get-stake-pro?account_address=${position.address}&type=${position.type}&activation_epoch=${position.activation_epoch}`) as NativeProInsights | LiquidProInsights;
     return response;
   }
 }

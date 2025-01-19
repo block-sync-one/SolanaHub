@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { IonLabel, IonSegmentButton, IonSegment, IonSkeletonText, IonText, IonIcon, IonButton } from "@ionic/angular/standalone";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { StakeAccount, StakeService } from '../../stake.service';
+import { LiquidProInsights, NativeProInsights, StakeAccount, StakeService } from '../../stake.service';
 import { LiquidStakeToken } from '../../stake.service';
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
@@ -26,82 +26,21 @@ export class ProInsightsComponent implements AfterViewInit {
   @Input() stakePosition: StakeAccount | LiquidStakeToken | any
   @ViewChild('chartEl', { static: true }) chartEl: ElementRef;
   chartData: Chart;
-  public stakeRewardsData = [
-    {
-      epoch: 550,
-      reward: 1
-    },
-    {
-      epoch: 551,
-      reward: 7
-    },
-    {
-      epoch: 552,
-      reward: 5
-    },
-    {
-      epoch: 553,
-      reward: 3
-    },
-    {
-      epoch: 554,
-      reward: 1
-    },
-    {
-      epoch: 555,
-      reward: 8
-    },
-    {
-      epoch: 556,
-      reward: 3
-    },
-    {
-      epoch: 557,
-      reward: 2
-    },
-    {
-      epoch: 558,
-      reward: 6
-    },
-    {
-      epoch: 559,
-      reward: 0.5
-    },
-    {
-      epoch: 560,
-      reward: 4.2
-    },
-    {
-      epoch: 561,
-      reward: 2.8
-    },
-    {
-      epoch: 562,
-      reward: 5.1
-    },
-    {
-      epoch: 607,
-      reward: 3.7
-    },
-    {
-      epoch: 608,
-      reward: 4.9
-    },
-    {
-      epoch: 609,
-      reward: 2.3
-    }
-  ]
+  public stakeRewardsData = []
   selectedPeriod = '1d';
-  totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0);
+  totalRewards = null;
   startDate = '2024-01-01';
   startEpoch = 550;
   public epochDate$;
+  public isLoading = true;
   constructor() { }
 
-  ngAfterViewInit() {
-    this.initChart();
+ async ngAfterViewInit() {
     this.epochDate$ = this.getEpochUnixTime(this.stakePosition.activation_epoch)
+    this.initChart();
+    await this.getProInsights()
+    this.isLoading = false;
+    this.chartData.update();
   }
 
   private initChart() {
@@ -111,16 +50,20 @@ export class ProInsightsComponent implements AfterViewInit {
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
-        labels: this.stakeRewardsData.map(data => `Epoch ${data.epoch}`),
+        labels: this.isLoading ? Array(5).fill('Loading...') : this.stakeRewardsData.map(data => `Epoch ${data.epoch}`),
         datasets: [{
           label: 'Rewards',
-          data: this.stakeRewardsData.map(data => data.reward),
-          backgroundColor: 'rgba(184,71,148)',
-          borderWidth: 0
+          data: this.isLoading ? Array(5).fill(0.5) : this.stakeRewardsData.map(data => data.reward),
+          backgroundColor: this.isLoading ? 'rgba(200,200,200,0.3)' : 'rgba(184,71,148)',
+          borderWidth: 0,
+          animation: this.isLoading ? {
+            duration: 1000,
+            loop: true,
+            delay: (context) => context.dataIndex * 100
+          } : undefined
         }]
       },
       options: {
-
         responsive: true,
         maintainAspectRatio: false,
         layout: {
@@ -130,8 +73,8 @@ export class ProInsightsComponent implements AfterViewInit {
           y: {
             ticks: {
               callback: (value, index, ticks) => {
-                const lowestReward = Math.min(...this.stakeRewardsData.map(data => data.reward));
-                const highestReward = Math.max(...this.stakeRewardsData.map(data => data.reward));
+                const lowestReward = Math.min(...this.stakeRewardsData?.map(data => data.reward));
+                const highestReward = Math.max(...this.stakeRewardsData?.map(data => data.reward));
                 if (index === 0) return lowestReward;
                 if (index === ticks.length - 1) return highestReward;
                 return '';
@@ -146,10 +89,10 @@ export class ProInsightsComponent implements AfterViewInit {
             beginAtZero: false // Set this to true if you want the Y-axis to start at 0
           },
           x: {
-            min: this.stakeRewardsData.length - 5,
-            max: this.stakeRewardsData.length - 1,
+            min: this.stakeRewardsData?.length - 5,
+            max: this.stakeRewardsData?.length - 1,
             ticks: {
-              callback: (value, index, ticks) => index === ticks.length - 1 || index === 0 ? this.stakeRewardsData[index].epoch : ''
+              callback: (value, index, ticks) => index === ticks.length - 1 || index === 0 ? this.stakeRewardsData[index]?.epoch : ''
             },
             border: {
               display: false,
@@ -211,7 +154,8 @@ export class ProInsightsComponent implements AfterViewInit {
               mode: 'x',
             }
           }
-        }
+        },
+        events: this.isLoading ? [] : undefined,
       }
     };
 
@@ -239,7 +183,21 @@ export class ProInsightsComponent implements AfterViewInit {
     console.log('date', date);
     return date
   }
-  public getProInsights() {
-    this._stakeService.getProInsights(this.stakePosition.address)
+  public async getProInsights() {
+    try {
+      const res: NativeProInsights | LiquidProInsights | any = await this._stakeService.getProInsights(this.stakePosition)
+      this.stakePosition.proInsights = res
+      const stakeRewards = res.stakeRewards
+      this.stakeRewardsData = stakeRewards.map((stakeReward: any) => ({
+        epoch: stakeReward.epoch,
+        reward: stakeReward.reward
+      }))
+      this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0);
+      this.stakePosition.proInsights.startDate = new Date(stakeRewards[stakeRewards.length - 1].effective_time)
+      console.log('res', res);
+    } catch (error) {
+      console.error('Error getting pro insights', error);
+    }
+    
   }
 }
