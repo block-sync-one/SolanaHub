@@ -22,6 +22,8 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
+import { FreemiumService } from "@app/shared/layouts/freemium";
+import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -31,7 +33,8 @@ export class NativeStakeService {
   constructor(
     private _utils: UtilService,
     private _txi: TxInterceptorService,
-    private _shs: SolanaHelpersService
+    private _shs: SolanaHelpersService,
+    private _freemiumService: FreemiumService
   ) { }
 
 
@@ -43,17 +46,17 @@ export class NativeStakeService {
       u8('rentExemptReserve'),
       // Add other fields as necessary
     ]);
-  
+
     if (accountInfo === null) {
       console.log('Stake account not found');
       return;
     }
-  
+
     if (!accountInfo.owner.equals(StakeProgram.programId)) {
       console.log('Not a stake account');
       return;
     }
-  
+
     const data = Buffer.from(accountInfo.data);
     const decodedData = StakeAccountLayout.decode(data);
     //@ts-ignore
@@ -80,24 +83,20 @@ export class NativeStakeService {
     let state = "inactive";
     try {
 
-      var data: RpcResponseAndContext<AccountInfo<Buffer | ParsedAccountData>> = await this._shs.connection?.getParsedAccountInfo(pk) 
+      var data: RpcResponseAndContext<AccountInfo<Buffer | ParsedAccountData>> = await this._shs.connection?.getParsedAccountInfo(pk)
       // if deactivationEpoch > currentEpoch it's active
       // if deactivationEpoch < currentEpoch it's inactive
       // if activationEpoch == currentEpoch it's activating
       // if deactivationEpoch == currentEpoch it's deactivating
       // otherwise it's active
-      
+
       const stakeState = data.value?.data['parsed']?.info?.stake.delegation
 
-      state = stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch != currentEpoch ? "activating" 
-        : stakeState.deactivationEpoch == currentEpoch && stakeState.activationEpoch != currentEpoch ? "deactivating" 
-        : stakeState.deactivationEpoch > currentEpoch ? "active" 
-        : stakeState.activationEpoch < currentEpoch || (stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch == currentEpoch) ? "inactive" 
+      state = stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch != currentEpoch ? "activating"
+        : stakeState.deactivationEpoch == currentEpoch && stakeState.activationEpoch != currentEpoch ? "deactivating"
+        : stakeState.deactivationEpoch > currentEpoch ? "active"
+        : stakeState.activationEpoch < currentEpoch || (stakeState.activationEpoch == currentEpoch && stakeState.deactivationEpoch == currentEpoch) ? "inactive"
         : "active"
-
-      
-      
-
     } catch (error) {
       state = "inactive";
       console.log(error);
@@ -161,7 +160,7 @@ export class NativeStakeService {
     })
     const extendStakeAccountRes = await Promise.all(extendStakeAccount);
     // this.getInflationReward(extendStakeAccountRes)
- 
+
     // this._stakeAccounts$.next(extendStakeAccountRes);
     this.stakeAccounts.set(extendStakeAccountRes)
     return extendStakeAccountRes
@@ -257,7 +256,16 @@ export class NativeStakeService {
         });
       })
       const record = { message: 'account', data: { action: 'merge accounts' } }
+
+      // TODO: Add platformFee transaction
+      if (this._freemiumService.isPremium()) {
+        const platformFee =  this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.MERGE, 0);
+        // const f = platformFee / mergeAccounts.length;
+
+      //  const tx =  [mergeAccounts, platformfee];
+      }
       return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record)
+
     } catch (error) {
       console.log(error);
     }
@@ -274,7 +282,7 @@ export class NativeStakeService {
       lamports, // Withdraw the full balance at the time of the transaction
     }));
     console.log(withdrawTx);
-    
+
     try {
       const record = { message: 'account', data: { action: 'withdraw stake' } }
       return await this._txi.sendTx([...withdrawTx], walletOwnerPK, null, record)

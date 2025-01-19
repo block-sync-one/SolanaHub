@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject, signal} from '@angular/core';
 import { Stake } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
@@ -13,6 +13,7 @@ import { AmountInputComponent } from 'src/app/shared/components/amount-input/amo
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import {PlatformFeeComponent} from "@app/shared/components/platform-fee/platform-fee.component";
 import {FreemiumService} from "@app/shared/layouts/freemium";
+import { PremiumActions } from "@app/enums";
 
 @Component({
   selector: 'unstake-lst-modal',
@@ -35,6 +36,7 @@ export class UnstakeLstModalComponent  implements OnInit {
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
   public _freemiumService = inject(FreemiumService);
+  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.UNSTAKE_LST, 0))
   public amount:number = 0
 
   ngOnInit() {

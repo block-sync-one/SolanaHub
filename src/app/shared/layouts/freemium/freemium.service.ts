@@ -3,6 +3,8 @@ import { SolanaHelpersService, VirtualStorageService } from 'src/app/services';
 import va from '@vercel/analytics';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
+import { Premium } from "@app/models";
+import { PremiumActions } from "@app/enums";
 
 interface Account {
   isPremium: boolean;
@@ -16,7 +18,7 @@ export class FreemiumService {
   public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
   public readonly stake = computed(() => this._account()?.stake ?? 0);
   private _account = signal<Account | null>(null);
-  private _premiumServices: string[] = [];
+  private _premiumServices = signal<Premium[]>([]);
   static DEFAULT_PLATFORM_FEE = 3000000;
   private _platformFee = signal(FreemiumService.DEFAULT_PLATFORM_FEE); // Default to 0.003 SOL if platform fee is not set
   private _showAd = signal(this.getAdStatus());
@@ -38,53 +40,57 @@ export class FreemiumService {
   }
 
   /**
-   * Checks if the user's action is a premium action.
+   * Checks if a premium action with the given name exists.
    *
    * @param {string} name - The name of the premium action to check.
    * @returns {boolean} True if the premium action exists, false otherwise.
+   * @public
    */
   public isPremiumAction(name: string): boolean {
-    return this._premiumServices.includes(name);
+    return this._premiumServices().some((v) => v.name === name);
   }
 
   /**
-   * Gets the platform fee in SOL.
+   * Calculates the dynamic platform fee in SOL for a given action and total amount.
    *
-   * @public
-   * @returns {WritableSignal<number>} The platform fee signal divided by 1 billion LAMPORTS.
-   * @default 3000000
+   * @param {PremiumActions} action - The premium action to calculate the fee for.
+   * @param {number} totalAmount - The total amount for which the fee is calculated if percentage
+   * @returns {number} The calculated platform fee in SOL.
    */
-  public getPlatformFeeInSOL = computed(() => this._platformFee() / LAMPORTS_PER_SOL);
+  getDynamicPlatformFeeInSOL(action: PremiumActions, totalAmount: number): number {
+    const actionFee = this.getFeeByAction(action);
+    if (actionFee === undefined) {
+      return FreemiumService.DEFAULT_PLATFORM_FEE / LAMPORTS_PER_SOL
+    }
+
+    if (actionFee?.percentage && totalAmount > 0) {
+      return totalAmount * actionFee.fee;
+    }
+
+    return actionFee.fee;
+  }
+
+  public getFeeByAction(action: PremiumActions): Premium {
+    return this._premiumServices().find((v) => v.name === action);
+  }
 
   private async _initializeService(): Promise<void> {
-    await Promise.all([
-      this._fetchPremiumServices(),
-      this._fetchPlatformFee(),
-    ]);
+    await this._fetchPremiumServices()
   }
 
   private async _fetchPremiumServices(): Promise<void> {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-premium-services`);
       const data = await response.json();
-      this._premiumServices = data.premiumServices;
+      this._premiumServices.set(data?.premiumServices);
     } catch (error) {
       console.error('Error fetching premium services:', error);
     }
   }
 
-  private async _fetchPlatformFee(): Promise<void> {
-    try {
-      const response = await fetch(`${environment.apiUrl}/api/freemium/get-platform-fee`);
-      const data = await response.json();
-      this._platformFee.set(data.platformFee ?? FreemiumService.DEFAULT_PLATFORM_FEE);
-    } catch (error) {
-      console.error('Error fetching platform fee:', error);
-    }
-  }
-
-  public addServiceFee(walletPk: PublicKey, type: string): TransactionInstruction | null {
-    if (this.isPremium() || !this._premiumServices.includes(type)) {
+  // TODO: refactor
+  public addServiceFee(walletPk: PublicKey, type: PremiumActions): TransactionInstruction | null {
+    if (this.isPremium() || !type || !this.isPremiumAction(type)) {
       return null;
     }
 

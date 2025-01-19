@@ -1,6 +1,4 @@
 <div class="fee">
-  @if (isPremium()) {
-    <freemium-badge/>
-  }
+  <freemium-badge/>
   <span [ngClass]="{ 'fee--line-through': isPremium()}">{{ feeInSOL }} SOL</span>
 </div>

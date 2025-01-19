@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject, signal} from '@angular/core';
 import { Stake, Token } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
@@ -11,6 +11,7 @@ import { UtilService } from 'src/app/services';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
 import { FreemiumService } from "@app/shared/layouts/freemium";
+import { PremiumActions } from "@app/enums";
 @Component({
   selector: 'split-modal',
   templateUrl: './split-modal.component.html',
@@ -27,6 +28,7 @@ import { FreemiumService } from "@app/shared/layouts/freemium";
 })
 export class SplitModalComponent implements OnInit{
   public _freemiumService = inject(FreemiumService);
+  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.SPLIT, 0))
   @Input() stake:Stake;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
