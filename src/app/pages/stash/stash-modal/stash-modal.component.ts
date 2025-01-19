@@ -11,6 +11,7 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
 import va from '@vercel/analytics'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
+import {PlatformFeeComponent} from "@app/shared/components/platform-fee/platform-fee.component";
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -19,14 +20,14 @@ import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
   providers: [
 
   ],
-  imports: [IonCheckbox, 
+  imports: [IonCheckbox,
     AlertComponent,
     IonSkeletonText,
     IonButton,
     IonImg,
     IonText,
     IonLabel,
-    KeyValuePipe
+    KeyValuePipe, PlatformFeeComponent
   ]
 })
 export class StashModalComponent implements OnInit {
@@ -81,7 +82,7 @@ export class StashModalComponent implements OnInit {
 
       return acc;
     }, {})
-    // loop through summary and add toFixedNoRounding 2 
+    // loop through summary and add toFixedNoRounding 2
     Object.keys(this.summary).forEach(key => {
       this.summary[key] = Number(this.summary[key]).toFixedNoRounding(5)
     })
@@ -135,7 +136,7 @@ export class StashModalComponent implements OnInit {
     const type = event[0].type
 
       this.stashState.set('preparing transactions')
-    
+
     let signatures: string[] = []
     let dataToReload =''
     switch (type) {
@@ -145,7 +146,7 @@ export class StashModalComponent implements OnInit {
         break
       case 'defi-position':
         signatures = await this._stashService.closeOutOfRangeDeFiPosition(event, publicKey)
-        dataToReload = 'defi-position'  
+        dataToReload = 'defi-position'
         break
       case 'value-deficient':
         signatures = await this._stashService.burnZeroValueAssets(event, publicKey)

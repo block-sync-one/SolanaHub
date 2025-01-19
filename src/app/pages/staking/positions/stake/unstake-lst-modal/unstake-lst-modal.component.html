@@ -19,14 +19,20 @@
         <div class="account-id">account</div>
         <div class="account-value">{{amount * stake.pool?.exchangeRate || 0 | number: '1.3'}} SOL</div>
       </div>
+      <div class="account">
+        <div class="account-id">Platform Fee</div>
+        <div class="account-value">
+          <app-platform-fee [feeInSOL]="_freemiumService?.getPlatformFeeInSOL()" ></app-platform-fee>
+        </div>
+      </div>
     </div>
     <alert type="warning" text="
     Please follow these steps to successfully unstake.
     <ol>
-      <li>Initiate Delayed Unstake and get a stake account in return </li> 
-      <li>Unstake & deactivate the Stake Account from the native staking tab</li> 
-      <li>Wait for Epoch Completion</li> 
-      <li>Withdraw SOL from deactiviated account  </li>  
+      <li>Initiate Delayed Unstake and get a stake account in return </li>
+      <li>Unstake & deactivate the Stake Account from the native staking tab</li>
+      <li>Wait for Epoch Completion</li>
+      <li>Withdraw SOL from deactiviated account  </li>
     </ol>
     "></alert>
   </div>

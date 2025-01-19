@@ -21,9 +21,10 @@
         <div class="account-value">{{stake.balance - amount | number: '1.3'}} SOL</div>
       </div>
       <div class="account">
-        <div class="account-id">account 2</div>
-        <div class="account-address">{{utils.addrUtil(newStakeAccount.publicKey.toBase58()).addrShort}}</div>
-        <div class="account-value">{{amount || 0 | number: '1.3'}} SOL</div>
+        <div class="account-id">Platform Fee</div>
+        <div class="account-value">
+          <app-platform-fee [feeInSOL]="_freemiumService?.getPlatformFeeInSOL()" ></app-platform-fee>
+        </div>
       </div>
     </div>
   </div>
