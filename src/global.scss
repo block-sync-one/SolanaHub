@@ -252,7 +252,9 @@ ion-spinner {
 .multi-wallet-modal {
   --max-width: 420px;
   --width: 100%;
+  --height: auto;
   --background: var(--ion-color-light);
+  --border-radius: 1rem;
 }
 
 .nft-modal {
