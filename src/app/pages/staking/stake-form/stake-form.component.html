@@ -4,7 +4,11 @@
     <ion-segment value="stake" mode="ios" #segmentedView>
       <ion-segment-button value="stake">
         <ion-label>Stake
-          <chip color="primary" name="7% APY" />
+          @if(hubSOLApy()) {
+          <chip color="primary" [name]="(hubSOLApy() | percent:'1.0-2') + 'APY'" />
+          }@else {
+            <ion-skeleton-text style="width: 50px;" animated/>
+          }
         </ion-label>
       </ion-segment-button>
       <ion-segment-button value="unstake">
@@ -18,18 +22,90 @@
         <convert-to-hub-sol-box />
         }
       </div>
-      <form [formGroup]="stakeForm" id="stake-form-wrapper">
-        <!-- <stake-input 
+      <form [formGroup]="tokenSwapForm" class=" ion-margin-bottom">
+        <!-- <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting> -->
+        <div class="token-exchange">
+          <div class="ion-margin-bottom">
+          <stake-input 
+          [label]="'Stake'"
+          [assetControl]="tokenSwapForm.controls['inputToken']"
+          [amountControl]="tokenSwapForm.controls['inputAmount']"
+          [jupTokens]="jupTokens"/>
+          </div>
+          <div class="ion-margin-bottom">
+          <stake-input 
+          [label]="'Receive'"
+          [assetControl]="tokenSwapForm.controls['outputToken']" 
+          [jupTokens]="jupTokens" 
+          [outValue]="bestRoute()?.outAmount" 
+          [readonly]="true"
+          [waitForBestRoute]="loading"
+          />
+          </div>
+          <!-- @if(bestRoute()){
+      
+            <div id="route-path">
+              <ion-button size="small">
+                <div>
+                  {{bestRoute()?.routePlan?.length}} 
+                </div>
+                <ion-img src="assets/images/route-icon.svg"/>
+              </ion-button>
+              <div>
+      
+                <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
+                @for (lp of bestRoute().routePlan; track $index) {
+                  <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
+                  
+                }
+              </div>
+            </div>
+          } -->
+          <div id="exchange-rate-wrapper">
+            <div id="exchange-rate-label">Exchange Rate</div>
+            <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLExchangeRate()}} SOL</div>
+          </div>
+          <div id="stake-button-wrapper">
+            <ion-button expand="block" color="primary" >
+              <ion-label>Stake</ion-label>
+            </ion-button>
+          </div>
+        </div>
+      </form>
+      
+      <!-- <form [formGroup]="stakeForm" id="stake-form-wrapper">
+        <div class="ion-margin-bottom" id="stake-input-wrapper">
+        <stake-input
+        
         [assetControl]="stakeForm.controls['asset']"
         [amountControl]="stakeForm.controls['amount']"
-        [stakeAbleAssets]="stakeAbleAssets"
-        /> -->
-      </form>
+        [label]="'Stake'"
+        />
+        </div>
+        <div class="ion-margin-bottom" id="stake-input-wrapper">
+          <stake-input
+          [label]="'Receive'"
+          [readonly]="true"
+          [assetControl]="stakeForm.controls['assetOut']" 
+          [amountControl]="stakeForm.controls['amount']"
+
+          />
+        </div>
+        <div id="exchange-rate-wrapper">
+          <div id="exchange-rate-label">Exchange Rate</div>
+          <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLToken.exchangeRate}} SOL</div>
+        </div>
+        <div id="stake-button-wrapper">
+          <ion-button expand="block" color="primary" (click)="stake()">
+            <ion-label>Stake</ion-label>
+          </ion-button>
+        </div>
+      </form> -->
   }
   @if(segmentedView.value === 'unstake') {
-    <form [formGroup]="unstakeForm" id="unstake-form-wrapper">
+    <!-- <form [formGroup]="unstakeForm" id="unstake-form-wrapper">
       unstake
-    </form>
+    </form> -->
   }
 </div>
   <div id="validator-insights">

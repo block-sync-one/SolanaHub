@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { IonicModule } from '@ionic/angular';
 
-import { MergeModalComponent } from './merge-modal.component';
+import { SelectPositionComponent } from './select-position.component';
 
-describe('MergeModalComponent', () => {
-  let component: MergeModalComponent;
-  let fixture: ComponentFixture<MergeModalComponent>;
+describe('SelectPositionComponent', () => {
+  let component: SelectPositionComponent;
+  let fixture: ComponentFixture<SelectPositionComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ MergeModalComponent ],
+      declarations: [ SelectPositionComponent ],
       imports: [IonicModule.forRoot()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(MergeModalComponent);
+    fixture = TestBed.createComponent(SelectPositionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));

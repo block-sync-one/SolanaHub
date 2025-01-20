@@ -60,3 +60,24 @@ ion-segment-button {
         text-transform: capitalize;
     }
 }
+#exchange-rate-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    div{
+        color: var(--ion-light-gray);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
+#stake-button-wrapper {
+    margin-bottom: 10px;
+    ion-label{
+        text-transform:capitalize;
+        color: var(--ion-color-light);
+        font-weight: 600;
+        line-height: 24px; /* 150% */
+    }
+}

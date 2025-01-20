@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal, computed, effect, inject, signal } from '@angular/core';
 import { Stake } from 'src/app/models';
-import { StakeComponent } from '../stake.component';
+import { PositionComponent } from '../position.component';
 import {
   IonLabel,
   IonInput,
@@ -9,13 +9,15 @@ import {
 } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DecimalPipe, NgClass } from '@angular/common';
+import { StakeAccount } from '../../../stake.service';
+import { LiquidStakeToken } from '../../../stake.service';
 @Component({
   selector: 'merge-modal',
   templateUrl: './merge-modal.component.html',
   styleUrls: ['./merge-modal.component.scss'],
   standalone: true,
   imports: [
-    StakeComponent,
+    PositionComponent,
     IonLabel,
     IonInput,
     IonText,
@@ -26,7 +28,7 @@ import { DecimalPipe, NgClass } from '@angular/common';
   ]
 })
 export class MergeModalComponent implements OnInit {
-  @Input() targetStake: Stake;
+  @Input() targetStake: LiquidStakeToken | StakeAccount | any;
   @Input() stakeAccounts: Stake[];
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram } from '@solana/web3.js';
-import { BehaviorSubject, map, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
 import { Validator } from 'src/app/models/stakewiz.model';
 import { NativeStakeService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { HttpFetchService } from 'src/app/services/http-fetch.service';
@@ -18,13 +18,13 @@ export interface LiquidStakeToken {
   balance: number
   price: number
   value: number
-  frozen: boolean
+  frozen?: boolean
   type: string
-  apy: number
+  apy?: number
   exchangeRate: number
-  poolPublicKey: string
-  tokenMint: string
-  state: string
+  poolPublicKey?: string
+  tokenMint?: string
+  state?: string
   proInsights?: NativeProInsights | LiquidProInsights
 }
 
@@ -87,11 +87,8 @@ export class StakeService {
 
 
   constructor(
-    private _lss: LiquidStakeService,
-    private _nss: NativeStakeService,
     private _txi: TxInterceptorService,
     private _shs: SolanaHelpersService,
-    private _portfolio: PortfolioService,
     private _httpFetchService: HttpFetchService,
     private _util: UtilService
   ) {
@@ -115,6 +112,13 @@ export class StakeService {
         liquid: positions.liquid
       };
     })
+  );
+  public activePositions$ = this.stakePositions$.pipe(
+    filter((positions): positions is NonNullable<typeof positions> => positions !== null),
+    map(positions => [
+      ...positions.native.filter(p => p.state === 'active'),
+      ...positions.liquid
+    ])
   );
   public readonly nativePositions$ = this._stakePositions$.asObservable().pipe(map(positions => positions?.native));
   public readonly liquidPositions$ = this._stakePositions$.asObservable().pipe(map(positions => positions?.liquid));

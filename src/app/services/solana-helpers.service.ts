@@ -107,41 +107,6 @@ export class SolanaHelpersService {
     }
   }
 
-  // public async getStakeAccountsByOwner(walletAddress: string): Promise<Array<{
-  //   pubkey: PublicKey;
-  //   account: AccountInfo<Buffer | ParsedAccountData | any>;
-  // }>> {
-  //   try {
-
-  //     // get stake account
-  //     const stakeAccounts: Array<{
-  //       pubkey: PublicKey;
-  //       account: AccountInfo<Buffer | ParsedAccountData | any>;
-  //     }> = await this.connection.getParsedProgramAccounts(new PublicKey("Stake11111111111111111111111111111111111111"), {
-
-  //       "filters": [   {
-  //         "memcmp": {
-  //           "offset": 12, // fetch stake auth controlled by wallets
-  //           "bytes": walletAddress,
-  //         }
-  //       },
-  //         {
-  //           "memcmp": {
-  //             "offset": 44, // fetch stake auth controlled by program
-  //             "bytes": walletAddress,
-  //           }
-  //         }
-  //       ]
-  //     })
-
-  //     console.log(stakeAccounts);
-
-  //     return stakeAccounts;
-  //   } catch (error) {
-  //     new Error(error)
-  //   }
-  //   return [];
-  // }
 
 
   public async getClusterStake(): Promise<{ activeStake, delinquentStake }> {

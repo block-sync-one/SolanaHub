@@ -2,12 +2,14 @@ import { Component, Input, OnChanges, OnInit, Signal, SimpleChanges, computed, i
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/angular/standalone';
 import { JupToken, Token } from 'src/app/models';
-import { ModalController } from '@ionic/angular';
-import { JupStoreService } from 'src/app/services';
-import { CurrencyPipe, DecimalPipe } from '@angular/common';
+import { PopoverController } from '@ionic/angular';
+import { JupStoreService, UtilService } from 'src/app/services';
+import { CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
 
 import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
 import { StakeAbleAsset } from '../stake-form.component';
+import { SelectPositionComponent } from '../select-position/select-position.component';
+import { PositionComponent } from '../../stake-positions/stake/position.component';
 @Component({
   selector: 'stake-input',
   templateUrl: './input.component.html',
@@ -21,26 +23,28 @@ import { StakeAbleAsset } from '../stake-form.component';
     IonImg,
     IonSkeletonText,
     CurrencyPipe,
-    DecimalPipe
+    DecimalPipe,
+    PositionComponent,
+    NgClass
   ]
 })
 export class InputComponent implements OnInit, OnChanges {
-
+@Input() label: string = 'stake';
   @Input() assetControl;
   @Input() amountControl;
   @Input() outValue = null;
   // public amountValue = null
-  @Input() stakeAbleAssets = signal([] as StakeAbleAsset[])
+  @Input() jupTokens = signal([] as JupToken[])
   @Input() readonly: boolean = false;
   @Input() tokenPrice = signal(0);
   // public usdValue = computed(() => this.tokenPrice() * this.amountControl.value)
   @Input() waitForBestRoute = signal(false);
   private _jupStore = inject(JupStoreService);
-  private _modalCtrl = inject(ModalController);
-
+  private _utilService = inject(UtilService);
+  private _popoverCtrl = inject(PopoverController);
   public visibleValue = signal(null)
   ngOnInit(): void {
-    console.log(this.assetControl.value)
+
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     // this.getTokenPrice();
@@ -62,35 +66,6 @@ export class InputComponent implements OnInit, OnChanges {
     this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
 
   }
-  async openTokensModal() {
-    const config = {
-      logoURI: 'assets/images/tokens-icon.svg',
-      title: 'Select Token',
-      desc: 'Select token you wish to swap',
-      btnText: 'select',
-    }
-
-    const modal = await this._modalCtrl.create({
-      component: ModalComponent,
-      componentProps: {
-        componentName: 'token-list',
-        data: { stakeAbleAssets: this.stakeAbleAssets },
-        config
-      },
-      cssClass: 'modal-style',
-    });
-    modal.present();
-
-    const { data, role } = await modal.onWillDismiss();
-    console.log(data)
-    // let jupToken: JupToken = data
-
-    // if (data) {
-    //   this.tokenControl.setValue(jupToken);
-    //   this.getTokenPrice();
-    // }
-
-  }
 
   getTokenPrice() {
     const { address } = this.assetControl.value
@@ -103,4 +78,57 @@ export class InputComponent implements OnInit, OnChanges {
     });
   }
 
+
+  async openStakeAbleAssetsModal(ev) {
+    if(this.readonly && this.assetControl.value.type != 'native'){
+      return
+    }
+    const popover = await this._popoverCtrl.create({
+      component: SelectPositionComponent,
+      cssClass: 'modal-style',
+      event: ev,
+      side: 'bottom',
+      alignment: 'center',
+      translucent: true,
+      dismissOnSelect: true,
+      showBackdrop: false,
+      mode: 'ios',
+
+    });
+    popover.present();
+
+    const { data, role } = await popover.onWillDismiss();
+    console.log(data)
+    if (data) {
+      // aggregate position to follow up stakeable assets interface 
+      this.assetControl.setValue(data)
+      if(data.type == 'native'){
+        this.visibleValue.set(data.balance)
+        this.readonly = true
+        
+      }else{
+        this.visibleValue.set(0)
+        this.readonly = false
+      }
+    }
+    // let jupToken: JupToken = data
+
+    // if (data) {
+    //   this.assetControl.setValue(jupToken);
+    //   this.getTokenPrice();
+    // }
+
+  }
+
+
+  getLogoURI(stake: any): string {
+    return stake.validator?.image || stake.logoURI || 'assets/images/unknown.svg';
+  }
+  getStakeName(stake: any): string {
+    return stake.validator?.name || stake?.symbol;
+  }
+
+  getAccountShortAddress(stake: any): string {
+    return this._utilService.addrUtil(stake.address).addrShort;
+  }
 }

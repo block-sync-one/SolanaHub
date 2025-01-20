@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject } from '@angular/core';
 import { Stake, Token } from 'src/app/models';
-import { StakeComponent } from '../stake.component';
+
 import {
   IonLabel,
   IonInput
@@ -9,21 +9,23 @@ import { DecimalPipe } from '@angular/common';
 import { Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { UtilService } from 'src/app/services';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
+import { PositionComponent } from '../position.component';
+import { StakeAccount } from '../../../stake.service';
+import { LiquidStakeToken } from '../../../stake.service';
 @Component({
   selector: 'split-modal',
   templateUrl: './split-modal.component.html',
   styleUrls: ['./split-modal.component.scss'],
   standalone: true,
   imports: [
-    StakeComponent, 
+    PositionComponent, 
     IonLabel,
     IonInput,
     DecimalPipe,
-    InputLabelComponent 
   ]
 })
 export class SplitModalComponent implements OnInit{
-  @Input() stake:Stake;
+  @Input() stake:LiquidStakeToken | StakeAccount | any;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
   public newStakeAccount = new Keypair();

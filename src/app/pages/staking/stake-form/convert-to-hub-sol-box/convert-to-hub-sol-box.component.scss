@@ -6,6 +6,8 @@
     border: 1px solid var(--ion-color-primary);
     background: var(--ion-color-primary-bg);
     padding: 16px;
+    flex-wrap: wrap;
+    gap: 20px;
 }
 
 #asset-detection {
@@ -51,6 +53,12 @@ ion-button {
     --padding-start: 8px;
 
     span {
+        color: #FFF;
+
+        /* Text sm/Semibold */
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 18px;
         text-transform: none;
     }
 }

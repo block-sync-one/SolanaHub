@@ -23,25 +23,23 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
 @Component({
   selector: 'position',
-  templateUrl: './stake.component.html',
-  styleUrls: ['./stake.component.scss'],
+  templateUrl: './position.component.html',
+  styleUrls: ['./position.component.scss'],
   standalone: true,
   imports: [
-    DecimalPipe,
     CurrencyPipe,
     IonSkeletonText,
     IonImg,
-    IonChip,
+
     IonIcon,
-    DecimalPipe,
+
     CurrencyPipe,
     CopyTextDirective,
     TooltipModule,
-    DatePipe,
+
     ChipComponent,
-    ProInsightsComponent,
-    IonPopover,
-    IonContent,
+
+
     IonIcon
   ]
 })

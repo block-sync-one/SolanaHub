@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StakeService } from '../stake.service';
 import { map, ReplaySubject, shareReplay } from 'rxjs';
-import { PositionComponent } from './stake/stake.component';
+import { PositionComponent } from './stake/position.component';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { IonSkeletonText,  IonLabel, IonText } from "@ionic/angular/standalone";
@@ -58,15 +58,19 @@ export class StakePositionsComponent implements OnInit {
         }
 
         const totalNativeValue = nativePositions.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0);
-        const totalLiquidValue = positions?.liquid?.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0);
+        // Only include liquid value for active state
+        const totalLiquidValue = state === 'active' 
+          ? positions?.liquid?.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0) || 0
+          : 0;
         const totalValue = Number(totalNativeValue) + Number(totalLiquidValue);
-        return {
+        const group = {
           state,
           description: stateDesc[state],
           totalValue,
           avgAPY,
           positions: nativePositions
         }
+        return group;
       });
 
       // include liquid positions into active group

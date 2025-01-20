@@ -1,0 +1,17 @@
+<div id="stake-positions-container">
+  <!-- <div id="stake-positions-header">
+    <ion-segment value="liquid" mode="ios" (ionChange)="onSelectAsset($event)">
+      <ion-segment-button value="liquid">
+        <ion-label>Token</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="stake">
+        <ion-label>Stake</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div> -->
+  <div id="stake-positions-content">
+    @for (position of positions$ | async; track position) {
+     <position [stake]="position" (click)="onSelectAsset(position)" />
+    }
+  </div>
+</div>

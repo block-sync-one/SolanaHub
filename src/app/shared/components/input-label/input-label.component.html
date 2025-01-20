@@ -8,7 +8,7 @@
         <!-- <ion-img src="assets/images/wallet-icon.svg" /> -->
       </div>
       @if(asset){
-        <span>{{utils.formatBigNumbers(asset?.balance) || 0}} {{asset?.symbol}}</span>
+        <span>{{utils.fixedNumber(asset?.balance) || 0}} {{asset?.symbol}}</span>
 
       }@else{
           <ion-skeleton-text [animated]="true" />

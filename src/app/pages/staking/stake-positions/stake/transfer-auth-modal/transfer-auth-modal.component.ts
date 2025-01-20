@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
 import { Stake } from 'src/app/models';
-import { StakeComponent } from '../stake.component';
+
 import {
   IonLabel,
   IonInput,
@@ -12,13 +12,16 @@ import { DecimalPipe } from '@angular/common';
 import { UtilService } from 'src/app/services';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import { AddressInputComponent } from 'src/app/shared/components/address-input/address-input.component';
+import { PositionComponent } from '../position.component';
+import { StakeAccount } from '../../../stake.service';
+import { LiquidStakeToken } from '../../../stake.service';
 @Component({
   selector: 'transfer-auth-modal',
   templateUrl: './transfer-auth-modal.component.html',
   styleUrls: ['./transfer-auth-modal.component.scss'],
   standalone: true,
   imports: [
-    StakeComponent,
+    PositionComponent,
     AlertComponent,
     IonLabel,
     IonText,
@@ -30,7 +33,7 @@ import { AddressInputComponent } from 'src/app/shared/components/address-input/a
   ]
 })
 export class TransferAuthModalComponent implements OnInit {
-  @Input() stake: Stake;
+  @Input() stake: LiquidStakeToken | StakeAccount | any;
   @Output() onAuthSet = new EventEmitter();
   public targetAddress: string = '';
   public authoritiesChecked = signal({ withdraw: false, stake: false })
@@ -38,8 +41,8 @@ export class TransferAuthModalComponent implements OnInit {
 
 
   ngOnInit() {
-    this.stake.withdrawAuth = this.utils.addrUtil(this.stake.withdrawAuth).addrShort
-    this.stake.stakeAuth = this.utils.addrUtil(this.stake.stakeAuth).addrShort
+    this.stake.authorities.withdrawer = this.utils.addrUtil(this.stake.authorities.withdrawer).addrShort
+    this.stake.authorities.staker = this.utils.addrUtil(this.stake.authorities.staker).addrShort
 
    }
    updateTargetAddress(address){
