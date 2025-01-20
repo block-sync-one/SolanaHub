@@ -15,12 +15,12 @@ interface Account {
   providedIn: 'root'
 })
 export class FreemiumService {
-  public readonly isPremium = computed(() => this._account()?.isPremium ?? null);
+  public readonly isPremium = computed(() => this._account()?.isPremium ?? false);
   public readonly stake = computed(() => this._account()?.stake ?? 0);
+  public readonly isAdEnabled = computed(() => !this.isPremium() && this._showAd());
   private _account = signal<Account | null>(null);
-  private _premiumServices = signal<Premium[]>([]);
-  static DEFAULT_PLATFORM_FEE = 3000000;
-  private _platformFee = signal(FreemiumService.DEFAULT_PLATFORM_FEE); // Default to 0.003 SOL if platform fee is not set
+  private _premiumServices = new Map<PremiumActions, Premium>();
+  static DEFAULT_PLATFORM_FEE = 3000000; // Default to 0.003 SOL if platform fee is not set
   private _showAd = signal(this.getAdStatus());
   private _isPremiumCache = new Map<string, Account>();
 
@@ -47,31 +47,39 @@ export class FreemiumService {
    * @public
    */
   public isPremiumAction(name: string): boolean {
-    return this._premiumServices().some((v) => v.name === name);
+    return this._premiumServices.get(<PremiumActions> name).name === name;
   }
 
   /**
-   * Calculates the dynamic platform fee in SOL for a given action and total amount.
+   * Calculates the dynamic platform fee in SOL for a given action.
    *
    * @param {PremiumActions} action - The premium action to calculate the fee for.
-   * @param {number} totalAmount - The total amount for which the fee is calculated if percentage
-   * @returns {number} The calculated platform fee in SOL.
+   * @param {number} [totalAmount] - Optional total amount for percentage-based fees.
+   * @returns {number} The calculated fee in SOL.
+   * @throws {Error} If the action requires a total amount but none is provided.
    */
-  getDynamicPlatformFeeInSOL(action: PremiumActions, totalAmount: number): number {
-    const actionFee = this.getFeeByAction(action);
+  getDynamicPlatformFeeInSOL(action: PremiumActions, totalAmount?: number): number {
+    const actionFee = this._premiumServices.get(action);
+    let fee = 0;
+
+    if(actionFee?.percentage && !totalAmount){
+      throw Error("Action is not valid. Please provide a total amount")
+    }
+
     if (actionFee === undefined) {
       return FreemiumService.DEFAULT_PLATFORM_FEE / LAMPORTS_PER_SOL
     }
 
     if (actionFee?.percentage && totalAmount > 0) {
-      return totalAmount * actionFee.fee;
+      fee = totalAmount * actionFee.fee;
+    } else {
+      fee = actionFee.fee;
     }
 
-    return actionFee.fee;
-  }
+    actionFee.valueInSol = fee;
+    this._premiumServices.set(action, actionFee)
 
-  public getFeeByAction(action: PremiumActions): Premium {
-    return this._premiumServices().find((v) => v.name === action);
+    return fee;
   }
 
   private async _initializeService(): Promise<void> {
@@ -82,13 +90,12 @@ export class FreemiumService {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-premium-services`);
       const data = await response.json();
-      this._premiumServices.set(data?.premiumServices);
+      data?.premiumServices.forEach((s) => this._premiumServices.set(s.name, s));
     } catch (error) {
       console.error('Error fetching premium services:', error);
     }
   }
 
-  // TODO: refactor
   public addServiceFee(walletPk: PublicKey, type: PremiumActions): TransactionInstruction | null {
     if (this.isPremium() || !type || !this.isPremiumAction(type)) {
       return null;
@@ -97,7 +104,7 @@ export class FreemiumService {
     return SystemProgram.transfer({
       fromPubkey: walletPk,
       toPubkey: new PublicKey(environment.platformFeeCollector),
-      lamports: this._platformFee(),
+      lamports: this._premiumServices.get(type).valueInSol * LAMPORTS_PER_SOL,
     });
   }
 
@@ -149,12 +156,6 @@ export class FreemiumService {
     }
     return true;
   }
-
-  public readonly isAdEnabled = computed(() => {
-    const isPremium = this.isPremium();
-    if (isPremium === null) return null;
-    return !isPremium && this._showAd();
-  });
 
   private _showAdEvent(): void {
     va.track('hide freemium ad');

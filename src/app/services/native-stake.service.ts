@@ -22,8 +22,6 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { Stake, StakeAccountShyft, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
-import { FreemiumService } from "@app/shared/layouts/freemium";
-import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -33,8 +31,7 @@ export class NativeStakeService {
   constructor(
     private _utils: UtilService,
     private _txi: TxInterceptorService,
-    private _shs: SolanaHelpersService,
-    private _freemiumService: FreemiumService
+    private _shs: SolanaHelpersService
   ) { }
 
 
@@ -256,16 +253,7 @@ export class NativeStakeService {
         });
       })
       const record = { message: 'account', data: { action: 'merge accounts' } }
-
-      // TODO: Add platformFee transaction
-      if (this._freemiumService.isPremium()) {
-        const platformFee =  this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.MERGE, 0);
-        // const f = platformFee / mergeAccounts.length;
-
-      //  const tx =  [mergeAccounts, platformfee];
-      }
       return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record)
-
     } catch (error) {
       console.log(error);
     }

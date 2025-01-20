@@ -63,10 +63,6 @@
   </div>
   }
 
-  @if(!_freemiumService.isPremium()) {
-    <ng-container *appIsPremiumAction="componentName">
-      <app-modal-message />
-    </ng-container>
-  }
+  <app-modal-message *appIsPremiumAction="componentName"/>
 
 </div>

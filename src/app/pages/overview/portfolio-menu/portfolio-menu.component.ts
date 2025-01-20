@@ -73,10 +73,8 @@ export class PortfolioMenuComponent {
   }
 
   async openAddPortfolioPopup(walletAddress?: string) {
-    const modal = await this._popover.create({
+    const modal = await this._modalCtrl.create({
       component: AddPortfolioPopupComponent,
-      mode: 'ios',
-      showBackdrop: true,
       cssClass: 'multi-wallet-modal',
       componentProps: {
         walletAddress

@@ -28,7 +28,7 @@ import { PremiumActions } from "@app/enums";
 })
 export class SplitModalComponent implements OnInit{
   public _freemiumService = inject(FreemiumService);
-  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.SPLIT, 0))
+  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.SPLIT))
   @Input() stake:Stake;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
