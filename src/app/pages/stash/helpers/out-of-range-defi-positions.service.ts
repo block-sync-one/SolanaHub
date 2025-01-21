@@ -1,8 +1,9 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { Injectable, computed, signal } from '@angular/core';
 import { StashAsset, StashGroup, OutOfRange } from '../stash.model';
-import { PublicKey, Transaction, TransactionInstruction } from '@solana/web3.js';
+import { PublicKey, Transaction } from '@solana/web3.js';
 import { HelpersService } from './helpers.service';
+import { PremiumActions } from "@app/enums";
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,7 @@ export class OutOfRangeDeFiPositionsService {
 
   constructor(
     private _helpersService: HelpersService,
-    private utils: UtilService
+    private _freemiumService: FreemiumService
   ) {
     this.updateOutOfRangeDeFiPositions();
   }
@@ -67,7 +68,7 @@ export class OutOfRangeDeFiPositionsService {
       })).json()
 
       const txArray: Transaction[] = encodedIx.map(ix => Transaction.from(Buffer.from(ix, 'base64')).instructions).flat()
-      return await this._helpersService._simulateBulkSendTx(txArray)
+      return await this._helpersService._simulateBulkSendTx(txArray, this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH_OOR))
 
     } catch (error) {
       console.log(error);
@@ -75,4 +76,4 @@ export class OutOfRangeDeFiPositionsService {
     }
   }
 
-} 
+}

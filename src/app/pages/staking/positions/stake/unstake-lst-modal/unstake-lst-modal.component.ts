@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, inject, signal} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, inject, signal} from '@angular/core';
 import { Stake } from 'src/app/models';
 import { StakeComponent } from '../stake.component';
 import {
@@ -7,12 +7,11 @@ import {
 } from '@ionic/angular/standalone';
 import { UtilService } from 'src/app/services';
 import { DecimalPipe } from '@angular/common';
-import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import { AmountInputComponent } from 'src/app/shared/components/amount-input/amount-input.component';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
-import {PlatformFeeComponent} from "@app/shared/components/platform-fee/platform-fee.component";
-import {FreemiumService} from "@app/shared/layouts/freemium";
+import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
+import { FreemiumService } from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
 
 @Component({
@@ -36,7 +35,7 @@ export class UnstakeLstModalComponent  implements OnInit {
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
   public _freemiumService = inject(FreemiumService);
-  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.UNSTAKE_LST, 0))
+  public fee = signal(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.UNSTAKE_LST, 0))
   public amount:number = 0
 
   ngOnInit() {

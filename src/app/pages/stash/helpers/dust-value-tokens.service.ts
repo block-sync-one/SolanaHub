@@ -1,9 +1,9 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { PortfolioService, JupStoreService } from 'src/app/services';
+import { Injectable, computed, effect, signal } from '@angular/core';
 import { StashAsset, StashGroup } from '../stash.model';
 import { HelpersService } from './helpers.service';
 import { JupToken } from 'src/app/models/jup-token.model';
-import { TransactionInstruction } from '@solana/web3.js';
+import { FreemiumService } from "@app/shared/layouts/freemium";
+import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +11,7 @@ import { TransactionInstruction } from '@solana/web3.js';
 export class DustValueTokensService {
   private readonly dustValueStashGroupSignal = signal<StashGroup | null>(null);
 
-  constructor(private readonly _helpersService: HelpersService) {
+  constructor(private readonly _helpersService: HelpersService, private _freemiumService: FreemiumService) {
     effect(() => {
       const assets = this._helpersService.dasAssets();
       if (assets) {
@@ -37,7 +37,7 @@ export class DustValueTokensService {
     const rentFeeUSD = this._helpersService.rentFee * this._helpersService.jupStoreService.solPrice() * buffer;
 
     const filterDustValueTokens = tokens
-      .filter(token => 
+      .filter(token =>
         Number(token.value) <= maxDustValue &&
         Number(token.value) > rentFeeUSD &&
         // token.value > 0 &&
@@ -99,11 +99,11 @@ export class DustValueTokensService {
       // Deserialize each transaction in the array
 
       console.log('swapencodedIx', swapencodedIx.flat());
-      
+
       // filter null and flat
       const ixs = swapencodedIx.flat().filter(ix => ix !== null)
       // const instructions = swapencodedIx.map(tx => extractInstructions(tx));
-      return await this._helpersService._simulateBulkSendTx(ixs)
+      return await this._helpersService._simulateBulkSendTx(ixs, this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH))
 
     } catch (error) {
       console.log(error);
@@ -111,4 +111,4 @@ export class DustValueTokensService {
     }
   }
 
-} 
+}

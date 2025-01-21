@@ -43,7 +43,7 @@ import { PremiumActions } from "@app/enums";
 })
 export class MergeModalComponent implements OnInit {
   public _freemiumService = inject(FreemiumService);
-  public fee = signal(this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.MERGE))
+  public fee = signal(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.MERGE))
   @Input() targetStake: Stake;
   @Input() stakeAccounts: Stake[];
   @Output() onAccountsSelected = new EventEmitter();

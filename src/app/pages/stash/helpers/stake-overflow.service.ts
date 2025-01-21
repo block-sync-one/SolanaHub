@@ -1,17 +1,19 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { NativeStakeService, PortfolioService } from 'src/app/services';
-import { StashAsset, StashGroup } from '../stash.model';
+import { Injectable, computed, signal } from '@angular/core';
+import { NativeStakeService } from 'src/app/services';
+import { StashAsset } from '../stash.model';
 import { HelpersService } from './helpers.service';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { StakeProgram } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
 import { Stake } from 'src/app/models';
+import { PremiumActions } from "@app/enums";
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 @Injectable({
   providedIn: 'root'
 })
 export class StakeOverflowService {
-  constructor(private _helpersService: HelpersService, private _nss: NativeStakeService) {
+  constructor(private _helpersService: HelpersService, private _nss: NativeStakeService, private _freemiumService: FreemiumService) {
     this.getStakeAccounts()
   }
 
@@ -46,7 +48,7 @@ export class StakeOverflowService {
       lamports: acc.extractedValue.SOL * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
     }));
     const instructions = withdrawTx.map(ix => ix.instructions)
-    const signatures = await this._helpersService._simulateBulkSendTx(instructions.flat())
+    const signatures = await this._helpersService._simulateBulkSendTx(instructions.flat(), this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH))
     if(signatures) {
       this.getStakeAccounts()
     }
@@ -55,4 +57,4 @@ export class StakeOverflowService {
 
     // this._nss.withdraw([account], publicKey, account.extractedValue.SOL * LAMPORTS_PER_SOL)
   }
-} 
+}

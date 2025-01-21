@@ -54,15 +54,15 @@ export class FreemiumService {
    * Calculates the dynamic platform fee in SOL for a given action.
    *
    * @param {PremiumActions} action - The premium action to calculate the fee for.
-   * @param {number} [totalAmount] - Optional total amount for percentage-based fees.
+   * @param {number} [multiplier] - Optional multiplier for total fees calculation.
    * @returns {number} The calculated fee in SOL.
    * @throws {Error} If the action requires a total amount but none is provided.
    */
-  getDynamicPlatformFeeInSOL(action: PremiumActions, totalAmount?: number): number {
+  calculatePlatformFeeInSOL(action: PremiumActions, multiplier?: number): number {
     const actionFee = this._premiumServices.get(action);
     let fee = 0;
 
-    if(actionFee?.percentage && !totalAmount){
+    if(actionFee?.percentage && !multiplier){
       throw Error("Action is not valid. Please provide a total amount")
     }
 
@@ -70,8 +70,8 @@ export class FreemiumService {
       return FreemiumService.DEFAULT_PLATFORM_FEE / LAMPORTS_PER_SOL
     }
 
-    if (actionFee?.percentage && totalAmount > 0) {
-      fee = totalAmount * actionFee.fee;
+    if ((actionFee?.percentage || action === PremiumActions.STASH_OOR) && multiplier > 0) {
+      fee = multiplier * actionFee.fee;
     } else {
       fee = actionFee.fee;
     }
@@ -80,6 +80,17 @@ export class FreemiumService {
     this._premiumServices.set(action, actionFee)
 
     return fee;
+  }
+
+  /**
+   * Gets the dynamic platform fee in SOL for a given action.
+   *
+   * @param {PremiumActions} action - The premium action to calculate the fee for.
+   * @returns {number} The fee in SOL for the given action.
+   * @memberof _premiumServices
+   */
+  getDynamicPlatformFeeInSOL(action: PremiumActions): number {
+    return this._premiumServices.get(action).valueInSol;
   }
 
   private async _initializeService(): Promise<void> {

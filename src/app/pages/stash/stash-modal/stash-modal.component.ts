@@ -11,7 +11,10 @@ import { AlertComponent } from 'src/app/shared/components/alert/alert.component'
 import va from '@vercel/analytics'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
-import {PlatformFeeComponent} from "@app/shared/components/platform-fee/platform-fee.component";
+import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
+import { FreemiumService } from "@app/shared/layouts/freemium";
+import { PremiumActions } from "@app/enums";
+
 @Component({
   selector: 'stash-modal',
   templateUrl: './stash-modal.component.html',
@@ -43,13 +46,13 @@ export class StashModalComponent implements OnInit {
     public modalCtrl: ModalController,
     private _lss: LiquidStakeService,
     private _earningsService: EarningsService,
-    private _loyaltyLeagueService: LoyaltyLeagueService
+    private _loyaltyLeagueService: LoyaltyLeagueService,
+    private _freemiumService: FreemiumService
   ) {
   }
 
-
   public summary: { [key: string]: number } = {};
-  public platformFeeInSOL = this._helpersService.platformFeeInSOL
+  public platformFeeInSOL = signal(0)
   public stashState = signal('')
   public hubSOLRate = null
   ngOnInit() {
@@ -93,7 +96,7 @@ export class StashModalComponent implements OnInit {
 
     // if summary contain SOL, deduct platform fee
     if (this.summary['SOL']) {
-      this.summary['SOL'] = this.summary['SOL'] - this._helpersService.platformFeeInSOL()
+      this.summary['SOL'] = this.summary['SOL'] - this.platformFeeInSOL()
     }
   }
   private async _fetchHubSOLRate() {
@@ -114,14 +117,11 @@ export class StashModalComponent implements OnInit {
       case 'stake-account':
       case 'value-deficient':
       case 'dust-value':
-        this._helpersService.platformFeeInSOL.set(this.summary['SOL'] * this._helpersService.platformFee)
+        this.platformFeeInSOL.set(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.STASH, this.summary['SOL']));
         break
       case 'defi-position':
-        let costPerPosition = 0.01
-        this._helpersService.platformFeeInSOL.set(this.stashAssets.length * costPerPosition)
+        this.platformFeeInSOL.set(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.STASH_OOR, this.stashAssets.length));
         break
-
-
     }
   }
 
@@ -195,7 +195,7 @@ export class StashModalComponent implements OnInit {
     }
     let stashReferralRecord = null
     if (this._earningsService.referralAddress()) {
-      const platformFee = this._helpersService.platformFeeInSOL()
+      const platformFee = this.platformFeeInSOL()
         stashReferralRecord = {
           txs: signatures,
           referralFee: platformFee * 0.5,
@@ -205,7 +205,7 @@ export class StashModalComponent implements OnInit {
     this._earningsService.storeRecord(stashRecord, stashReferralRecord)
   }
   storeEarningPlatformRecord(signatures: string[]){
-    const platformFee = this._helpersService.platformFeeInSOL()
+    const platformFee = this.platformFeeInSOL()
     const referralFee = this._earningsService.referralAddress() ? platformFee * 0.5 : 0
     const numberOfPositions = this.stashAssets.length
     const type = this.stashAssets[0].type

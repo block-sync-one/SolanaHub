@@ -1,19 +1,19 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { PortfolioService } from 'src/app/services';
-import { StashAsset, StashGroup } from '../stash.model';
+import { Injectable, computed, signal } from '@angular/core';
+import { StashAsset } from '../stash.model';
 import { createBurnCheckedInstruction, createCloseAccountInstruction } from "../../../../../node_modules/@solana/spl-token";
 import { PublicKey } from '@solana/web3.js';
 import { HelpersService } from './helpers.service';
 import { TransactionInstruction } from '@solana/web3.js';
+import { PremiumActions } from "@app/enums";
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ZeroValueAssetsService {
-  constructor(private _helpersService: HelpersService
-
-  ) {
+  constructor(private _helpersService: HelpersService,
+              private _freemiumService: FreemiumService) {
     this.updateZeroValueAssets();
   }
 
@@ -118,7 +118,6 @@ export class ZeroValueAssetsService {
         walletOwner
       ));
     }));
-    return await this._helpersService._simulateBulkSendTx(instructions.flat())
+    return await this._helpersService._simulateBulkSendTx(instructions.flat(), this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH))
   }
-
-} 
+}
