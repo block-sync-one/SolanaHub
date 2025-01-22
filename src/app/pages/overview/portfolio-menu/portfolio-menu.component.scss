@@ -16,19 +16,25 @@
   line-height: 24px;
 }
 
-#portfolio-button-add {
+#portfolio-button-add, #portfolio-menu-add-area {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
+}
+
+#portfolio-menu-add-area {
   padding-block: 17px;
-  border-block: 1px solid var(--ion-color-border);
-  color: var(--ion-light-gray);
+  border-top: 1px solid var(--ion-color-border);
+  cursor: pointer;
+}
+
+#portfolio-button-add {
+  color: var(--ion-color-dark);
   font-size: 13px;
   font-weight: 600;
 
   ion-icon {
-    cursor: pointer;
     width: 20px;
     height: 20px;
   }

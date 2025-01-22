@@ -5,7 +5,6 @@
   color: var(--ion-color-dark);
   display: flex;
   flex-direction: column;
-  gap: 24px;
 }
 
 .d-flex {
@@ -20,6 +19,7 @@
   color: var(--ion-color-dark);
   grid-column: span 2;
   margin-bottom: 4px;
+  line-height: 18px;
 
   &--mb {
     margin-bottom: .5rem;
@@ -29,18 +29,24 @@
 .modal-header {
   .energy {
     display: inline-block;
-    padding-top: -20px;
-    height: 200px;
-    width: auto;
+    position: absolute;
+    margin-top: -44px;
+    height: 336px;
+    width: 336px;
+    left: 102px;
   }
 
-  .d-flex {
-    margin-top: -5rem;
+  .description {
+    position: absolute;
+    top: 138px;
+    text-align: center;
+    left: 106px;
   }
 
   &__title {
     font-size: 24px;
     font-weight: 500;
+    line-height: 32px;
   }
 
   .close-ad ion-img {
@@ -54,23 +60,26 @@
 }
 
 .modal-body {
-  border: 1px solid #E3E8EF;
+  border: 1px solid var(--ion-color-border);
   border-radius: 0.5rem;
   color: var(--ion-color-dark);
+  margin-top: 194px;
+  margin-bottom: 24px;
 
   &__header {
     padding-block: 1rem;
-    border-bottom: 1px solid #E3E8EF;
+    border-bottom: 1px solid var(--ion-color-border);
   }
 
   &__hubSol {
     font-size: 36px;
     font-weight: 500;
+    letter-spacing: -0.72px;
   }
 
   &__hubSol-icon {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
   }
 
   &__plan {
@@ -90,6 +99,7 @@
   &__description {
     font-weight: 500;
     color: var(--ion-color-dark);
+    line-height: 24px;
   }
 
   ion-img {
@@ -100,4 +110,7 @@
 
 .modal-footer ion-button {
   text-transform: initial;
+  font-size: 16px;
+  font-weight: 600;
+  height: 44px;
 }

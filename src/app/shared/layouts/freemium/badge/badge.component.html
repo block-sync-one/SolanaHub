@@ -1,10 +1,11 @@
-@if(isPremium()) {
+@if(isVisible()) {
 <div class="pro">
   <chip
     (click)="openFreemiumAccessPopup()"
     color="pro">
     <div id="chip-content">
-      <ion-img src="/assets/images/flash.svg" /><span>PRO</span>
+      <ion-img src="/assets/images/flash.svg"/>
+      <span>PRO</span>
     </div>
   </chip>
 </div>

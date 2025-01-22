@@ -23,12 +23,12 @@
     <portfolio-box/>
   }
   @if (canAddWallet()) {
-    <div>
-      <div id="portfolio-button-add">
-        <ion-icon name="add-circle-outline" (click)="openPortfolioSetup()"></ion-icon>
-          Add wallet
-        <freemium-badge/>
+    <div id="portfolio-menu-add-area">
+      <div id="portfolio-button-add" (click)="openPortfolioSetup()">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <span>Add wallet</span>
       </div>
+      <freemium-badge [show]="true"/>
     </div>
   }
 </div>

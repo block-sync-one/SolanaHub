@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { PopupPlanComponent } from '@app/shared/layouts/freemium';
 import { FreemiumService } from '../freemium.service';
@@ -9,10 +9,13 @@ import { FreemiumService } from '../freemium.service';
   styleUrls: ['./badge.component.scss'],
 })
 export class BadgeComponent {
-  public _freemiumService = inject(FreemiumService);
+  @Input() set show(value: boolean) {
+    this.showSignal.set(value);
+  }
+  private _freemiumService = inject(FreemiumService);
+  private showSignal = signal(false)
+  public isVisible = computed(() => this._freemiumService.isPremium() || this.showSignal());
   private _modalCtrl= inject(ModalController);
-  public isPremium = this._freemiumService.isPremium;
-
 
   async openFreemiumAccessPopup(){
     const modal = await this._modalCtrl.create({
