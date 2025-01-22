@@ -5,7 +5,8 @@ import {
   IonSkeletonText,
   IonAvatar
 } from '@ionic/angular/standalone';
-import { ChipComponent } from "../../../../shared/components/chip/chip.component";
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+
 @Component({
   selector: 'convert-to-hub-sol-box',
   templateUrl: './convert-to-hub-sol-box.component.html',

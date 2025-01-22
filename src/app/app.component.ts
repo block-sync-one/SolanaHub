@@ -42,6 +42,7 @@ import { NewsFeedComponent } from './shared/components/news-feed/news-feed.compo
 
 import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
+import { StakeService } from './pages/staking/stake.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -86,6 +87,7 @@ export class AppComponent implements OnInit {
       if(wallet){
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
+
         });
       }
 
@@ -93,6 +95,7 @@ export class AppComponent implements OnInit {
     }))
 
   public notifIndicator = this._notifService.notifIndicator;
+  public hubSOLApyIndicator = this._stakingService.hubSOLApy;
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
 
   constructor(
@@ -105,6 +108,7 @@ export class AppComponent implements OnInit {
     private _vrs: VirtualStorageService,
     private _utilService: UtilService,
     private _renderer: Renderer2,
+    private _stakingService: StakeService,
     @Inject(DOCUMENT) private document: Document,
   ) {
     const showNewsFeed = JSON.parse(this._vrs.localStorage.getData('newsFeedClosed'))

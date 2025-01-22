@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram } from '@solana/web3.js';
 import { BehaviorSubject, filter, map, switchMap, from } from 'rxjs';
 import { Validator } from 'src/app/models/stakewiz.model';
@@ -137,12 +137,17 @@ export class StakeService {
     map(positions => positions?.liquid)
   );
 
+
   constructor(
     private _txi: TxInterceptorService,
+    private _lss: LiquidStakeService,
     private _shs: SolanaHelpersService,
     private _httpFetchService: HttpFetchService,
     private _util: UtilService
-  ) {}
+  ) {
+    this.getHubSOLAPY()
+
+  }
 
   // Helper method to update state
   private setState(newState: Partial<typeof this._state$.value>) {
@@ -150,27 +155,6 @@ export class StakeService {
       ...this._state$.value,
       ...newState
     });
-  }
-
-  // Private method to enrich positions with validator data
-  private async enrichPositionsWithValidators(positions: StakePositions): Promise<StakePositions> {
-    const validators = await this._shs.getValidatorsList();
-    
-    const nativePositionExtended = await Promise.all(
-      positions.native.map(async position => {
-        const { addrShort } = this._util.addrUtil(position.address);
-        const validator = validators.find(v => v.vote_identity === position.voter);
-        return { ...position, validator, shortAddress: addrShort };
-      })
-    );
-console.log('nativePositionExtended', nativePositionExtended);
-
-
-
-    return {
-      native: nativePositionExtended,
-      liquid: positions.liquid
-    };
   }
 
   public async updateStakePositions(walletAddress: string): Promise<void> {
@@ -185,6 +169,7 @@ console.log('nativePositionExtended', nativePositionExtended);
         positions: response,
         loading: false 
       });
+
     } catch (error) {
       console.error('Error updating stake positions', error);
       this.setState({ 
@@ -222,4 +207,15 @@ console.log('nativePositionExtended', nativePositionExtended);
       throw error;
     }
   }
+
+
+  public hubSOLApy = signal(null);
+  public getHubSOLAPY(): void {
+    this._lss.getStakePoolList().then(sp => {
+      const {apy} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
+      this.hubSOLApy.set(apy)
+     
+    })
+  }
 }
+

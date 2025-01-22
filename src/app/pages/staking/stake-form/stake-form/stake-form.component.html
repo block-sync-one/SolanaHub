@@ -1,0 +1,54 @@
+<div id="convert-to-hubSOL-wrapper" class="ion-margin-bottom">
+
+  <convert-to-hub-sol-box />
+
+</div>
+<form [formGroup]="tokenSwapForm" class=" ion-margin-bottom">
+  <!-- <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting> -->
+  <div class="token-exchange">
+    <div class="ion-margin-bottom">
+    <stake-input 
+    [label]="'Stake'"
+    [assetControl]="tokenSwapForm.controls['inputToken']"
+    [amountControl]="tokenSwapForm.controls['inputAmount']"
+      />
+    </div>
+    <div class="ion-margin-bottom">
+    <stake-input 
+    [label]="'Receive'"
+    [assetControl]="tokenSwapForm.controls['outputToken']" 
+    [outValue]="getOutValue()" 
+    [readonly]="true"
+    [waitForBestRoute]="loading"
+    />
+    </div>
+    <!-- @if(bestRoute()){
+
+      <div id="route-path">
+        <ion-button size="small">
+          <div>
+            {{bestRoute()?.routePlan?.length}} 
+          </div>
+          <ion-img src="assets/images/route-icon.svg"/>
+        </ion-button>
+        <div>
+
+          <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
+          @for (lp of bestRoute().routePlan; track $index) {
+            <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
+            
+          }
+        </div>
+      </div>
+    } -->
+    <div id="exchange-rate-wrapper">
+      <div id="exchange-rate-label">Exchange Rate</div>
+      <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLExchangeRate()}} SOL</div>
+    </div>
+    <div id="stake-button-wrapper">
+      <ion-button expand="block" color="primary" (click)="submitSwap()">
+        <ion-label>{{swapState()}}</ion-label>
+      </ion-button>
+    </div>
+  </div>
+</form>

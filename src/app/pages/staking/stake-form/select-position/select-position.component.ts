@@ -7,7 +7,6 @@ import {
   IonImg
 } from '@ionic/angular/standalone';
 import { LiquidStakeToken, StakeService } from '../../stake.service';
-import { StakeAbleAsset } from '../stake-form.component';
 import { AsyncPipe } from '@angular/common';
 import { filter, map } from 'rxjs';
 import { PositionComponent } from '../../stake-positions/stake/position.component';

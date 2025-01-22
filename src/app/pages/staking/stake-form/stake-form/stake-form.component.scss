@@ -1,0 +1,52 @@
+#exchange-rate-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    div{
+        color: var(--ion-light-gray);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
+#stake-button-wrapper {
+    margin-bottom: 10px;
+    ion-label{
+        text-transform:capitalize;
+        color: var(--ion-color-light);
+        font-weight: 600;
+        line-height: 24px; /* 150% */
+    }
+}
+
+
+#route-path {
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 21px;
+    text-align: left;
+    margin-block-end: 18px;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    text-transform: capitalize;
+
+    div{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    /* 190.909% */
+    ion-button {
+        margin-inline-end: 4px;
+        --border-radius: 100px;
+        --background: #EFF0F0;
+        --color: rgba(0, 0, 0, 0.35);
+        font-size: 10px;
+        height: 23px;
+        --padding-bottom: 0;
+        --padding-top: 0;
+        font-weight: 600;
+    }
+}

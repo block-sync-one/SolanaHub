@@ -5,8 +5,6 @@ import { PopoverController } from '@ionic/angular';
 import { JupStoreService, UtilService } from 'src/app/services';
 import { CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
 
-import { ModalComponent } from 'src/app/shared/components/modal/modal.component';
-import { StakeAbleAsset } from '../stake-form.component';
 import { SelectPositionComponent } from '../select-position/select-position.component';
 import { PositionComponent } from '../../stake-positions/stake/position.component';
 @Component({

@@ -68,6 +68,12 @@
                     {{notifIndicator()}}
                   </ion-chip>
                   }
+                  
+                  @if(p.title == 'Staking' && hubSOLApyIndicator()){
+                    <ion-chip color="primary">
+                      {{hubSOLApyIndicator() | percent:'1.2-2'}} APY
+                    </ion-chip>
+                    }
                   }
                 </ion-item>
                 }

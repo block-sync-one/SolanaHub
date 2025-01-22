@@ -17,7 +17,7 @@ import {
 } from '@ionic/angular/standalone';
 import { JupStoreService, NativeStakeService,  SolanaHelpersService,  UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
-import { StakeFormComponent } from './stake-form/stake-form.component';
+import { StakeBoxWrapperComponent } from './stake-form/stake-box-wrapper.component';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 
 import { addIcons } from 'ionicons';
@@ -43,7 +43,7 @@ interface ValidatorDataItem {
     IonCol,
     IonContent,
     IonSkeletonText,
-    StakeFormComponent,
+    StakeBoxWrapperComponent,
     StakePositionsComponent
   ]
 })

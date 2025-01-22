@@ -4,32 +4,27 @@ import {
   IonSegment,
   IonSegmentButton,
   IonLabel, IonImg, IonButton, IonIcon } from '@ionic/angular/standalone';
-import { ChipComponent } from "../../../shared/components/chip/chip.component";
-import { ConvertToHubSOLBoxComponent } from './convert-to-hub-sol-box/convert-to-hub-sol-box.component';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputComponent } from './input/input.component';
-import { LiquidStakeToken, StakeAccount, StakeService } from '../stake.service';
-import { filter, map, Observable } from 'rxjs';
-import { JupRoute, JupToken, Token, Validator, WalletExtended } from 'src/app/models';
-import { JupStoreService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
+import { JupStoreService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PercentPipe } from '@angular/common';
-
-export interface StakeAbleAsset {
-  logoURI: string;
-  symbol: string;
-  balance: string;
-  address: string;
-  mint?: string;
-  validator?: Validator;
-  type: 'token' | 'stakeAccount';
-}
+import { StakeService } from '../../stake.service';
+import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
+import { ConvertToHubSOLBoxComponent } from './convert-to-hub-sol-box/convert-to-hub-sol-box.component';
+import { InputComponent } from '../input/input.component';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'stake-form',
   templateUrl: './stake-form.component.html',
   styleUrls: ['./stake-form.component.scss'],
   standalone: true,
-  imports: [IonIcon, IonButton, IonImg,
+  imports: [
+    CommonModule,
+    IonIcon, 
+    IonButton, 
+    IonImg,
     IonSegment,
     IonSegmentButton,
     IonLabel,
@@ -41,7 +36,7 @@ export interface StakeAbleAsset {
     PercentPipe
   ]
 })
-export class StakeFormComponent implements OnInit {
+export class StakeFormComponent  implements OnInit {
 
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public tokenIn: Token = {
@@ -180,6 +175,4 @@ export class StakeFormComponent implements OnInit {
       setTimeout(() => this.swapState.set('Stake'), 2000);
     }
   }
-
-
 }
