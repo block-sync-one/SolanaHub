@@ -16,33 +16,37 @@
     font-size: 14px;
 
    #ad-text {
-    // flex: 10;
+     font-size: 13px;
+     font-weight: 500;
     height: inherit;
     text-align: center;
     align-items: center;
     justify-content: center;
     display: flex;
-    gap: 1rem;
+    gap: 1rem
+   }
 
-    ion-button {
-      --color: var(--ion-color-primary);
-      --background: var(--ion-color-light);;
-      --background-hover: var(--ion-color-page-top);
-      --border-style: solid;
-      --border-width: 1px;
-      --border-color: var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
-      --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
-      text-transform: capitalize;
-    }
+  ion-button {
+    text-transform: initial;
+    --border-radius: var(--radius-sm, 6px);
+    --border-color: var(--Component-colors-Components-Buttons-Secondary-button-secondary-border, #CDD5DF);
+    --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
+    --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
   }
 }
 
 .close-ad {
   position: absolute;
-  right: 16px;
+  right: 26px;
   top: 14px;
 }
 
+ion-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  cursor: pointer;
+  color: var(--ion-color-dark);
+}
 ion-img {
   width: 25px;
   cursor: pointer;

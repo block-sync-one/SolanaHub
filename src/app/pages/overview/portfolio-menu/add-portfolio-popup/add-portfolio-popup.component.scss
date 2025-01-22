@@ -2,8 +2,13 @@
   display: flex;
   flex-direction: column;
   gap: .8rem;
-  border-radius: 1rem;
   padding: 1rem;
+
+  ion-button {
+    text-transform: initial;
+    font-size: 1rem;
+    font-weight: 600;
+  }
 }
 
 .content-header {
@@ -54,4 +59,5 @@
     padding-top: .4rem;
     color: var(--ion-color-danger);
   }
+
 }

@@ -16,21 +16,21 @@
   line-height: 24px;
 }
 
-#portfolio-menu-header-button {
-
-  #portfolio-menu-header-button-add {
-    cursor: pointer;
-    width: 24px;
-    height: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-full, 9999px);
-    border: 1px dashed var(--ion-light-gray);
-  }
+#portfolio-button-add {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding-block: 17px;
+  border-block: 1px solid var(--ion-color-border);
+  color: var(--ion-light-gray);
+  font-size: 13px;
+  font-weight: 600;
 
   ion-icon {
-    color: var(--ion-light-gray);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
   }
 }
 

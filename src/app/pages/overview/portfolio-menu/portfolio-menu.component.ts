@@ -2,11 +2,12 @@ import { Component, computed, inject } from '@angular/core';
 import { IonIcon} from "@ionic/angular/standalone";
 import { ModalController, PopoverController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { addOutline } from 'ionicons/icons';
+import { addCircleOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from '@app/services';
 import { FreemiumService, PopupPlanComponent } from "@app/shared/layouts/freemium";
 import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-popup.component";
 import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
+import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
 
 @Component({
   selector: 'portfolio-menu',
@@ -16,6 +17,7 @@ import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
   imports: [
     IonIcon,
     PortfolioBoxComponent,
+    FreemiumModule,
   ]
 })
 export class PortfolioMenuComponent {
@@ -29,7 +31,7 @@ export class PortfolioMenuComponent {
     private _freemiumService: FreemiumService,
     private _modalCtrl: ModalController
   ) {
-    addIcons({ addOutline });
+    addIcons({ addCircleOutline });
   }
 
   protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
@@ -71,10 +73,8 @@ export class PortfolioMenuComponent {
   }
 
   async openAddPortfolioPopup(walletAddress?: string) {
-    const modal = await this._popover.create({
+    const modal = await this._modalCtrl.create({
       component: AddPortfolioPopupComponent,
-      mode: 'ios',
-      showBackdrop: true,
       cssClass: 'multi-wallet-modal',
       componentProps: {
         walletAddress

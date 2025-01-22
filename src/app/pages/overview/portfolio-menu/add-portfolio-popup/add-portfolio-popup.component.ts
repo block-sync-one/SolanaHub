@@ -1,9 +1,9 @@
-import {Component, inject, OnInit, signal, Input} from '@angular/core';
-import {PopoverController} from "@ionic/angular";
-import {IonButton, IonIcon, IonImg, IonInput, IonItem, IonLabel, IonList, IonText} from "@ionic/angular/standalone";
+import {Component, inject, signal, Input} from '@angular/core';
+import {ModalController} from "@ionic/angular";
+import {IonButton, IonIcon, IonImg, IonInput, IonLabel, IonText} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {alertCircleOutline, closeOutline, walletOutline } from "ionicons/icons";
-import {AddressValidatorService, PortfolioService} from "../../../../services";
+import { AddressValidatorService, PortfolioService } from "@app/services";
 
 @Component({
   selector: 'add-portfolio-popup',
@@ -20,7 +20,7 @@ import {AddressValidatorService, PortfolioService} from "../../../../services";
   ]
 })
 export class AddPortfolioPopupComponent {
-  private _popover = inject(PopoverController)
+  private _modalCtrl = inject(ModalController)
   private _addressValidatorService = inject(AddressValidatorService)
   private _portfolioService = inject(PortfolioService)
   @Input() walletAddress?: string
@@ -50,6 +50,6 @@ export class AddPortfolioPopupComponent {
   }
 
   dismissModal(address?: string | null, nickname?: string | null) {
-    this._popover.dismiss({address, nickname})
+    this._modalCtrl.dismiss({address, nickname})
   }
 }

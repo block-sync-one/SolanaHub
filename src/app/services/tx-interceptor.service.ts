@@ -9,6 +9,7 @@ import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
 import { FreemiumService } from '../shared/layouts/freemium/freemium.service';
+import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class TxInterceptorService {
     return memoInstruction
   }
 
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type: string = ''): Promise<string> {
+  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type?: PremiumActions): Promise<string> {
     try {
 
 
@@ -126,7 +127,7 @@ export class TxInterceptorService {
     //     const txWithFee = new VersionedTransaction(batchMessage);
     //     txWithPriorityFees.push(t, txWithFee)
     //   }
- 
+
     // }));
     // console.log('txWithPriorityFees', txWithPriorityFees);
     let signedTx = await this._shs.getCurrentWallet().signAllTransactions(transactions) as (Transaction | VersionedTransaction)[];
@@ -248,7 +249,7 @@ export class TxInterceptorService {
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
     console.log('get tx fee', transaction);
 
-    // if transaction is array then return array of 
+    // if transaction is array then return array of
     // Extract all account keys from the transaction
     const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
     console.log('accountKeys', accountKeys);

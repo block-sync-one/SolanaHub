@@ -32,7 +32,7 @@
 
                 <ion-item
                 #rla="routerLinkActive"
-                 [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'"
+                 [disabled]="!p.active || (watchMode$ | async) && p.title !== 'Overview'"
                   style="opacity: 1;"
                   routerDirection="root"
                    [routerLink]="[p.url]"
@@ -51,7 +51,7 @@
                   <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
                   <ion-label>{{ p.title }}</ion-label>
                   @if((watchMode$ | async)){
-                  @if (p.title != 'Overview') {
+                  @if (p.title !== 'Overview') {
                   <ion-chip color="primary">
                     Disabled
                   </ion-chip>
@@ -63,7 +63,7 @@
                     Soon
                   </ion-chip>
                   }
-                  @if(p.title == 'Notifications' && notifIndicator()){
+                  @if(p.title === 'Notifications' && notifIndicator()){
                   <ion-chip color="primary">
                     {{notifIndicator()}}
                   </ion-chip>
@@ -96,8 +96,10 @@
         </div>
       </ion-content>
     </ion-menu>
-    <ion-content class="ion-page" id="main-content" [class.ad-offset]="false">
-       <freemium-ad/>
+    <ion-content class="ion-page" id="main-content" [class.ad-offset]="adShouldShow()">
+      @if(adShouldShow()) {
+        <freemium-ad/>
+      }
        @if((isCaptchaVerified$ | async) == false){
       <turnstile-captcha />
        }@else{

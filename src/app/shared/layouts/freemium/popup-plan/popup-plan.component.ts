@@ -13,7 +13,8 @@ import { UtilService } from "@app/services";
   styleUrls: ['./popup-plan.component.scss'],
 })
 export class PopupPlanComponent  {
-  public stake = inject(FreemiumService).stake;
+  public freemiumService = inject(FreemiumService);
+  public stake = this.freemiumService.stake;
   public utils = inject(UtilService);
   private _modalCtrl= inject(ModalController);
   private _router= inject(Router);

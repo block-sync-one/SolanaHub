@@ -28,17 +28,17 @@
             <ion-text>{{item.symbol}}</ion-text>
           </div>
         </div>
-        
+
         <div class="floor-price">
           @if(item.type === 'defi-position'){
-            @for (balance of item.extractedValue | keyvalue; track $index) {{{ $index === 1 ? '-' : '' }}{{utils.fixedNumber(balance.value || 0)}} {{balance.key}}} 
-            
+            @for (balance of item.extractedValue | keyvalue; track $index) {{{ $index === 1 ? '-' : '' }}{{utils.fixedNumber(balance.value || 0)}} {{balance.key}}}
+
           }
           @else{
             {{utils.fixedNumber(item?.balance || 0)}} {{item.symbol}}
           }
         </div>
-        
+
       </div>
       }
     </div>
@@ -46,7 +46,7 @@
     <div id="burn-summary">
       <ion-label>Cleanup summary</ion-label>
       <div id="burn-calc">
-  
+
         <div class="item">
           <div class="item-id">items selected</div>
           <div class="item-value">{{stashAssets.length}}</div>
@@ -70,11 +70,13 @@
         </div>
         <div class="item">
           <div class="item-id">platform fee</div>
-          <div class="item-value">{{utils.fixedNumber(platformFeeInSOL())}} SOL</div>
+          <div class="item-value">
+            <app-platform-fee [feeInSOL]="utils.fixedNumber(platformFeeInSOL())" ></app-platform-fee>
+          </div>
         </div>
       </div>
     </div>
-    @if(stashAssets[0].type == 'value-deficient'){
+    @if(stashAssets[0].type === 'value-deficient'){
       @if(extraWarning){
         <div class="ion-margin-bottom">
           <alert type="danger" text="Not all tokens have a visible market price. Burn with caution; this action is irreversible." >
@@ -82,12 +84,12 @@
         </div>
       }
     }
-    @if(stashAssets[0].type == 'dust-value'){
+    @if(stashAssets[0].type === 'dust-value'){
       <div class="ion-margin-bottom">
         <alert type="warning" text="Bulk swap may have price slippage or failed routes" />
       </div>
     }
-    @if(stashAssets[0].type == 'defi-position'){
+    @if(stashAssets[0].type === 'defi-position'){
       <div class="ion-margin-bottom">
         <alert type="focus" text="Balances from unclaimed fees may not visible in the summary" />
       </div>

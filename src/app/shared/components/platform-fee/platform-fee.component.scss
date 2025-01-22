@@ -1,0 +1,10 @@
+.fee {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ion-light-gray);
+
+  &--line-through {
+    text-decoration-line: line-through;
+  }
+}

@@ -11,7 +11,7 @@ import {
 } from "@ionic/angular/standalone";
 
 import { ModalController } from '@ionic/angular';
-import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
+import { PopupPlanComponent } from '@app/shared/layouts/freemium';
 import { ChipComponent } from "../../../components/chip/chip.component";
 
 @Component({
