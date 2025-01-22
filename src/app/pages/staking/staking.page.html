@@ -1,7 +1,7 @@
 <ion-content [fullscreen]="true">
   <page-header title="staking"
     description="Stake your SOL today and start earning staking rewards – transform your digital currency into a continuous source of passive income">
-
+<div style="width: 100%;">
     <ion-row id="stat-wrapper" class="ion-justify-content-between ion-margin-top">
       @for (stat of validatorData; track $index) {
       <ion-col size="5.5" sizeLg="3.5" class="staking-stat">
@@ -19,6 +19,7 @@
       }
 
     </ion-row>
+  </div>
   </page-header>
 
 

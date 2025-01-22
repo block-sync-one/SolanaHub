@@ -3,11 +3,11 @@
   <!-- @if (this.walletTokens(); as wallet) { -->
 
     <div id="wallet-info">
-      <div>
+      <div style="display: flex;">
         <ion-icon name="wallet-outline"></ion-icon>
         <!-- <ion-img src="assets/images/wallet-icon.svg" /> -->
       </div>
-      @if(asset){
+      @if(this.walletTokens()){
         <span>{{utils.fixedNumber(asset?.balance) || 0}} {{asset?.symbol}}</span>
 
       }@else{

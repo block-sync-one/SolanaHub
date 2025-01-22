@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram } from '@solana/web3.js';
-import { BehaviorSubject, filter, map, switchMap } from 'rxjs';
+import { BehaviorSubject, filter, map, switchMap, from } from 'rxjs';
 import { Validator } from 'src/app/models/stakewiz.model';
 import { NativeStakeService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { HttpFetchService } from 'src/app/services/http-fetch.service';
@@ -15,7 +15,7 @@ export interface LiquidStakeToken {
   name: string
   decimals: number
   logoURI: string
-  balance: number
+  balance: any
   price: number
   value: number
   frozen?: boolean
@@ -82,74 +82,144 @@ export interface LiquidProInsights {
   providedIn: 'root'
 })
 export class StakeService {
-  private _nativePositions: StakeAccount[] = [];
-  private _positions: StakePositions | null = null;
+  // State management
+  private readonly _state$ = new BehaviorSubject<{
+    positions: StakePositions | null;
+    loading: boolean;
+    error: string | null;
+  }>({
+    positions: null,
+    loading: false,
+    error: null
+  });
 
+  // Selectors
+  private readonly state$ = this._state$.asObservable();
+  public readonly loading$ = this.state$.pipe(map(state => state.loading));
+  public readonly error$ = this.state$.pipe(map(state => state.error));
 
-  constructor(
-    private _txi: TxInterceptorService,
-    private _shs: SolanaHelpersService,
-    private _httpFetchService: HttpFetchService,
-    private _util: UtilService
-  ) {
+  // Enhanced positions stream with validator data
+  public readonly stakePositions$ = this.state$.pipe(
+    map(state => state.positions),
+    filter((positions): positions is NonNullable<typeof positions> => positions !== null),
+    switchMap(positions => {
+      // Convert the Promise to an Observable
+      return from(this._shs.getValidatorsList()).pipe(
+        map(validators => {
+          const nativePositionExtended = positions.native.map(position => {
+            const { addrShort } = this._util.addrUtil(position.address);
+            const validator = validators.find(v => v.vote_identity === position.voter);
+            return { ...position, validator, shortAddress: addrShort };
+          });
 
-  }
-  private _stakePositions$ = new BehaviorSubject<StakePositions | null>(null);
-  public readonly stakePositions = this._stakePositions$.value;
-  public readonly stakePositions$ = this._stakePositions$.asObservable().pipe(
-    switchMap(async positions => {
-      if (!positions) return null;
-      const validators = await this._shs.getValidatorsList();
-      const nativePositionExtended = await Promise.all(
-        positions.native.map(async position => {
-          const { addrShort } = this._util.addrUtil(position.address);
-          const validator = validators.find(v => v.vote_identity === position.voter);
-          return { ...position, validator, shortAddress: addrShort };
+          return {
+            native: nativePositionExtended,
+            liquid: positions.liquid
+          };
         })
       );
-      return {
-        native: nativePositionExtended,
-        liquid: positions.liquid
-      };
     })
   );
-  public activePositions$ = this.stakePositions$.pipe(
+
+  public readonly activePositions$ = this.stakePositions$.pipe(
     filter((positions): positions is NonNullable<typeof positions> => positions !== null),
     map(positions => [
       ...positions.native.filter(p => p.state === 'active'),
       ...positions.liquid
     ])
   );
-  public readonly nativePositions$ = this._stakePositions$.asObservable().pipe(map(positions => positions?.native));
-  public readonly liquidPositions$ = this._stakePositions$.asObservable().pipe(map(positions => positions?.liquid));
 
-  public async updateStakePositions(walletAddress: string) {
+  public readonly nativePositions$ = this.stakePositions$.pipe(
+    map(positions => positions?.native)
+  );
+
+  public readonly liquidPositions$ = this.stakePositions$.pipe(
+    map(positions => positions?.liquid)
+  );
+
+  constructor(
+    private _txi: TxInterceptorService,
+    private _shs: SolanaHelpersService,
+    private _httpFetchService: HttpFetchService,
+    private _util: UtilService
+  ) {}
+
+  // Helper method to update state
+  private setState(newState: Partial<typeof this._state$.value>) {
+    this._state$.next({
+      ...this._state$.value,
+      ...newState
+    });
+  }
+
+  // Private method to enrich positions with validator data
+  private async enrichPositionsWithValidators(positions: StakePositions): Promise<StakePositions> {
+    const validators = await this._shs.getValidatorsList();
+    
+    const nativePositionExtended = await Promise.all(
+      positions.native.map(async position => {
+        const { addrShort } = this._util.addrUtil(position.address);
+        const validator = validators.find(v => v.vote_identity === position.voter);
+        return { ...position, validator, shortAddress: addrShort };
+      })
+    );
+console.log('nativePositionExtended', nativePositionExtended);
+
+
+
+    return {
+      native: nativePositionExtended,
+      liquid: positions.liquid
+    };
+  }
+
+  public async updateStakePositions(walletAddress: string): Promise<void> {
     try {
-      const response: StakePositions = await this._httpFetchService.get(`/api/portfolio/get-stake?address=${walletAddress}`) as StakePositions;
-      this._stakePositions$.next(response);
+      this.setState({ loading: true, error: null });
+      
+      const response = await this._httpFetchService.get<StakePositions>(
+        `/api/portfolio/get-stake?address=${walletAddress}`
+      );
+      
+      this.setState({ 
+        positions: response,
+        loading: false 
+      });
     } catch (error) {
       console.error('Error updating stake positions', error);
+      this.setState({ 
+        error: 'Failed to update stake positions',
+        loading: false 
+      });
     }
   }
 
-  public async withdrawExcessiveBalance(position: StakeAccount):Promise<string | null> {
+
+  public async withdrawExcessiveBalance(position: StakeAccount): Promise<string | null> {
     try {
       const walletOwner = new PublicKey(position.authorities.staker);
       const withdrawTx = StakeProgram.withdraw({
         stakePubkey: new PublicKey(position.address),
         authorizedPubkey: walletOwner,
         toPubkey: walletOwner,
-        lamports: position.inactive_stake * LAMPORTS_PER_SOL, // Withdraw the full balance at the time of the transaction
+        lamports: position.inactive_stake * LAMPORTS_PER_SOL,
       });
-     return await this._txi.sendTx([...withdrawTx.instructions], walletOwner)
+      
+      return await this._txi.sendTx([...withdrawTx.instructions], walletOwner);
     } catch (error) {
       console.error('Error withdrawing excessive balance', error);
-      return null
+      return null;
     }
   }
 
-  public async getProInsights(position: StakeAccount) {
-    const response: NativeProInsights | LiquidProInsights = await this._httpFetchService.get(`/api/portfolio/get-stake-pro?account_address=${position.address}&type=${position.type}&activation_epoch=${position.activation_epoch}`) as NativeProInsights | LiquidProInsights;
-    return response;
+  public async getProInsights(position: StakeAccount): Promise<NativeProInsights | LiquidProInsights> {
+    try {
+      return await this._httpFetchService.get<NativeProInsights | LiquidProInsights>(
+        `/api/portfolio/get-stake-pro?account_address=${position.address}&type=${position.type}&activation_epoch=${position.activation_epoch}`
+      );
+    } catch (error) {
+      console.error('Error fetching pro insights', error);
+      throw error;
+    }
   }
 }

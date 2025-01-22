@@ -8,7 +8,7 @@ import { JupToken } from "../models/jup-token.model";
 import { environment } from 'src/environments/environment';
 
 declare global {
- 
+
   interface Number {
     toFixedNoRounding: Function;
   }
@@ -44,17 +44,17 @@ export class UtilService {
 
 
 
-  public get RPC(): string{
+  public get RPC(): string {
     const config = JSON.parse(this._vrs.localStorage.getData('RPC'))?.value || environment.solanaCluster
-    return config ;
+    return config;
   }
 
-  public get explorer(): string{
+  public get explorer(): string {
     const config = JSON.parse(this._vrs.localStorage.getData('explorer'))?.value || 'https://solscan.io'
-    return config ;
+    return config;
   }
-  
-  public get theme()  {
+
+  public get theme() {
     const config = JSON.parse(this._vrs.localStorage.getData('theme'))?.value || 'light'
 
     return config;
@@ -102,16 +102,16 @@ export class UtilService {
     return this.jupTokens
   }
   public addTokenData(assets: any, tokensInfo: JupToken[], mapBy: string = 'address'): any[] {
-    
+
     return assets.map((res: any) => {
-      
+
       // const { symbol, name, logoURI, decimals } = tokensInfo.find(token => token.address === res.data.address)
-     
+
       // res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res.data.address
 
       const token = tokensInfo.find(token => token.address === res?.data[mapBy])
- 
-      
+
+
       res?.data?.address === "11111111111111111111111111111111" ? res.data.address = "So11111111111111111111111111111111111111112" : res?.data?.address
       res.mint = token?.mint ? token.mint : '';
       res.name = token?.name ? token.name : 'unknown';
@@ -130,11 +130,11 @@ export class UtilService {
     })
   }
 
-  async getTokenInfo2(mintAddress: string){
-    try{
+  async getTokenInfo2(mintAddress: string) {
+    try {
       const tokenInfo = await (await fetch(`${this.serverlessAPI}/api/portfolio/get-token-info?mintAddress=${mintAddress}`)).json()
       return tokenInfo
-    }catch(error){
+    } catch (error) {
       console.error(error);
       return null
     }
@@ -145,75 +145,85 @@ export class UtilService {
     var bytes = 0;
 
     function sizeOf(obj) {
-        if(obj !== null && obj !== undefined) {
-            switch(typeof obj) {
-            case 'number':
-                bytes += 8;
-                break;
-            case 'string':
-                bytes += obj.length * 2;
-                break;
-            case 'boolean':
-                bytes += 4;
-                break;
-            case 'object':
-                var objClass = Object.prototype.toString.call(obj).slice(8, -1);
-                if(objClass === 'Object' || objClass === 'Array') {
-                    for(var key in obj) {
-                        if(!obj.hasOwnProperty(key)) continue;
-                        sizeOf(obj[key]);
-                    }
-                } else bytes += obj.toString().length * 2;
-                break;
-            }
+      if (obj !== null && obj !== undefined) {
+        switch (typeof obj) {
+          case 'number':
+            bytes += 8;
+            break;
+          case 'string':
+            bytes += obj.length * 2;
+            break;
+          case 'boolean':
+            bytes += 4;
+            break;
+          case 'object':
+            var objClass = Object.prototype.toString.call(obj).slice(8, -1);
+            if (objClass === 'Object' || objClass === 'Array') {
+              for (var key in obj) {
+                if (!obj.hasOwnProperty(key)) continue;
+                sizeOf(obj[key]);
+              }
+            } else bytes += obj.toString().length * 2;
+            break;
         }
-        return bytes;
+      }
+      return bytes;
     };
 
     function formatByteSize(bytes) {
-        // if(bytes < 1024) return bytes + " bytes";
-        // else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
-        // else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
-        // else return(bytes / 1073741824).toFixed(3) + " GiB";
-        return bytes
+      // if(bytes < 1024) return bytes + " bytes";
+      // else if(bytes < 1048576) return(bytes / 1024).toFixed(3) + " KiB";
+      // else if(bytes < 1073741824) return(bytes / 1048576).toFixed(3) + " MiB";
+      // else return(bytes / 1073741824).toFixed(3) + " GiB";
+      return bytes
     };
 
     return formatByteSize(sizeOf(obj));
-};
+  };
 
-public fixedNumber(value: any): string {
-  // Convert the input to a number
-  const num = Number(value);
+  public fixedNumber(value: any): string {
+    // Convert the input to a number
+    const num = Number(value);
 
-  // If the number is not valid, return '0.00'
-  if (isNaN(num) || !isFinite(num)) {
-    return '0.00';
+    // If the number is not valid, return '0.00'
+    if (isNaN(num) || !isFinite(num)) {
+      return '0.00';
+    }
+
+    // Find the closest positive number
+    const absNum = Math.abs(num);
+
+    // Find the minimum number of decimal places needed
+    let decimalPlaces = 3; // Start with minimum 2 decimal places
+    let tempNum = absNum;
+    while (tempNum < 0.01 && tempNum > 0) {
+      tempNum *= 10;
+      decimalPlaces++;
+    }
+
+    // Cap the decimal places at 8 to avoid excessive precision
+    decimalPlaces = Math.min(decimalPlaces, 8);
+
+    // Format the number with the calculated decimal places
+    const formattedNum = absNum.toFixedNoRounding(decimalPlaces);
+
+    // Remove trailing zeros after the decimal point, but keep at least 2 decimal places
+    const trimmedNum = parseFloat(formattedNum).toFixedNoRounding(Math.max(2, (formattedNum.split('.')[1] || '').replace(/0+$/, '').length));
+
+    // Localize the number
+    return Number(trimmedNum).toLocaleString(undefined, {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 8
+    });
   }
-
-  // Find the closest positive number
-  const absNum = Math.abs(num);
-
-  // Find the minimum number of decimal places needed
-  let decimalPlaces = 3; // Start with minimum 2 decimal places
-  let tempNum = absNum;
-  while (tempNum < 0.01 && tempNum > 0) {
-    tempNum *= 10;
-    decimalPlaces++;
+  public formatScientificToDecimal(num: any): string {
+    // Convert to string and check if it's in scientific notation
+    const numStr = num.toString();
+    if (numStr.includes('e')) {
+      // Convert scientific notation to decimal
+      const res = Number(num).toFixed(20).replace(/\.?0+$/, '');
+      return res
+    }
+    return numStr;
   }
-
-  // Cap the decimal places at 8 to avoid excessive precision
-  decimalPlaces = Math.min(decimalPlaces, 8);
-
-  // Format the number with the calculated decimal places
-  const formattedNum = absNum.toFixedNoRounding(decimalPlaces);
-
-  // Remove trailing zeros after the decimal point, but keep at least 2 decimal places
-  const trimmedNum = parseFloat(formattedNum).toFixedNoRounding(Math.max(2, (formattedNum.split('.')[1] || '').replace(/0+$/, '').length));
-
-  // Localize the number
-  return Number(trimmedNum).toLocaleString(undefined, {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 8
-  });
-}
 }

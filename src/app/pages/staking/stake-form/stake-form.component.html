@@ -30,14 +30,13 @@
           [label]="'Stake'"
           [assetControl]="tokenSwapForm.controls['inputToken']"
           [amountControl]="tokenSwapForm.controls['inputAmount']"
-          [jupTokens]="jupTokens"/>
+            />
           </div>
           <div class="ion-margin-bottom">
           <stake-input 
           [label]="'Receive'"
           [assetControl]="tokenSwapForm.controls['outputToken']" 
-          [jupTokens]="jupTokens" 
-          [outValue]="bestRoute()?.outAmount" 
+          [outValue]="getOutValue()" 
           [readonly]="true"
           [waitForBestRoute]="loading"
           />
@@ -66,41 +65,14 @@
             <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLExchangeRate()}} SOL</div>
           </div>
           <div id="stake-button-wrapper">
-            <ion-button expand="block" color="primary" >
-              <ion-label>Stake</ion-label>
+            <ion-button expand="block" color="primary" (click)="submitSwap()">
+              <ion-label>{{swapState()}}</ion-label>
             </ion-button>
           </div>
         </div>
       </form>
       
-      <!-- <form [formGroup]="stakeForm" id="stake-form-wrapper">
-        <div class="ion-margin-bottom" id="stake-input-wrapper">
-        <stake-input
-        
-        [assetControl]="stakeForm.controls['asset']"
-        [amountControl]="stakeForm.controls['amount']"
-        [label]="'Stake'"
-        />
-        </div>
-        <div class="ion-margin-bottom" id="stake-input-wrapper">
-          <stake-input
-          [label]="'Receive'"
-          [readonly]="true"
-          [assetControl]="stakeForm.controls['assetOut']" 
-          [amountControl]="stakeForm.controls['amount']"
-
-          />
-        </div>
-        <div id="exchange-rate-wrapper">
-          <div id="exchange-rate-label">Exchange Rate</div>
-          <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLToken.exchangeRate}} SOL</div>
-        </div>
-        <div id="stake-button-wrapper">
-          <ion-button expand="block" color="primary" (click)="stake()">
-            <ion-label>Stake</ion-label>
-          </ion-button>
-        </div>
-      </form> -->
+    
   }
   @if(segmentedView.value === 'unstake') {
     <!-- <form [formGroup]="unstakeForm" id="unstake-form-wrapper">

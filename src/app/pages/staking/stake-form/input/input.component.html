@@ -1,45 +1,7 @@
-<!-- <input-label [label]="label" [showBtns]="!readonly" (onSetSize)="valueChange($event)"
-  [asset]="assetControl.value" />
-<div class="token-input" #input>
-  <ion-button fill="clear" class="token-select" (click)="openStakeAbleAssetsModal(input)">
-    <div id="asset-info">
-      <div id="logo">
-        <ion-img [src]="getLogoURI(assetControl?.value)" />
-      </div>
-      <div id="asset-name">
-        <span id="name">
-          {{getStakeName(assetControl?.value)}}
-        </span>
-        @if(assetControl?.value?.type == 'native'){
-        <span id="address">
-          {{getAccountShortAddress(assetControl?.value)}}
-        </span>
 
-        }
-      </div>
-    </div>
-
-      <ion-icon [ngClass]="{'ion-hide': readonly}" name="chevron-down-outline"></ion-icon>
-
-    
-  </ion-button>
-  <ion-input (ionInput)="valueChange($event)" [readonly]="readonly" inputmode="decimal"
-    [value]="visibleValue() | number: '1.0-7'" [class.readonly]="readonly" class="currency-amount" />
-
-  @if(amountControl?.value || outValue){
-  <small>{{tokenPrice() * visibleValue() | currency}}</small>
-  }
-  @if(waitForBestRoute()){
-  <ion-skeleton-text animated />
-  }
-</div>
-@if(readonly){
-
-<div class="ion-margin-bottom"></div>
-} -->
 
 <input-label 
-
+[label]="label"
  [showBtns]="!readonly" 
  (onSetSize)="valueChange($event)" 
 [asset]="assetControl.value" />

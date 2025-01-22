@@ -21,10 +21,20 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
   @Output() onSetSize = new EventEmitter()
   constructor(private _portfolioService: PortfolioService, public utils: UtilService) {
     addIcons({walletOutline});
+    effect(()=>{
 
+      if(this.walletTokens()){
+        this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
+        console.log('this.asset', this.asset, this.walletTokens(),this.asset.balance)
+      }
+    })
    }
    ngOnChanges(changes: SimpleChanges): void {
-   console.log('this.asset', this.asset)
+   
+    if(this.asset && this.walletTokens()){
+
+      this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
+    }
    }
 ngOnInit(): void {
   
@@ -32,7 +42,7 @@ ngOnInit(): void {
 
   setSize(size: 'half' | 'max'){
 
-    let amount = Number(this.utils.fixedNumber(this.asset.balance))
+    let amount = Number(this.asset.balance).toFixedNoRounding(5)
 
     if(size === 'half'){
       amount = amount / 2

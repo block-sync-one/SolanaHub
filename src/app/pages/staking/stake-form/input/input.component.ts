@@ -1,7 +1,6 @@
 import { Component, Input, OnChanges, OnInit, Signal, SimpleChanges, computed, inject, signal } from '@angular/core';
 import { InputLabelComponent } from 'src/app/shared/components/input-label/input-label.component';
 import { IonInput, IonIcon, IonButton, IonImg, IonSkeletonText } from '@ionic/angular/standalone';
-import { JupToken, Token } from 'src/app/models';
 import { PopoverController } from '@ionic/angular';
 import { JupStoreService, UtilService } from 'src/app/services';
 import { CurrencyPipe, DecimalPipe, NgClass } from '@angular/common';
@@ -29,12 +28,12 @@ import { PositionComponent } from '../../stake-positions/stake/position.componen
   ]
 })
 export class InputComponent implements OnInit, OnChanges {
-@Input() label: string = 'stake';
+  @Input() label: string = 'stake';
   @Input() assetControl;
   @Input() amountControl;
   @Input() outValue = null;
   // public amountValue = null
-  @Input() jupTokens = signal([] as JupToken[])
+
   @Input() readonly: boolean = false;
   @Input() tokenPrice = signal(0);
   // public usdValue = computed(() => this.tokenPrice() * this.amountControl.value)
@@ -44,21 +43,21 @@ export class InputComponent implements OnInit, OnChanges {
   private _popoverCtrl = inject(PopoverController);
   public visibleValue = signal(null)
   ngOnInit(): void {
-
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     // this.getTokenPrice();
   }
   ngOnChanges(changes: SimpleChanges) {
+
     this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
+    if (this.assetControl.value.type == 'liquid') {
+      this.getTokenPrice();
+    }
 
-    this.getTokenPrice();
 
 
-    
   }
 
   valueChange(ev) {
+
     let value = ev.detail !== undefined ? ev.detail.value : ev
     const definitelyValidValue = value.toString().indexOf(',') > 0 ? value.replaceAll(",", "") : value
     this.amountControl.patchValue(definitelyValidValue)
@@ -80,7 +79,7 @@ export class InputComponent implements OnInit, OnChanges {
 
 
   async openStakeAbleAssetsModal(ev) {
-    if(this.readonly && this.assetControl.value.type != 'native'){
+    if (this.readonly && this.assetControl.value.type != 'native') {
       return
     }
     const popover = await this._popoverCtrl.create({
@@ -98,25 +97,23 @@ export class InputComponent implements OnInit, OnChanges {
     popover.present();
 
     const { data, role } = await popover.onWillDismiss();
-    console.log(data)
+    console.log(data, this.amountControl?.value, this.outValue)
     if (data) {
       // aggregate position to follow up stakeable assets interface 
-      this.assetControl.setValue(data)
-      if(data.type == 'native'){
-        this.visibleValue.set(data.balance)
-        this.readonly = true
-        
-      }else{
-        this.visibleValue.set(0)
-        this.readonly = false
-      }
-    }
-    // let jupToken: JupToken = data
+      console.log(data);
+      setTimeout(() => {
 
-    // if (data) {
-    //   this.assetControl.setValue(jupToken);
-    //   this.getTokenPrice();
-    // }
+        this.assetControl.setValue(data)
+        if (data.type == 'native') {
+          this.visibleValue.set(data.balance)
+          this.readonly = true
+        } else {
+          this.visibleValue.set(0)
+          this.readonly = false
+        }
+      });
+    }
+
 
   }
 

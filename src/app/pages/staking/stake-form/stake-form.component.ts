@@ -11,7 +11,7 @@ import { InputComponent } from './input/input.component';
 import { LiquidStakeToken, StakeAccount, StakeService } from '../stake.service';
 import { filter, map, Observable } from 'rxjs';
 import { JupRoute, JupToken, Token, Validator, WalletExtended } from 'src/app/models';
-import { JupStoreService, PortfolioService, SolanaHelpersService, UtilService } from 'src/app/services';
+import { JupStoreService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PercentPipe } from '@angular/common';
 
@@ -43,118 +43,6 @@ export interface StakeAbleAsset {
 })
 export class StakeFormComponent implements OnInit {
 
-  // constructor(
-  //   private _stakeService: StakeService,
-  //   private _jupStoreService: JupStoreService,
-  //   private _shs: SolanaHelpersService,
-  //   private _lss: LiquidStakeService
-  // ) {
-
-  // }
-  // public activePositions = this._stakeService.stakePositions$
-  // public solPrice = this._jupStoreService.solPrice;
-  // public solHolding = {
-  //   logoURI: 'assets/images/sol.svg',
-  //   symbol: 'SOL',
-  //   balance: null,
-  //   price: null,
-  //   value: null,
-  //   address: 'So11111111111111111111111111111111111111112',
-  //   mint: 'So11111111111111111111111111111111111111112',
-  //   type: 'liquid',
-  //   chainId: 1,
-  //   name: 'Solana',
-  //   decimals: 9,
-  //   exchangeRate: 1,
-  //   poolPublicKey: '',
-  //   tokenMint: '',
-  // }
-  // public hubSOLToken = {
-  //   logoURI: 'assets/images/hubSOL.svg',
-  //   symbol: 'hubSOL',
-  //   balance: null,
-  //   price: null,
-  //   value: null,
-  //   address: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-  //   mint: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-  //   type: 'liquid',
-  //   chainId: 1,
-  //   name: 'Solana',
-  //   decimals: 9,
-  //   exchangeRate: 1,
-  //   poolPublicKey: '',
-  //   tokenMint: '',
-  //   apy: null,
-  // }
-
-  // public tokenOut: Token = {
-  //   "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
-  //   "chainId": 101,
-  //   "decimals": 9,
-  //   "name": "SolanaHub Staked SOL",
-  //   "symbol": "hubSOL",
-  //   "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png",
-  // }
-  // public tokenIn: Token = {
-  //   "address": "So11111111111111111111111111111111111111112",
-  //   "decimals": 9,
-  //   "chainId": 101,
-  //   "name": "Wrapped SOL",
-  //   "symbol": "SOL",
-  //   "logoURI": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
-  // }
-
-  
-  // public stakeAbleAssets: (LiquidStakeToken | StakeAccount)[] = [];
-  // public async ngOnInit(): Promise<void> {
-  //   const sp = await this._lss.getStakePoolList()
-  //  const {exchangeRate, poolPublicKey,tokenMint, apy} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
-  //  this.hubSOLToken.exchangeRate = exchangeRate
-  //  this.hubSOLToken.poolPublicKey = poolPublicKey
-  //  this.hubSOLToken.tokenMint = tokenMint
-  //  this.hubSOLToken.apy = apy
-  //   console.log(sp)
-  //   this.activePositions.pipe(
-  //     filter(positions => positions != null)
-  //   ).subscribe(positions => {
-
-  //     const { balance } = this._shs.getCurrentWallet();
-  //     this.solHolding = {
-  //       logoURI: 'assets/images/sol.svg',
-  //       symbol: 'SOL',
-  //       balance,
-  //       address: 'So11111111111111111111111111111111111111112',
-  //       mint: 'So11111111111111111111111111111111111111112',
-  //       type: 'liquid',
-  //       chainId: 1,
-  //       name: 'Solana',
-  //       decimals: 9,
-  //       price: this.solPrice(),
-  //       value: balance * this.solPrice(),
-  //       exchangeRate: 1,
-  //       poolPublicKey: '',
-  //       tokenMint: '',
-  //     }
-  //     this.stakeAbleAssets = [this.solHolding, ...positions.liquid, ...positions.native];
-  //     this.stakeForm.controls['asset'].setValue(this.solHolding);
-  //     console.log(this.stakeAbleAssets);
-
-  //   })
-  // }
-
-  // public stakeForm = new FormGroup({
-  //   asset: new FormControl(this.solHolding),
-  //   assetOut: new FormControl(this.hubSOLToken),
-  //   amount: new FormControl(0),
-  //   assetType: new FormControl(null), // stake account or liquid asset(SOL/LST)
-  // });
-
-  // public unstakeForm = new FormGroup({
-  //   asset: new FormControl(null),
-  //   amount: new FormControl(null),
-  //   assetType: new FormControl(null),
-  //   unstakeType: new FormControl('instant'), // instant or delayed
-  // });
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public tokenIn: Token = {
     "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
@@ -170,7 +58,9 @@ export class StakeFormComponent implements OnInit {
     "chainId": 101,
     "name": "SOL",
     "symbol": "SOL",
-    "logoURI": "assets/images/sol.svg"
+    "logoURI": "assets/images/sol.svg",
+     balance: null,
+    type: 'liquid'
   }
   public loading = signal(false);
 
@@ -187,7 +77,9 @@ export class StakeFormComponent implements OnInit {
     private _fb: FormBuilder,
     private _jupStore: JupStoreService,
     private _util: UtilService,
-    private _lss: LiquidStakeService
+    private _lss: LiquidStakeService,
+    private _stakeService: StakeService,
+    private _txi: TxInterceptorService
   ) {
     this._lss.getStakePoolList().then(sp => {
       const {apy, exchangeRate} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
@@ -199,7 +91,7 @@ export class StakeFormComponent implements OnInit {
 
 
   async ngOnInit() {
-
+  
     this.tokenSwapForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
       outputToken: [this.tokenIn, [Validators.required]],
@@ -214,9 +106,7 @@ export class StakeFormComponent implements OnInit {
         this.bestRoute.set(null)
       }
     })
-    const tokensList = await this._util.getJupTokens('all');
 
-    this.jupTokens.set(tokensList)
   }
 
   async calcBestRoute() {
@@ -248,23 +138,47 @@ export class StakeFormComponent implements OnInit {
     }
   }
 
-  public swapState = signal('Swap')
+  public getOutValue() {
+    const { inputToken } = this.tokenSwapForm.value
+
+    // setTimeout(() => {
+    return inputToken.type === 'native' 
+    ? inputToken.balance / this.hubSOLExchangeRate() 
+    : this.bestRoute()?.outAmount
+    // });
+  }
+  public swapState = signal('Stake')
   public async submitSwap(): Promise<void> {
-    this.loading.set(true)
-    this.swapState.set('preparing transaction');
+    try {
+      this.loading.set(true);
+      this.swapState.set('preparing transaction');
 
-    const route = { ...this.bestRoute() }
-    const outAmount = (Number(route.outAmount) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
-    const minOutAmount = (Number(route.otherAmountThreshold) * 10 ** this.tokenSwapForm.value.outputToken.decimals).toFixed(0).toString()
+      const route = { ...this.bestRoute() };
+      if (!route) {
+        throw new Error('No valid swap route found');
+      }
 
+      // Calculate amounts using single-line operations
+      const { decimals } = this.tokenSwapForm.value.outputToken;
+      const multiplier = Math.pow(10, decimals);
+      
+      route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
+      route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
 
-    route.outAmount = outAmount
-    route.otherAmountThreshold = minOutAmount
-
-    await this._jupStore.swapTx(route);
-    this.swapState.set('swap');
-    this.loading.set(false)
-    
+      this.swapState.set('executing Stake');
+      const tx = await this._jupStore.swapTx(route);
+      await this._txi.sendMultipleTxn([tx]);
+      
+      this.swapState.set('Stake');
+    } catch (error) {
+      this.swapState.set('Stake');
+      console.error('Swap failed:', error);
+      throw error; // Re-throw to be handled by caller if needed
+    } finally {
+      this.loading.set(false);
+      // Reset state after a delay
+      setTimeout(() => this.swapState.set('Stake'), 2000);
+    }
   }
 
 
