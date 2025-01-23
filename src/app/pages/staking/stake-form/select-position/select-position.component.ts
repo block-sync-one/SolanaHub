@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import {
   IonSkeletonText,
   IonSegment,
@@ -29,7 +29,7 @@ import { PortfolioService } from 'src/app/services';
   ]
 })
 export class SelectPositionComponent  implements OnInit {
-
+  @Input() formType: 'stake' | 'unstake' = 'stake';
   constructor(
     private _stakeService: StakeService, 
     private _popoverController: PopoverController,
@@ -38,16 +38,18 @@ export class SelectPositionComponent  implements OnInit {
   public positions$ = this._stakeService.activePositions$.pipe(
     map(positions => {
       positions = positions.filter(p => p.symbol != 'hubSOL');
-      // add SOL item from the wallet
-      const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112");
-      if(sol) {
-        positions.push({
-          ...sol,
-          exchangeRate: 1,
-          type: 'liquid'
-        } as LiquidStakeToken);
+      // add SOL item from the wallet only for stake form
+
+      if (this.formType === 'stake') {
+        const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112");
+        if(sol) {
+          positions.push({
+            ...sol,
+            exchangeRate: 1,
+            type: 'liquid'
+          } as LiquidStakeToken);
+        }
       }
-      console.log('positions', positions);
       return positions;
     })
   );
@@ -56,8 +58,6 @@ export class SelectPositionComponent  implements OnInit {
   }
 
   onSelectAsset(event: any) {
-    debugger;
-    console.log('event', event);
     this._popoverController.dismiss(event);
   }
 }

@@ -127,7 +127,7 @@ export class UtilService {
       delete item.data;
 
       return item
-    })
+    }).filter((item: any) => item.value > 0.01)
   }
 
   async getTokenInfo2(mintAddress: string) {

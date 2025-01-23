@@ -26,6 +26,7 @@ import { PositionComponent } from '../../stake-positions/stake/position.componen
   ]
 })
 export class InputComponent implements OnInit, OnChanges {
+  @Input() formType: 'stake' | 'unstake' = 'stake';
   @Input() label: string = 'stake';
   @Input() assetControl;
   @Input() amountControl;
@@ -83,6 +84,9 @@ export class InputComponent implements OnInit, OnChanges {
     const popover = await this._popoverCtrl.create({
       component: SelectPositionComponent,
       cssClass: 'modal-style',
+      componentProps: {
+        formType: this.formType
+      },
       event: ev,
       side: 'bottom',
       alignment: 'center',

@@ -10,8 +10,14 @@
     </ion-segment>
   </div> -->
   <div id="stake-positions-content">
-    @for (position of positions$ | async; track position) {
-     <position [stake]="position" (click)="onSelectAsset(position)" />
+    @if ((positions$ | async)?.length) {
+      @for (position of positions$ | async; track position) {
+        <position [stake]="position" (click)="onSelectAsset(position)" />
+      }
+    } @else {
+
+        <p style="text-align: center;">No positions available</p>
+    
     }
   </div>
 </div>

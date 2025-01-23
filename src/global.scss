@@ -111,6 +111,12 @@ ion-checkbox {
     --height: 90vh;
     align-items: flex-end;
 }
+.slow-unstake-tooltip {
+    --width: 355px;
+    --background: var(--ion-color-light);
+    --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --border-radius: 12px;
+  }
 .pro-insights-modal {
     --width:224px;
     --max-width: 97%;

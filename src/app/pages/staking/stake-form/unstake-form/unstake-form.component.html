@@ -1,3 +1,19 @@
-<p>
-  unstake works!
-</p>
+<form [formGroup]="unstakeForm" class=" ion-margin-bottom">
+  <!-- <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting> -->
+
+    <stake-input 
+    [formType]="'unstake'"
+    [label]="'unstake'"
+    [assetControl]="unstakeForm.controls['inputToken']"
+    [amountControl]="unstakeForm.controls['inputAmount']"
+      />
+  <unstake-path 
+  [unstakePath]="unstakePath()" 
+  (onSelectPath)="selectUnstakePath($event)" 
+  />
+  <div id="stake-button-wrapper">
+    <ion-button expand="block" color="primary" (click)="submitUnstake()">
+      <ion-label>Unstake</ion-label>
+    </ion-button>
+  </div>
+    </form>

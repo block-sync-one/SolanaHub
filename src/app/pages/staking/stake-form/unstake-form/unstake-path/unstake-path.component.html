@@ -1,0 +1,87 @@
+<div id="stake-path">
+  <ion-radio-group mode="ios" id="unstake-options" [value]="unstakePath" (ionChange)="selectPath($event)">
+    <ion-row class="ion-justify-content-between" style="width: 100%; display: flex; gap: 10px 0;">
+      <ion-col size="12" sizeXl="5.9">
+        <ion-radio class="stake-type wrapping-list" value="instant">
+          <div class="option-content">
+
+            <chip color="primary">
+              <div>
+                <ion-icon name="flash" />
+                <span>Instant</span>
+              </div>
+            </chip>
+
+            <div class="details">
+              <div class="miss-price">
+                <span class="label">Slippage:</span>
+                <chip><ion-icon name="funnel-outline" />0.01%</chip>
+              </div>
+              <div class="receive">
+                <span class="label">Receive</span>
+                <span class="amount">11.676152597 SOL</span>
+              </div>
+            </div>
+          </div>
+        </ion-radio>
+      </ion-col>
+
+      <ion-col size="12" sizeXl="5.9">
+        <ion-radio class="stake-type wrapping-list" value="slow">
+          <div class="option-content">
+            <div class="header-content">
+              <chip color="primary">
+                <div>
+                  <ion-icon name="time" />
+                  <span>Slow • 16 hours</span>
+                </div>
+
+              </chip>
+              <ion-icon name="information-circle-outline" id="tooltip-icon" />
+            </div>
+            <div class="details">
+              <div class="miss-price">
+                <span class="label">platform fee:</span>
+                <span class="label">0.00035 SOL</span>
+              </div>
+              <div class="receive">
+                <span class="label">Receive</span>
+                <span class="amount">11.78 SOL
+                  <chip color="active" name="+2%" />
+                </span>
+              </div>
+            </div>
+          </div>
+        </ion-radio>
+      </ion-col>
+    </ion-row>
+  </ion-radio-group>
+
+</div>
+<ion-popover trigger="tooltip-icon" position="bottom" side="start" cssClass="slow-unstake-tooltip" triggerAction="click" showBackdrop="false">
+  <ng-template>
+  
+      <div id="slow-unstake-tooltip">
+        <ion-label>How slow unstake works</ion-label>
+        <div class="steps">
+          <div class="step">
+            <span class="step-number">1</span>
+            <span class="step-text">Initiate the process and confirm the transaction</span>
+          </div>
+          <div class="step">
+            <span class="step-number">2</span>
+            <span class="step-text">Allow funds to transfer into a staking account</span>
+          </div>
+          <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-text">Complete process by deactivating the stake account</span>
+          </div>
+          <div class="step">
+            <span class="step-number">4</span>
+            <span class="step-text">Anticipate the next Epoch to withdraw funds</span>
+          </div>
+        </div>
+      </div>
+   
+  </ng-template>
+</ion-popover>
