@@ -29,9 +29,11 @@
   ion-button {
     text-transform: initial;
     --border-radius: var(--radius-sm, 6px);
-    --border-color: var(--Component-colors-Components-Buttons-Secondary-button-secondary-border, #CDD5DF);
-    --background: var(--Component-colors-Components-Buttons-Secondary-button-secondary-bg, #FFF);
+    --border-color: var(--ion-color-border);
+    --background: var(--ion-color-bg, #FFF);
     --box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+    --padding-start: 8px;
+    --padding-end: 8px;
   }
 }
 

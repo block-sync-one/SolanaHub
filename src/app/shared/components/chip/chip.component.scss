@@ -6,7 +6,7 @@
 
 .badge {
   cursor: pointer;
-  padding: 2px 8px;
+  padding: 2px 7px;
   border-radius: 9999px;
   /*
       border: 1px solid var(--ion-color-border);
@@ -21,6 +21,7 @@
   font-weight: 500;
   width: fit-content;
   color: var(--ion-color-light-contrast);
+  line-height: 16px;
 
   &.pro {
     background-image: linear-gradient(64.89deg, #FF50C8 0%, #7100FF 100%, #8E00FF 100%);

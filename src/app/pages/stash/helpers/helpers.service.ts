@@ -4,6 +4,7 @@ import { StashAsset, StashGroup, TokenInfo } from '../stash.model';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { EarningsService } from './earnings.service';
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 @Injectable({
     providedIn: 'root'
@@ -17,7 +18,8 @@ export class HelpersService {
         public txi: TxInterceptorService,
         public utils: UtilService,
         public jupStoreService: JupStoreService,
-        public earningsService: EarningsService
+        public earningsService: EarningsService,
+        public freemiumService: FreemiumService
     ) {
         // this.getDASAssets()
     }
@@ -184,6 +186,7 @@ export class HelpersService {
             transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[]);
         }
 
+      if (!this.freemiumService.isPremium()) {
         // Add platform fee to each transaction
         if (ixs[0] instanceof VersionedTransaction) {
             // Add a single fee transaction for versioned transactions
@@ -199,6 +202,7 @@ export class HelpersService {
                 (tx as Transaction).add(...platformFeeTxsIn as TransactionInstruction[]);
             }
         }
+      }
 
         // Send transactions
         try {

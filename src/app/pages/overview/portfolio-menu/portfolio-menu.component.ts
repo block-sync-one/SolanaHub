@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { IonIcon} from "@ionic/angular/standalone";
-import { ModalController, PopoverController } from '@ionic/angular';
+import { ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addCircleOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from '@app/services';
@@ -25,7 +25,6 @@ export class PortfolioMenuComponent {
 
   constructor(
     private _portfolioService: PortfolioService,
-    private _popover: PopoverController,
     private _utils: UtilService,
     private _shs: SolanaHelpersService,
     private _freemiumService: FreemiumService,
