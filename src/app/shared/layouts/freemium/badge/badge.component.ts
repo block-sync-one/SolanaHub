@@ -17,7 +17,14 @@ export class BadgeComponent {
   public isVisible = computed(() => this._freemiumService.isPremium() || this.showSignal());
   private _modalCtrl= inject(ModalController);
 
-  async openFreemiumAccessPopup(){
+  async openFreemiumAccessPopup(event){
+    try {
+      event.stopPropagation()
+      await this._modalCtrl.dismiss();
+    } catch (err) {
+      console.error("Event is undefined")
+    }
+
     const modal = await this._modalCtrl.create({
       component: PopupPlanComponent,
       cssClass: 'freemium-popup'

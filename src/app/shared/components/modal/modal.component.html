@@ -1,4 +1,4 @@
-<div class="ion-padding">
+<div class="modal-container">
   <div id="modal-intro">
     <div>
 
@@ -62,7 +62,5 @@
     <ion-button (click)="submit()" [disabled]="!emittedValue()">{{config.btnText}}</ion-button>
   </div>
   }
-
-  <app-modal-message *appIsPremiumAction="componentName"/>
-
 </div>
+<app-modal-message *appIsPremiumAction="componentName"/>

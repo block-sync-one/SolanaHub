@@ -1,7 +1,9 @@
 <div id="freemium-ad">
   <div id="ad-text">
     <div class="ion-hide-md-down">Get PRO: Enjoy SolanaHub with no limits, no fees, and growing community.</div>
-    <ion-button size="small" fill="outline" (click)="openFreemiumAccessPopup()">Learn more</ion-button>
+    <div class="learn-more">
+      <chip color="pro pro--learn-more" (click)="openFreemiumAccessPopup()">Learn more</chip>
+    </div>
   </div>
   <div class="close-ad">
     <ion-icon (click)="closeAd()" id="close-modal" name="close-outline"></ion-icon>

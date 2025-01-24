@@ -12,8 +12,9 @@ import va from '@vercel/analytics'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
-import { FreemiumService } from "@app/shared/layouts/freemium";
+import {FreemiumService, ModalUpgradeMessageComponent} from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
+import {IsPremiumServiceDirective} from "@app/shared/directives";
 
 @Component({
   selector: 'stash-modal',
@@ -30,7 +31,7 @@ import { PremiumActions } from "@app/enums";
     IonImg,
     IonText,
     IonLabel,
-    KeyValuePipe, PlatformFeeComponent
+    KeyValuePipe, PlatformFeeComponent, IsPremiumServiceDirective, ModalUpgradeMessageComponent
   ]
 })
 export class StashModalComponent implements OnInit {
