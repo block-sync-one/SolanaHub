@@ -21,4 +21,10 @@ export class WatchModeService {
       return null
     }
   }
+  public checkAndSetWatchMode(walletAddress: string){
+    if (!!new PublicKey(walletAddress) || PublicKey.isOnCurve(walletAddress)) {
+      const publicKey = new PublicKey(walletAddress)
+      this.watchedWallet$.next({ publicKey })
+    }
+  }
 }

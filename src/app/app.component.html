@@ -100,7 +100,11 @@
        @if((isCaptchaVerified$ | async) == false){
       <turnstile-captcha />
        }@else{
+        @if(isReady$ | async){
       <ion-router-outlet></ion-router-outlet>
+        }@else{
+          <not-connected/>
+        }
        }
 
     </ion-content>

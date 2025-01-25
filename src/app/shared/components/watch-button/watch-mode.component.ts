@@ -31,11 +31,9 @@ export class WatchModeComponent implements OnInit {
 
     const walletAddress = ev.detail.value
     const nameService = walletAddress.indexOf('.') > -1 ? walletAddress : null
-    console.log(nameService);
     try {
       // multi sig wallet or regular wallet
       if (nameService) {
-        console.log('name service', nameService);
         const publicKey = (await this._watchModeService.convertNameServiceToWalletAddress(nameService)).address
         this.fetchWallet(publicKey)
       } else {
@@ -47,9 +45,6 @@ export class WatchModeComponent implements OnInit {
 
   }
   private fetchWallet(walletAddress) {
-    if (!!new PublicKey(walletAddress) || PublicKey.isOnCurve(walletAddress)) {
-      const publicKey = new PublicKey(walletAddress)
-      this._watchModeService.watchedWallet$.next({ publicKey })
-    }
+    this._watchModeService.checkAndSetWatchMode(walletAddress)
   }
 }
