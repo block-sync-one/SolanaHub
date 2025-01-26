@@ -8,7 +8,7 @@ import {
   Renderer2,
   ViewChild,
   signal,
-  inject
+  inject, computed
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
@@ -96,9 +96,12 @@ export class AppComponent implements OnInit {
     switchMap(async ([wallet, watchMode]) => {
       console.log('wallet', wallet);
       if(wallet){
+        this.isWalletConnected.set(true);
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
         });
+      } else {
+        this.isWalletConnected.set(false)
       }
 
       return wallet || watchMode;
@@ -106,7 +109,8 @@ export class AppComponent implements OnInit {
 
   public notifIndicator = this._notifService.notifIndicator;
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
-  public adShouldShow = inject(FreemiumService).isAdEnabled;
+  public adShouldShow = computed(() => this.isWalletConnected() && this._freemiumService.isAdEnabled());
+  public isWalletConnected = signal(false);
 
   constructor(
     // private _freemiumService: FreemiumService,
@@ -118,6 +122,7 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _vrs: VirtualStorageService,
     private _utilService: UtilService,
+    private _freemiumService: FreemiumService,
     private _renderer: Renderer2,
     @Inject(DOCUMENT) private document: Document,
   ) {
