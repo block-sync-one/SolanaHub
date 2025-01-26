@@ -7,11 +7,7 @@
       <div class="season-stats-card-title">Total Participants Points</div>
       <div class="season-stats-card-body">
         @if(seasonStats$ | async; as seasonStats){
-        <number-counter 
-       
-         [targetNumber]="seasonStats.totalPoints" 
-         [nextSnapshotTime]="seasonStats.nextUpdate"
-         />
+        {{formatBigNumber(seasonStats.totalPoints)}}
         }@else{
             <ion-skeleton-text animated style="--border-radius: 10px;" />
         }

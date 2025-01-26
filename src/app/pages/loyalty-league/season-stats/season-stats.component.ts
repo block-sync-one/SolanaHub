@@ -5,6 +5,7 @@ import { map, Observable, shareReplay } from 'rxjs';
 import { Season } from 'src/app/models';
 import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { NumberCounterComponent } from 'src/app/shared/components/number-counter/number-counter.component';
+import { UtilService } from 'src/app/services';
 
 @Component({
   selector: 'season-stats',
@@ -15,8 +16,12 @@ import { NumberCounterComponent } from 'src/app/shared/components/number-counter
 })
 export class SeasonStatsComponent  implements OnInit {
 
+  private _utilService = inject(UtilService)
   public seasonStats$: Observable<Season> = inject(LoyaltyLeagueService).getSessionMetrics().pipe(shareReplay())
 
   ngOnInit() {}
 
+  public formatBigNumber(number: number) {
+    return this._utilService.formatBigNumbers(number)
+  }
 }

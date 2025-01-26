@@ -37,10 +37,8 @@ import { WalletModule } from './shared/layouts/wallet/wallet.module';
 import { TurnstileCaptchaComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
 import { VirtualStorageService } from './services/virtual-storage.service';
-import { PublicKey } from '@solana/web3.js';
-import { environment } from 'src/environments/environment';
 
-import { PortfolioService, SolanaHelpersService, PortfolioFetchService, UtilService, WatchModeService } from './services';
+import { PortfolioService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
 import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
@@ -50,7 +48,6 @@ import { NotificationsService } from './services/notifications.service';
 import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 
-import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
 import {FreemiumService} from "@app/shared/layouts/freemium";
 @Component({
@@ -83,7 +80,8 @@ import {FreemiumService} from "@app/shared/layouts/freemium";
     IonImg,
     LoyaltyLeagueMemberComponent,
     FloatJupComponent,
-    IonIcon
+    IonIcon,
+    NotConnectedComponent
   ],
 })
 export class AppComponent implements OnInit {
@@ -91,9 +89,10 @@ export class AppComponent implements OnInit {
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
-      console.log('wallet', wallet);
+    
       if(wallet){
         this.isWalletConnected.set(true);
+
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
 
@@ -101,7 +100,9 @@ export class AppComponent implements OnInit {
       } else {
         this.isWalletConnected.set(false)
       }
+      
 
+   
       return wallet || watchMode;
     }))
 
@@ -112,6 +113,7 @@ export class AppComponent implements OnInit {
   public isWalletConnected = signal(false);
 
   constructor(
+    private activeRoute: ActivatedRoute,
     public router: Router,
     private _captchaService: CaptchaService,
     private _notifService: NotificationsService,
@@ -123,6 +125,7 @@ export class AppComponent implements OnInit {
     private _freemiumService: FreemiumService,
     private _renderer: Renderer2,
     private _stakingService: StakeService,
+    private _portfolioService: PortfolioService,
     @Inject(DOCUMENT) private document: Document,
   ) {
     const showNewsFeed = JSON.parse(this._vrs.localStorage.getData('newsFeedClosed'))
@@ -155,18 +158,21 @@ export class AppComponent implements OnInit {
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
 
-    // Add wallet connection handler
-    this._walletStore.connected$.pipe(
-      filter(connected => connected),
-      take(1),
-      tap(() => {
-        const attemptedUrl = sessionStorage.getItem('attemptedUrl');
-        if (attemptedUrl) {
-          sessionStorage.removeItem('attemptedUrl');
-          this.router.navigateByUrl(attemptedUrl);
-        }
-      })
-    ).subscribe();
+
+    // Replace the query params code with this
+    this.activeRoute.queryParams.subscribe(async (params) => {
+      if(params['watch']){
+        this._walletStore.disconnect().subscribe();
+        this._portfolioService.clearWallet()
+
+        // redirect to overview
+        this.router.navigate([`/${RoutingPath.OVERVIEW}`], { 
+          queryParamsHandling: 'preserve'  // Use this instead of queryParams
+        });
+        // set watch mode
+        this._watchModeService.checkAndSetWatchMode(params['watch'])
+      }
+    });
   }
 
   public SolanaHubLogo = 'assets/images/solanahub-logo.png';
