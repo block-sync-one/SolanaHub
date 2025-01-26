@@ -66,12 +66,12 @@ ion-menu {
     height: 22px;
     margin-right: 13px;
   }
-
-
 }
+
 .ad-offset{
-  --offset-top: -35px !important;
+  --offset-top: -40px !important;
 }
+
 ion-item {
   cursor: pointer;
   --background: transparent;
@@ -136,9 +136,9 @@ ion-img{
   justify-content: space-around;
   color: var(--ion-color-dark);
   text-transform: capitalize;
- 
+
   width: 100%;
- 
+
   margin: 0 auto;
   a{
     cursor: pointer;

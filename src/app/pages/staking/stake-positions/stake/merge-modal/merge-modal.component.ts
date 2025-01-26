@@ -1,16 +1,27 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren, WritableSignal, computed, effect, inject, signal } from '@angular/core';
-import { Stake } from 'src/app/models';
-import { PositionComponent } from '../position.component';
 import {
-  IonLabel,
-  IonInput,
-  IonText,
-  IonCheckbox
-} from '@ionic/angular/standalone';
+  Component,
+  computed,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  signal,
+  ViewChildren,
+  WritableSignal
+} from '@angular/core';
+import { Stake } from 'src/app/models';
+import { StakeComponent } from '../stake.component';
+import { IonCheckbox, IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DecimalPipe, NgClass } from '@angular/common';
-import { StakeAccount } from '../../../stake.service';
-import { LiquidStakeToken } from '../../../stake.service';
+import { FreemiumService } from "../../../../../shared/layouts/freemium/freemium.service";
+import { ChipComponent } from "../../../../../shared/components/chip/chip.component";
+import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
+import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
+import { PremiumActions } from "@app/enums";
+
 @Component({
   selector: 'merge-modal',
   templateUrl: './merge-modal.component.html',
@@ -24,23 +35,25 @@ import { LiquidStakeToken } from '../../../stake.service';
     IonCheckbox,
     ScrollingModule,
     NgClass,
-    DecimalPipe
+    DecimalPipe,
+    ChipComponent,
+    FreemiumModule,
+    PlatformFeeComponent
   ]
 })
 export class MergeModalComponent implements OnInit {
-  @Input() targetStake: LiquidStakeToken | StakeAccount | any;
+  public _freemiumService = inject(FreemiumService);
+  public fee = signal(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.MERGE))
+  @Input() targetStake: Stake;
   @Input() stakeAccounts: Stake[];
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>
   public accountsToMerge: WritableSignal<Stake[]> = signal(null);
+
   public mergedBalance = computed(() => this.accountsToMerge() ? this.accountsToMerge().reduce((accumulator, currentValue: Stake) => accumulator + currentValue.balance, 0) : 0)
-  public selectedAccounts = []
-  constructor() {
-  }
 
   selectAccount(checkbox, valid) {
     if (valid) {
-
       checkbox.checked = !checkbox.checked
       const checkedItems = this.checkAccounts.filter(box => box.checked).map(item => item.value)
 
@@ -52,12 +65,10 @@ export class MergeModalComponent implements OnInit {
       }
       this.onAccountsSelected.emit(payload)
     }
-
   }
 
-
   ngOnInit() {
-    // hide the target stake account from the list 
+    // hide the target stake account from the list
     this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address);
   }
 }

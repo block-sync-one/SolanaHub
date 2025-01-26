@@ -1,13 +1,12 @@
-@if(adShouldShow() != null) {
 <div id="freemium-ad">
   <div id="ad-text">
-
-    <div class="ion-hide-md-down"> Upgrade your stake to enjoy all solanahub perks </div>
-    <div class="ion-hide-md-up">Max perks with premium status </div>
-    <a (click)="openFreemumAccessPopup()">see why</a>
+    <div class="ion-hide-md-down">Get PRO: Enjoy SolanaHub with no limits, no fees, and growing community.</div>
+    <div class="learn-more">
+      <chip color="pro pro--learn-more" (click)="openFreemiumAccessPopup()">Learn more</chip>
+    </div>
   </div>
   <div class="close-ad">
-    <ion-img (click)="hideAd()" id="close-modal" src="assets/images/close-icon.svg" />
+    <ion-icon (click)="closeAd()" id="close-modal" name="close-outline"></ion-icon>
   </div>
 </div>
-}
+

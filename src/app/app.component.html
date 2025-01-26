@@ -32,26 +32,26 @@
 
                 <ion-item
                 #rla="routerLinkActive"
-                 [disabled]="!p.active || (watchMode$ | async) && p.title != 'Overview'"
+                 [disabled]="!p.active || (watchMode$ | async) && p.title !== 'Overview'"
                   style="opacity: 1;"
                   routerDirection="root"
-                   [routerLink]="[p.url]" 
-                   lines="none" 
-                   detail="false" 
+                   [routerLink]="[p.url]"
+                   lines="none"
+                   detail="false"
                    routerLinkActive="selected"
                    >
                   @if(p.title === 'hubSOL'){
                   <ion-img src="/assets/images/hubSOL.svg" />
                   }@else {
-                  <animated-icon 
-                  
+                  <animated-icon
+
                   aria-hidden="true" slot="start" [icon]="p.icon" />
                   }
 
                   <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
                   <ion-label>{{ p.title }}</ion-label>
                   @if((watchMode$ | async)){
-                  @if (p.title != 'Overview') {
+                  @if (p.title !== 'Overview') {
                   <ion-chip color="primary">
                     Disabled
                   </ion-chip>
@@ -63,17 +63,11 @@
                     Soon
                   </ion-chip>
                   }
-                  @if(p.title == 'Notifications' && notifIndicator()){
+                  @if(p.title === 'Notifications' && notifIndicator()){
                   <ion-chip color="primary">
                     {{notifIndicator()}}
                   </ion-chip>
                   }
-                  
-                  @if(p.title == 'Staking' && hubSOLApyIndicator()){
-                    <ion-chip color="primary">
-                      {{hubSOLApyIndicator() | percent:'1.2-2'}} APY
-                    </ion-chip>
-                    }
                   }
                 </ion-item>
                 }
@@ -94,7 +88,7 @@
               </a>
               <a href="https://discord.gg/w9gRgd3vsc" target="_blank">
                 <ion-icon name="logo-discord"></ion-icon>
-              
+
               </a>
 
             </div>
@@ -102,7 +96,10 @@
         </div>
       </ion-content>
     </ion-menu>
-    <ion-content class="ion-page" id="main-content" [class.ad-offset]="false">
+    <ion-content class="ion-page" id="main-content" [class.ad-offset]="adShouldShow()">
+      @if(adShouldShow()) {
+        <freemium-ad/>
+      }
        @if((isCaptchaVerified$ | async) == false){
       <turnstile-captcha />
        }@else{
@@ -113,5 +110,6 @@
 
   </ion-split-pane>
 </ion-app>
+
 
 

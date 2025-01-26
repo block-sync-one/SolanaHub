@@ -1,3 +1,7 @@
+.modal-container {
+  padding:  var(--ion-padding, 16px)  var(--ion-padding, 16px) 0  var(--ion-padding, 16px);
+}
+
 #modal-intro {
     display: flex;
     justify-content: space-between;

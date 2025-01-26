@@ -8,25 +8,27 @@
         You can connect up to 4
       </div>
     </div>
-    @if(canAddWallet()) {
-    <div id="portfolio-menu-header-button">
-      <div id="portfolio-menu-header-button-add" (click)="openPortfolioSetup()">
-        <ion-icon name="add-outline"></ion-icon>
-      </div>
-    </div>
-    }
   </div>
   @for (wallet of walletsPortfolio(); let i = $index; track i) {
-  <portfolio-box 
-  [isPrimary]="wallet.walletAddress === connectedWalletAddress" 
-  [wallet]="wallet" 
-  (delete)="delete($event)" 
-  (toggle)="toggle($event)"
-   (update)="openPortfolioSetup($event)"
-   (reload)="reload($event)" />
+    <portfolio-box
+      [isPrimary]="wallet.walletAddress === connectedWalletAddress"
+      [wallet]="wallet"
+      (delete)="delete($event)"
+      (toggle)="toggle($event)"
+      (update)="openPortfolioSetup($event)"
+      (reload)="reload($event)"/>
   }
 
-  @if(spinnerState()) {
-    <portfolio-box />
+  @if (spinnerState()) {
+    <portfolio-box/>
+  }
+  @if (canAddWallet()) {
+    <div id="portfolio-menu-add-area" (click)="openPortfolioSetup()">
+      <div id="portfolio-button-add">
+        <ion-icon name="add-circle-outline"></ion-icon>
+        <span>Add wallet</span>
+      </div>
+      <freemium-badge [show]="true"/>
+    </div>
   }
 </div>

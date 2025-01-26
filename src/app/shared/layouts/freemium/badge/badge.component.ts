@@ -1,23 +1,30 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { FreemiumService } from '../freemium.service';
-import { addIcons } from 'ionicons';
-import { starOutline } from 'ionicons/icons';
+import { Component, computed, inject, Input, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
-import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
+import { PopupPlanComponent } from '@app/shared/layouts/freemium';
+import { FreemiumService } from '../freemium.service';
+
 @Component({
   selector: 'freemium-badge',
   templateUrl: './badge.component.html',
   styleUrls: ['./badge.component.scss'],
 })
 export class BadgeComponent {
-
-  constructor(private _freemiumService: FreemiumService) {
-    addIcons({starOutline})
-   }
-
-  public isPremium = this._freemiumService.isPremium;
+  @Input() set show(value: boolean) {
+    this.showSignal.set(value);
+  }
+  private _freemiumService = inject(FreemiumService);
+  private showSignal = signal(false)
+  public isVisible = computed(() => this._freemiumService.isPremium() || this.showSignal());
   private _modalCtrl= inject(ModalController);
-  async openFreemumAccessPopup(){
+
+  async openFreemiumAccessPopup(event){
+    try {
+      event.stopPropagation()
+      await this._modalCtrl.dismiss();
+    } catch (err) {
+      console.error("Event is undefined")
+    }
+
     const modal = await this._modalCtrl.create({
       component: PopupPlanComponent,
       cssClass: 'freemium-popup'

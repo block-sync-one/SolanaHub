@@ -1,37 +1,43 @@
 <div id="split-stake-account">
   <ion-label>from target account</ion-label>
-  <position class="no-padding" [stake]="targetStake" />
-<ion-text>select the accounts you want to merge with the target account</ion-text>
+  <stake-position class="no-padding" [stake]="targetStake"/>
+  <ion-text>select the accounts you want to merge with the target account</ion-text>
 
   <cdk-virtual-scroll-viewport itemSize="74" minBufferPx="400" maxBufferPx="1000">
     <div class="account-check-wrapper" *cdkVirtualFor="let stake of stakeAccounts; let i = index;">
       <position [ngClass]="{
         'checked': checkAccounts.checked,
         'disabled': stake.state != targetStake.state || stake.validator.vote_identity != targetStake.validator.vote_identity
-       }" 
-       [class.checked]="checkAccounts.checked" 
-       (click)="selectAccount(checkAccounts, stake.state === targetStake.state && stake.validator.vote_identity === targetStake.validator.vote_identity)" 
-       [stake]="stake" />
-      <ion-checkbox 
-       
-       [value]="stake" 
-       [disabled]="stake.state != targetStake.state || stake.validator.vote_identity != targetStake.validator.vote_identity"
-        #checkAccounts 
-         class="stake-account-checkbox">
+       }"
+                      [class.checked]="checkAccounts.checked"
+                      (click)="selectAccount(checkAccounts, stake.state === targetStake.state && stake.validator.vote_identity === targetStake.validator.vote_identity)"
+                      [stake]="stake"/>
+      <ion-checkbox
+
+        [value]="stake"
+        [disabled]="stake.state != targetStake.state || stake.validator.vote_identity != targetStake.validator.vote_identity"
+        #checkAccounts
+        class="stake-account-checkbox">
       </ion-checkbox>
     </div>
   </cdk-virtual-scroll-viewport>
 
-  
+
   <div id="merge-summary">
-    <ion-label>merge summary</ion-label>
+    <ion-label>Merge summary</ion-label>
     <div id="merge-calc">
-      <div class="account">
-        <div class="account-id">account 1</div>
-        <div class="account-address">{{targetStake.shortAddress}}</div>
-        <div class="account-value">{{mergedBalance() + targetStake.balance | number: '1.3'}} SOL</div>
+      <div class="summary">
+        <div class="summary__label">Account 1</div>
+        <div class="summary_value">{{targetStake.shortAddress}}</div>
+        <div class="summary__value">{{ mergedBalance() + targetStake.balance | number: '1.3' }} SOL</div>
       </div>
-     
+
+      <div class="summary">
+        <div class="summary__label">Platform Fee</div>
+        <div class="summary__value">
+          <app-platform-fee [feeInSOL]="fee()" ></app-platform-fee>
+        </div>
+      </div>
     </div>
   </div>
 </div>

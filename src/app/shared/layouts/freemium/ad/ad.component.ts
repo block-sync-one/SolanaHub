@@ -1,24 +1,32 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FreemiumService } from '../freemium.service';
 import { ModalController } from '@ionic/angular';
-import { PopupPlanComponent } from '../popup-plan/popup-plan.component';
+import { PopupPlanComponent } from '@app/shared/layouts/freemium';
+import { addIcons } from "ionicons";
+import { closeOutline } from "ionicons/icons";
+
 @Component({
   selector: 'freemium-ad',
   templateUrl: './ad.component.html',
   styleUrls: ['./ad.component.scss'],
 })
 export class AdComponent {
-
-  constructor(private _freemiumService: FreemiumService) {
-  }
-  public hideAd = this._freemiumService.hideAd;
-  public adShouldShow = this._freemiumService.adShouldShow;
+  public _freemiumService = inject(FreemiumService);
   private _modalCtrl= inject(ModalController);
-  async openFreemumAccessPopup(){
+
+  constructor() {
+    addIcons({ closeOutline })
+
+  }
+  async openFreemiumAccessPopup(){
     const modal = await this._modalCtrl.create({
       component: PopupPlanComponent,
       cssClass: 'freemium-popup'
     });
     modal.present();
+  }
+
+  closeAd(): void {
+    this._freemiumService.hideAd();
   }
 }

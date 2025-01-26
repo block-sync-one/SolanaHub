@@ -1,5 +1,15 @@
 import { CommonModule, DOCUMENT, NgStyle } from '@angular/common';
-import { CUSTOM_ELEMENTS_SCHEMA, Component, ElementRef, Inject, OnInit, Renderer2, ViewChild, signal } from '@angular/core';
+import {
+  CUSTOM_ELEMENTS_SCHEMA,
+  Component,
+  ElementRef,
+  Inject,
+  OnInit,
+  Renderer2,
+  ViewChild,
+  signal,
+  inject, computed
+} from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import {
   IonApp,
@@ -42,7 +52,7 @@ import { NewsFeedComponent } from './shared/components/news-feed/news-feed.compo
 
 import va from '@vercel/analytics';
 import { CaptchaService } from './services/captcha.service';
-import { StakeService } from './pages/staking/stake.service';
+import {FreemiumService} from "@app/shared/layouts/freemium";
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -77,18 +87,19 @@ import { StakeService } from './pages/staking/stake.service';
   ],
 })
 export class AppComponent implements OnInit {
-
-
   readonly watchMode$ = this._watchModeService.watchMode$
   readonly isReady$ = this._walletStore.connected$.pipe(
     combineLatestWith(this.watchMode$),
     switchMap(async ([wallet, watchMode]) => {
       console.log('wallet', wallet);
       if(wallet){
+        this.isWalletConnected.set(true);
         setTimeout(() => {
           this._notifService.checkAndSetIndicator()
 
         });
+      } else {
+        this.isWalletConnected.set(false)
       }
 
       return wallet || watchMode;
@@ -97,6 +108,8 @@ export class AppComponent implements OnInit {
   public notifIndicator = this._notifService.notifIndicator;
   public hubSOLApyIndicator = this._stakingService.hubSOLApy;
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
+  public adShouldShow = computed(() => this.isWalletConnected() && this._freemiumService.isAdEnabled());
+  public isWalletConnected = signal(false);
 
   constructor(
     public router: Router,
@@ -107,6 +120,7 @@ export class AppComponent implements OnInit {
     private _walletStore: WalletStore,
     private _vrs: VirtualStorageService,
     private _utilService: UtilService,
+    private _freemiumService: FreemiumService,
     private _renderer: Renderer2,
     private _stakingService: StakeService,
     @Inject(DOCUMENT) private document: Document,

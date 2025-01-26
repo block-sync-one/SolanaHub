@@ -12,6 +12,7 @@ import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marin
 import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctum } from './sanctum';
 import { vSOLdirectStake } from './vSOL/set-validator-directed-stake';
 import { ToasterService } from './toaster.service';
+import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -132,11 +133,11 @@ export class LiquidStakeService {
         txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
         await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAddress}&txid=${txId}`);
       }
-      
+
       if (poolName === 'the vault') {
         const wallet = this._shs.getCurrentWallet()
         const ix2 = await this.setvSOLDirectStake(wallet, validatorVoteAddress)
-        
+
         ixs.push(...ix2)
         console.log(ixs);
         txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
@@ -207,12 +208,12 @@ export class LiquidStakeService {
     //   segmentClass: 'toastInfo'
     // })
     console.log(wallet, validatorVoteAddress);
-    
+
     return await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
   }
   async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
     console.log(stakeAccount, pool);
-    
+
     const { publicKey } = this._shs.getCurrentWallet()
     // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
     const record = {
@@ -235,7 +236,7 @@ export class LiquidStakeService {
         await this._txi.sendTx([txIns], publicKey, null, record);
       } else if (pool.poolName.toLowerCase() == 'solanahub staked sol') {
         console.log('depositStakeHubSolPool');
-        
+
         this.depositStakeHubSolPool(publicKey, stakeAccountPK)
       }
 
@@ -296,14 +297,14 @@ export class LiquidStakeService {
   }
 
   public async unstake(pool: StakePool, sol: number) {
- 
+
     // single validator pools
     // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
     // // Multi validator sanctum pools
     // const MVP = ['jupSOL']
     // sol = sol)
     console.log(sol);
-    
+
     const { publicKey } = this._shs.getCurrentWallet()
     const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
 
@@ -314,7 +315,7 @@ export class LiquidStakeService {
       }
       const { transaction } = await this.marinadeSDK.liquidUnstake(new BN(lamports))
       // sign and send the `transaction`
-      await this._txi.sendTx([transaction], publicKey, null, record, 'unstake-lst')
+      await this._txi.sendTx([transaction], publicKey, null, record, PremiumActions.UNSTAKE_LST)
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
       const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
@@ -328,7 +329,7 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, 'unstake-lst')
+      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
     } else {
 
       let transaction = await withdrawStake(
@@ -339,7 +340,7 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, 'unstake-lst')
+      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
 
     }
   }
@@ -348,7 +349,7 @@ export class LiquidStakeService {
     if (decimalPlaces > 3) {
       return Math.floor(num * 10000) / 10000;
   }
-  
+
   return num;
 }
 }

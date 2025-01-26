@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ComponentFactoryResolver, ComponentRef, EmbeddedViewRef, Injector, Input, OnInit, TemplateRef, ViewChild, ViewContainerRef, effect, inject, signal } from '@angular/core';
 import { ModalController } from '@ionic/angular';
 import { NFT, Stake, Validator } from 'src/app/models';
-import { IonButton, IonImg } from '@ionic/angular/standalone'
+import { IonButton, IonImg, IonText } from '@ionic/angular/standalone'
 
 import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
@@ -20,9 +20,10 @@ import { NftsService } from 'src/app/services/nfts.service';
 // import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
 import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
 import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal.component';
-import { SplitModalComponent } from 'src/app/pages/staking/stake-positions/stake/split-modal/split-modal.component';
-import { MergeModalComponent } from 'src/app/pages/staking/stake-positions/stake/merge-modal/merge-modal.component';
-import { TransferAuthModalComponent } from 'src/app/pages/staking/stake-positions/stake/transfer-auth-modal/transfer-auth-modal.component';
+import { ChipComponent } from "../chip/chip.component";
+import { ModalUpgradeMessageComponent } from "../../layouts/freemium";
+import { FreemiumService } from "../../layouts/freemium/freemium.service";
+import { IsPremiumServiceDirective } from "../../directives/is-premium-service.directive";
 
 
 @Component({
@@ -40,7 +41,12 @@ import { TransferAuthModalComponent } from 'src/app/pages/staking/stake-position
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    FaqModalComponent
+    UnstakeLstModalComponent,
+    FaqModalComponent,
+    ChipComponent,
+    IonText,
+    ModalUpgradeMessageComponent,
+    IsPremiumServiceDirective
   ]
 
 })
@@ -55,13 +61,15 @@ export class ModalComponent implements AfterViewInit {
   @Input() data
   @Input() componentName: 'stash-modal' | 'll-faq-modal' | 'list-nft-modal' | 'send-nft-modal' | 'burn-nft-modal' | 'delegate-lst-modal' | 'unstake-lst-modal' | 'validators-modal' | 'merge-modal' | 'split-modal' | 'instant-unstake-modal' | 'transfer-auth-modal' | 'token-list'
   public emittedValue = signal(null)
+
   constructor(
     private _modalCtrl: ModalController,
     private _shs: SolanaHelpersService,
     private _nfts: NftsService,
     private _nss: NativeStakeService,
     private _lss: LiquidStakeService,
-    private _txi: TxInterceptorService
+    private _txi: TxInterceptorService,
+    protected _freemiumService: FreemiumService
   ) {
   }
 
@@ -71,8 +79,9 @@ export class ModalComponent implements AfterViewInit {
   async submit() {
 
     const wallet = this._shs.getCurrentWallet()
+
     switch (this.componentName) {
-      
+
       case 'delegate-lst-modal':
         const pool = this.emittedValue().pool;
         this._lss.stakePoolStakeAccount(this.data.stake, pool)

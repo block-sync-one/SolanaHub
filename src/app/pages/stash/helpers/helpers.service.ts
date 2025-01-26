@@ -1,27 +1,25 @@
-// import { StashAsset, StashGroup } from "../stash.model";
-import { Injectable, computed, inject, signal } from '@angular/core';
-import { PortfolioService, JupStoreService, UtilService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
+import { Injectable, signal } from '@angular/core';
+import { JupStoreService, UtilService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
 import { StashAsset, StashGroup, TokenInfo } from '../stash.model';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { EarningsService } from './earnings.service';
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelpersService {
-
-    public platformFee = 0.05
-    public platformFeeInSOL = signal(0)
     public rentFee = 0.002039
     public dasAssets = signal([])
+
     constructor(
         public shs: SolanaHelpersService,
         public txi: TxInterceptorService,
-        public portfolioService: PortfolioService,
         public utils: UtilService,
         public jupStoreService: JupStoreService,
-        public earningsService: EarningsService
+        public earningsService: EarningsService,
+        public freemiumService: FreemiumService
     ) {
         // this.getDASAssets()
     }
@@ -175,6 +173,7 @@ export class HelpersService {
 
     public async _simulateBulkSendTx(
         ixs: TransactionInstruction[] | VersionedTransaction[] | Transaction[],
+        platformFeeInSOL: number
     ): Promise<string[]> {
         let transactions: (Transaction | VersionedTransaction)[] = [];
 
@@ -187,21 +186,23 @@ export class HelpersService {
             transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[]);
         }
 
+      if (!this.freemiumService.isPremium()) {
         // Add platform fee to each transaction
         if (ixs[0] instanceof VersionedTransaction) {
             // Add a single fee transaction for versioned transactions
-            const platformFeeP = Math.floor(this.platformFeeInSOL() * LAMPORTS_PER_SOL);
+            const platformFeeP = Math.floor(platformFeeInSOL * LAMPORTS_PER_SOL);
             const platformFeeTxsVersioned = await this._addPlatformFeeTx('versionedTx', platformFeeP);
             transactions.push(platformFeeTxsVersioned as VersionedTransaction);
         } else {
             // Calculate platform fee per transaction
-            const platformFeePerTx = Math.floor(this.platformFeeInSOL() * LAMPORTS_PER_SOL / transactions.length);
+            const platformFeePerTx = Math.floor(platformFeeInSOL * LAMPORTS_PER_SOL / transactions.length);
             const platformFeeTxsIn = await this._addPlatformFeeTx('instructions', platformFeePerTx);
             // Add fee to each legacy transaction
             for (const tx of transactions) {
                 (tx as Transaction).add(...platformFeeTxsIn as TransactionInstruction[]);
             }
         }
+      }
 
         // Send transactions
         try {
