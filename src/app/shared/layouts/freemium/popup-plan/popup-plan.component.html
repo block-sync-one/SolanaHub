@@ -47,7 +47,13 @@
     </div>
   </div>
   <div class="modal-footer">
-    <ion-button expand="block" (click)="gotoStakingPage()">Stake total of 20 hubSOL to Upgrade</ion-button>
+    <ion-button expand="block" (click)="gotoStakingPage()">
+      @if (freemiumService.isPremium()) {
+        Stake more
+      } @else {
+        Stake total of 20 hubSOL to Upgrade
+      }
+    </ion-button>
   </div>
 </div>
 

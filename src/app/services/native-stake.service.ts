@@ -22,6 +22,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { TxInterceptorService } from './tx-interceptor.service';
 import { Stake, Stake2, StakeAccountShyft, Validator, WalletExtended } from '../models';
 import { UtilService } from './util.service';
+import { PremiumActions } from "@app/enums";
 
 @Injectable({
   providedIn: 'root'
@@ -175,7 +176,7 @@ public async getNativeStakeAccounts(walletAddress: string): Promise<Stake2[]> {
 
       return []
     }
-  
+
 }
   public async deactivateStakeAccount(stakeAccountAddress: string, walletOwner: WalletExtended): Promise<string> {
     try {
@@ -246,7 +247,7 @@ public async getNativeStakeAccounts(walletAddress: string): Promise<Stake2[]> {
         }, minimumAmount);
 
       const record = { message: 'account', data: { action: 'split account' } }
-      return await this._txi.sendTx([splitAccount], walletOwnerPk, [createAccount.newStakeAccount], record)
+      return await this._txi.sendTx([splitAccount], walletOwnerPk, [createAccount.newStakeAccount], record, PremiumActions.SPLIT)
     } catch (error) {
       console.log(error);
     }
@@ -263,7 +264,7 @@ public async getNativeStakeAccounts(walletAddress: string): Promise<Stake2[]> {
         });
       })
       const record = { message: 'account', data: { action: 'merge accounts' } }
-      return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record)
+      return await this._txi.sendTx(mergeAccounts, walletOwnerPk, null, record, PremiumActions.MERGE)
     } catch (error) {
       console.log(error);
     }

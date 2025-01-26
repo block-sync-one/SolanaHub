@@ -7,7 +7,12 @@ ion-chip {
   border-top: 1px solid var(--ion-color-border);
   position: relative;
 
-  ion-img {
+  &__bg-image {
+    background-image: url('/assets/images/solanahub-bg.svg');
+    background-size: cover;
+    background-position: center;
+    width: 400px;
+    height: 100%;
     position: absolute;
     right: 0;
   }
