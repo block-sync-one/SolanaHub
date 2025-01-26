@@ -124,3 +124,12 @@ ion-checkbox {
     line-height: 130%;
     /* 15.6px */
 }
+
+:host ::ng-deep position {
+    border: 1px solid var(--ion-color-border);
+    border-radius: 12px;
+    chip{
+      display: none;
+    }
+  }
+  

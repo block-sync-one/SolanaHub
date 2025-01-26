@@ -65,14 +65,14 @@ cdk-virtual-scroll-viewport {
 ion-text {
   display: block;
   color: var(--ion-color-dark);
-  margin-block-end: 16px;
+  margin-block: 16px;
   font-size: 12px;
 }
 
 .account-check-wrapper {
   position: relative;
   cursor: pointer;
-
+  margin-block-end: 12px;
   ion-checkbox {
     position: absolute;
     top: 27px;
@@ -91,15 +91,17 @@ ion-text {
   }
 }
 
-:host ::ng-deep stake-position.disabled {
-  .stake-card {
+:host ::ng-deep position.disabled {
+
     background: var(--ion-color-primary-bg);
     opacity: 0.8;
-  }
+  
 }
 
-// :host ::ng-deep stake-position {
-//     .stake-card {
-//         padding-inline-start: 42px;
-//     }
-// }
+:host ::ng-deep position {
+  border: 1px solid var(--ion-color-border);
+  border-radius: 12px;
+  chip{
+    display: none;
+  }
+}

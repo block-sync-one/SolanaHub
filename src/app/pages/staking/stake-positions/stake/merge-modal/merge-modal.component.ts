@@ -71,6 +71,6 @@ export class MergeModalComponent implements OnInit {
 
   ngOnInit() {
     // hide the target stake account from the list
-    this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address);
+    this.stakeAccounts = this.stakeAccounts.filter(acc => acc.address != this.targetStake.address && acc.symbol == 'staked-SOL');
   }
 }
