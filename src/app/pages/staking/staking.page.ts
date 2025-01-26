@@ -84,14 +84,14 @@ export class StakingPage implements OnInit {
   ngOnInit() {
     const {publicKey} = this._shs.getCurrentWallet();
     this._stakeService.updateStakePositions(publicKey.toBase58());
-    this._nst.getSolanaHubValidatorInfo().then(info => {
-      this.validatorData[1].desc.set(
-        this._util.formatBigNumbers(info.activated_stake) + ' SOL'
-      );
-      this.validatorData[2].desc.set(
-        info.uptime.toString() + '%'
-      );
-    });
+    // this._nst.getSolanaHubValidatorInfo().then(info => {
+    //   this.validatorData[1].desc.set(
+    //     this._util.formatBigNumbers(info.activated_stake) + ' SOL'
+    //   );
+    //   this.validatorData[2].desc.set(
+    //     info.uptime.toString() + '%'
+    //   );
+    // });
 
     this._lss.getStakePoolList().then(pl => this.stakePools.set(pl));
   }

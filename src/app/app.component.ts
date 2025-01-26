@@ -50,6 +50,8 @@ import { NewsFeedComponent } from './shared/components/news-feed/news-feed.compo
 
 import { CaptchaService } from './services/captcha.service';
 import {FreemiumService} from "@app/shared/layouts/freemium";
+import { StakeService } from './pages/staking/stake.service';
+import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -81,7 +83,8 @@ import {FreemiumService} from "@app/shared/layouts/freemium";
     LoyaltyLeagueMemberComponent,
     FloatJupComponent,
     IonIcon,
-    NotConnectedComponent
+    NotConnectedComponent,
+    FreemiumModule
   ],
 })
 export class AppComponent implements OnInit {

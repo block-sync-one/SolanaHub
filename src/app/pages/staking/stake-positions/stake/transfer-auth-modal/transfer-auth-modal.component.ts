@@ -33,7 +33,7 @@ import { LiquidStakeToken } from '../../../stake.service';
   ]
 })
 export class TransferAuthModalComponent implements OnInit {
-  @Input() stake: LiquidStakeToken | StakeAccount | any;
+  @Input() stake:  StakeAccount | any;
   @Output() onAuthSet = new EventEmitter();
   public targetAddress: string = '';
   public authoritiesChecked = signal({ withdraw: false, stake: false })

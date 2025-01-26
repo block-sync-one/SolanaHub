@@ -24,6 +24,9 @@ import { ChipComponent } from "../chip/chip.component";
 import { ModalUpgradeMessageComponent } from "../../layouts/freemium";
 import { FreemiumService } from "../../layouts/freemium/freemium.service";
 import { IsPremiumServiceDirective } from "../../directives/is-premium-service.directive";
+import { SplitModalComponent } from '@app/pages/staking/stake-positions/stake/split-modal/split-modal.component';
+import { MergeModalComponent } from '@app/pages/staking/stake-positions/stake/merge-modal/merge-modal.component';
+import { TransferAuthModalComponent } from '@app/pages/staking/stake-positions/stake/transfer-auth-modal/transfer-auth-modal.component';
 
 
 @Component({
@@ -41,7 +44,6 @@ import { IsPremiumServiceDirective } from "../../directives/is-premium-service.d
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    UnstakeLstModalComponent,
     FaqModalComponent,
     ChipComponent,
     IonText,

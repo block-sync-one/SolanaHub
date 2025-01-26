@@ -46,7 +46,7 @@ import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
 export class PositionComponent implements OnInit{
   // @Input() stake: Stake = null;
   @Input() stake: LiquidStakeToken | StakeAccount = null
-  @Input() stakeAccounts: Stake[] = null
+  @Input() stakeAccounts: StakeAccount[] | LiquidStakeToken[] = null
   public toolTipPos = TooltipPosition.LEFT
   public solPrice = this._jupStore.solPrice;
 

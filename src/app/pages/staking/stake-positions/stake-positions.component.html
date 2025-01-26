@@ -43,7 +43,7 @@
 
 
     @for (position of group.positions; track $index) {
-    <position [stake]="position" />
+    <position [stake]="position" [stakeAccounts]="group.positions" />
     }
   </div>
   }@empty {

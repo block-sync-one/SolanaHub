@@ -12,7 +12,6 @@ import {
   WritableSignal
 } from '@angular/core';
 import { Stake } from 'src/app/models';
-import { StakeComponent } from '../stake.component';
 import { IonCheckbox, IonInput, IonLabel, IonText } from '@ionic/angular/standalone';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DecimalPipe, NgClass } from '@angular/common';
@@ -21,6 +20,9 @@ import { ChipComponent } from "../../../../../shared/components/chip/chip.compon
 import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
 import { PremiumActions } from "@app/enums";
+import { PositionComponent } from '../position.component';
+import { StakeAccount } from '@app/pages/staking/stake.service';
+import { LiquidStakeToken } from '@app/pages/staking/stake.service';
 
 @Component({
   selector: 'merge-modal',
@@ -44,8 +46,8 @@ import { PremiumActions } from "@app/enums";
 export class MergeModalComponent implements OnInit {
   public _freemiumService = inject(FreemiumService);
   public fee = signal(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.MERGE))
-  @Input() targetStake: Stake;
-  @Input() stakeAccounts: Stake[];
+  @Input() targetStake: StakeAccount | LiquidStakeToken | any;
+  @Input() stakeAccounts: StakeAccount[] | LiquidStakeToken[] | any;
   @Output() onAccountsSelected = new EventEmitter();
   @ViewChildren('checkAccounts') checkAccounts: QueryList<IonCheckbox>
   public accountsToMerge: WritableSignal<Stake[]> = signal(null);

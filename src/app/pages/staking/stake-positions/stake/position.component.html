@@ -37,11 +37,11 @@
           <chip class="stake-apy" color="primary" [name]="'APY ' + getStakeApy(stake) + '%'" />
         }
         <div class="account-value">
-          <div class="sol-amount">{{getStakeBalance(stake)}} {{stake.symbol}}</div>
+          <div class="sol-amount">{{getStakeBalance(stake)}} {{stake.symbol == 'staked-SOL' ? 'SOL' : stake.symbol}}</div>
           <div class="usd-value">{{stake?.balance * solPrice() * stake.exchangeRate | currency}}</div>
         </div>
       }@else{
-        <ion-skeleton-text animated />
+        <ion-skeleton-text style="width: 30px;" animated />
       }
     </div>
     

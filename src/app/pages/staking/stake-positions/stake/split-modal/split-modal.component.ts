@@ -12,13 +12,16 @@ import { InputLabelComponent } from 'src/app/shared/components/input-label/input
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
 import { FreemiumService } from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
+import { PositionComponent } from '../position.component';
+import { StakeAccount } from '@app/pages/staking/stake.service';
+import { LiquidStakeToken } from '@app/pages/staking/stake.service';
 @Component({
   selector: 'split-modal',
   templateUrl: './split-modal.component.html',
   styleUrls: ['./split-modal.component.scss'],
   standalone: true,
     imports: [
-        StakeComponent,
+        PositionComponent,
         IonLabel,
         IonInput,
         DecimalPipe,
@@ -29,7 +32,7 @@ import { PremiumActions } from "@app/enums";
 export class SplitModalComponent implements OnInit{
   public _freemiumService = inject(FreemiumService);
   public fee = signal(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.SPLIT))
-  @Input() stake:Stake;
+  @Input() stake:LiquidStakeToken | StakeAccount | any;
   @Output() onAmountSet = new EventEmitter();
   public utils = inject(UtilService)
   public newStakeAccount = new Keypair();
