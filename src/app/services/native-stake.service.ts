@@ -34,7 +34,10 @@ export class NativeStakeService {
     private _txi: TxInterceptorService,
     private _shs: SolanaHelpersService
   ) { }
-
+  public async getSolanaHubValidatorInfo() {
+    const validators = await this._shs.getValidatorsList()
+    return validators.find(v => v.vote_identity === this._shs.SolanaHubVoteKey)
+  }
 
   private async _getStakeAccountState(stakeAccountPubkey: PublicKey) {
     // Fetch the account information
