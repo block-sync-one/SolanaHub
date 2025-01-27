@@ -1,7 +1,7 @@
 .freemium-access-popup {
   position: relative;
   text-align: center;
-  padding: 0 24px;
+  padding: 24px;
   color: var(--ion-color-dark);
   display: flex;
   flex-direction: column;
@@ -27,12 +27,16 @@
 }
 
 .modal-header {
-  .energy {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 336px;
-  }
+
+.energy{
+  width: 336px;
+  height: 336px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  top: -45px;
+}
 
   .description {
     margin-top: 138px;

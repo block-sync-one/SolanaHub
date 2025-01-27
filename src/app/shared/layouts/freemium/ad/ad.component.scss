@@ -11,16 +11,22 @@
   font-weight: 500;
   background: var(--ion-color-primary-bg);
   color: var(--ion-color-primary);
-  padding: 12px;
+  display: flex;
+      height: 50px;
+      justify-content: center;
+      align-items: center;
 
   #ad-text {
     font-size: 13px;
     font-weight: 500;
     height: inherit;
-    text-align: center;
-    padding-right: 2rem;
-
+    padding-inline: 2rem;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    gap: 4px;
     @media (min-width: 576px) {
+      text-align: center;
       align-items: center;
       justify-content: center;
       display: flex;
@@ -50,4 +56,24 @@ ion-icon {
   font-size: 16px;
   cursor: pointer;
   color: var(--ion-color-dark);
+}
+
+.pro-button {
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 18px;
+    --border-radius: 6px;
+    --border-color: var(--ion-color-border);
+    --border-width: 1px;
+    width: 91px;
+    min-height: 26px !important;
+    ion-label {
+      background: linear-gradient(64.89deg, #FF50C8 0%, #7100FF 100%, #8E00FF 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.01em;
+      text-transform: initial;
+    }
+
 }

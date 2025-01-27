@@ -280,7 +280,7 @@ ion-spinner {
 .freemium-popup{
     --background: var(--ion-color-light);
     --width: 540px;
-    --height: 592px;
+    --height: fit-content;
     --border-radius: 12px;
 }
 .swap-setting-modal {

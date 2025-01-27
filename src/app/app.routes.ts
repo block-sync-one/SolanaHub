@@ -32,11 +32,6 @@ export const routes: Routes = [
     canActivate: []
   },
   {
-    path: RoutingPath.LOYALTY_LEAGUE,
-    loadComponent: () => import('./pages/loyalty-league/loyalty-league.page').then( m => m.LoyaltyLeaguePage),
-    canActivate: []
-  },
-  {
     path: `${RoutingPath.SWAP}/:pair`,
     loadComponent: () => import('./pages/swap/swap.page').then( m => m.SwapPage),
     canActivate: []

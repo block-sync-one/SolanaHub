@@ -68,8 +68,8 @@ ion-menu {
   }
 }
 
-.ad-offset{
-  --offset-top: -40px !important;
+.ad-offset {
+  --offset-top: calc(var(--ad-height, -40px)) !important;
 }
 
 ion-item {
