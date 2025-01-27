@@ -8,7 +8,7 @@ import { SolanaHelpersService } from './solana-helpers.service';
 import { UtilService } from './util.service';
 import { ToasterService } from './toaster.service';
 import { PortfolioFetchService } from "./portfolio-refetch.service";
-import { FreemiumService } from '../shared/layouts/freemium/freemium.service';
+import { FreemiumService } from '@app/shared/layouts/freemium';
 import { PremiumActions } from "@app/enums";
 
 @Injectable({
@@ -22,6 +22,7 @@ export class TxInterceptorService {
     private _shs: SolanaHelpersService,
     private _util: UtilService,
     private _fetchPortfolioService: PortfolioFetchService,
+    private _freemiumService: FreemiumService,
   ) { }
 
   private _memoIx(message: string = 'SolanaHub memo', publicKey: PublicKey) {
@@ -51,7 +52,9 @@ export class TxInterceptorService {
       if (priorityFeeEst) transaction.add(priorityFeeEst)
 
       transaction.add(this._memoIx('SolanaHub memo', walletOwner))
-
+      const serviceFeeInst = this._freemiumService.addServiceFee(walletOwner, type)
+      console.log("Platform fee tx", serviceFeeInst);
+      if (serviceFeeInst) transaction.add(serviceFeeInst)
 
     let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 

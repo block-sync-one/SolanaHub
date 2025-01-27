@@ -28,19 +28,15 @@
 
 .modal-header {
   .energy {
-    display: inline-block;
     position: absolute;
-    margin-top: -44px;
-    height: 336px;
+    left: 50%;
+    transform: translateX(-50%);
     width: 336px;
-    left: 102px;
   }
 
   .description {
-    position: absolute;
-    top: 138px;
-    text-align: center;
-    left: 106px;
+    margin-top: 138px;
+    margin-bottom: 24px;
   }
 
   &__title {
@@ -63,7 +59,6 @@
   border: 1px solid var(--ion-color-border);
   border-radius: 0.5rem;
   color: var(--ion-color-dark);
-  margin-top: 194px;
   margin-bottom: 24px;
 
   &__header {
@@ -83,10 +78,13 @@
   }
 
   &__plan {
-    display: inline-grid;
-    grid-template-rows: auto;
-    gap: 12px;
-    padding-block: 24px;
+    padding: 16px 24px;
+
+    @media (min-width: 576px) {
+      display: inline-grid;
+      grid-template-rows: auto;
+      gap: 12px;
+    }
   }
 }
 

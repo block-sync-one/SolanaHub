@@ -7,24 +7,29 @@
 }
 
 #freemium-ad {
-  height: 50px;
+  font-size: 13px;
   font-weight: 500;
   background: var(--ion-color-primary-bg);
   color: var(--ion-color-primary);
-  font-size: 13px;
+  padding: 12px;
 
   #ad-text {
     font-size: 13px;
     font-weight: 500;
     height: inherit;
     text-align: center;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    gap: 12px
+    padding-right: 2rem;
+
+    @media (min-width: 576px) {
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      gap: 12px
+    }
   }
 
   .learn-more {
+    display: inline-block;
     background: var(--ion-color-light);
     border-radius: 6px;
   }
@@ -32,8 +37,13 @@
 
 .close-ad {
   position: absolute;
-  right: 26px;
-  top: 20px;
+  right: 5px;
+  top: 12px;
+
+  @media (min-width: 576px) {
+    right: 26px;
+    top: 20px;
+  }
 }
 
 ion-icon {
