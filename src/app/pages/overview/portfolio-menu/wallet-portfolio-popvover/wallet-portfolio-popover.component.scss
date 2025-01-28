@@ -1,0 +1,26 @@
+#presentPopover {
+  cursor: pointer;
+}
+
+#actions-wrapper {
+  border-radius: 12px;
+  border: 1px solid var(--ion-color-border);
+  background: var(--ion-color-light);
+
+  ion-button {
+    font-size: 14px;
+    --color: var(--ion-color-dark);
+    --box-shadow: 0 0 0;
+    text-transform: capitalize;
+
+    div {
+      width: 100%;
+      display: flex;
+
+      ion-icon {
+        margin-inline-end: 4px;
+      }
+    }
+  }
+
+}

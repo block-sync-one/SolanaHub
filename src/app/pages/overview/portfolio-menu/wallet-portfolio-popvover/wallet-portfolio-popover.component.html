@@ -1,0 +1,14 @@
+<div id="actions-wrapper">
+  <ion-button expand="block" fill="clear" (click)="onActionClicked(WalletAddressAction.RELOAD)">
+    <div class="ion-text-left">
+      <ion-icon name="reload-outline"></ion-icon>
+      Reload
+    </div>
+  </ion-button>
+  <ion-button *ngIf="!isPrimary" expand="block" fill="clear" (click)="onActionClicked(WalletAddressAction.DELETE)">
+    <div class="ion-text-left">
+      <ion-icon name="trash-outline"></ion-icon>
+      Delete
+    </div>
+  </ion-button>
+</div>

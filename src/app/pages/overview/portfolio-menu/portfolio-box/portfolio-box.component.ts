@@ -1,15 +1,19 @@
-import { CurrencyPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { CurrencyPipe } from '@angular/common';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   IonButton,
   IonRippleEffect,
   IonText,
-  IonLabel,
   IonIcon,
   IonToggle,
-  IonSkeletonText, IonPopover, IonContent } from "@ionic/angular/standalone";
+  IonSkeletonText, IonPopover } from "@ionic/angular/standalone";
 import { addIcons } from 'ionicons';
 import { trashOutline, ellipsisVertical, reloadOutline } from 'ionicons/icons';
+import {
+  WalletAddressAction,
+  WalletPortfolioPopoverComponent
+} from "../wallet-portfolio-popvover/wallet-portfolio-popover.component";
+import { PopoverController } from "@ionic/angular";
 
 @Component({
   selector: 'portfolio-box',
@@ -17,7 +21,7 @@ import { trashOutline, ellipsisVertical, reloadOutline } from 'ionicons/icons';
   styleUrls: ['./portfolio-box.component.scss'],
   standalone: true,
   imports: [
-    IonPopover, 
+    IonPopover,
     IonToggle,
     IonIcon,
     IonText,
@@ -37,27 +41,39 @@ export class PortfolioBoxComponent  {
   @Output() delete = new EventEmitter<string>()
   @Output() toggle = new EventEmitter<string>()
   @Output() reload = new EventEmitter<string>()
-  constructor() {
+  constructor(private popoverController: PopoverController) {
     addIcons({ellipsisVertical,reloadOutline,trashOutline});
-  }
-
-  updateWallet(walletAddress: string) {
-    this.update.emit(walletAddress)
-  }
-
-  reloadWallet(walletAddress: string) {
-    this.reload.emit(walletAddress)
-  }
-
-  deleteWallet(walletAddress: string) {
-    this.delete.emit(walletAddress)
   }
 
   toggleWallet(walletAddress: string) {
     this.toggle.emit(walletAddress)
   }
 
-  presentPopover(event: any) {
-    console.log('presentPopover', event);
+  async presentPopover(event: Event, walletAddress: string) {
+    const popover = await this.popoverController.create({
+      component: WalletPortfolioPopoverComponent, // Create a separate component for the popover content
+      cssClass: 'portfolio-box-popover',
+      event,
+      componentProps: {
+        isPrimary: this.isPrimary
+      },
+      backdropDismiss: true,
+      showBackdrop: false,
+      dismissOnSelect: true,
+    });
+    await popover.present();
+
+    const {data} = await popover.onDidDismiss();
+    switch (data) {
+      case WalletAddressAction.UPDATE:
+        this.update.emit(walletAddress)
+        break;
+      case WalletAddressAction.DELETE:
+        this.delete.emit(walletAddress)
+        break;
+      case WalletAddressAction.RELOAD:
+        this.reload.emit(walletAddress)
+        break;
+    }
   }
 }

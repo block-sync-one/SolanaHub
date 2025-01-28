@@ -1,48 +1,23 @@
 <div class="portfolio-box">
   @if (wallet?.walletAddress) {
-  <div class="portfolio-box-body">
-    <div class="portfolio-box-wallet-text">{{wallet.nickname ? wallet.nickname : wallet.walletAddressShort}}</div>
-
-    <ion-text>{{wallet.value | currency:'USD'}}</ion-text>
-  </div>
-  <div class="portfolio-box-header">
-    <div class="portfolio-actions">
-      <ion-toggle color="primary" mode="md" [checked]="wallet.enabled"
-        (ionChange)="toggleWallet(wallet.walletAddress)"></ion-toggle>
-
-      <ion-icon id="presentPopover-{{wallet.walletAddress}}" name="ellipsis-vertical"></ion-icon>
-      <ion-popover trigger="presentPopover-{{wallet.walletAddress}}" class="portfolio-box-popover" triggerAction="click"
-        [backdropDismiss]="true" [showBackdrop]="false" [dismissOnSelect]="true">
-        <ng-template>
-          <div id="actions-wrapper">
-            <ion-button expand="block" fill="clear" (click)="reloadWallet(wallet.walletAddress)">
-              <div class="ion-text-left">
-                <ion-icon name="reload-outline"></ion-icon>
-                Reload
-              </div>
-            </ion-button>
-            @if(!isPrimary) {
-            <ion-button expand="block" fill="clear" (click)="deleteWallet(wallet.walletAddress)">
-              <div class="ion-text-left">
-                <ion-icon name="trash-outline" />
-                Delete
-              </div>
-            </ion-button>
-            }
-          </div>
-        </ng-template>
-      </ion-popover>
-
-
+    <div class="portfolio-box-body">
+      <div class="portfolio-box-wallet-text">{{ wallet.nickname ? wallet.nickname : wallet.walletAddressShort }}</div>
+      <ion-text>{{ wallet.value | currency:'USD' }}</ion-text>
     </div>
-  </div>
-
+    <div class="portfolio-box-header">
+      <div class="portfolio-actions">
+        <ion-toggle color="primary" mode="md" [checked]="wallet.enabled"
+                    (ionChange)="toggleWallet(wallet.walletAddress)"></ion-toggle>
+        <ion-icon id="presentPopover-{{wallet.walletAddress}}" name="ellipsis-vertical"
+                  (click)="presentPopover($event, wallet.walletAddress)"></ion-icon>
+      </div>
+    </div>
   } @else {
-  <div class="portfolio-box-empty">
-    <div class="portfolio-box-empty__skeleton">
-      <ion-skeleton-text [animated]="true" />
+    <div class="portfolio-box-empty">
+      <div class="portfolio-box-empty__skeleton">
+        <ion-skeleton-text [animated]="true"/>
+      </div>
     </div>
-  </div>
   }
-  <ion-ripple-effect />
+  <ion-ripple-effect/>
 </div>
