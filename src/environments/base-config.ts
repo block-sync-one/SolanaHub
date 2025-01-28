@@ -2,7 +2,7 @@ import { BaseConfig } from "../app/models";
 
 export const getBaseConfig = (): BaseConfig => {
   return {
-    platformFeeCollector:'HUBpmKPsZaXWCDoWh1SScYMneVSQJve99NamntdsEovP',
+    platformFeeCollector:'B4puwNbu1fARV4pdcDonreDTXec5JNAiG7MhiVjVRCtx', // hubsol reserve pool
     rpcs: [
       {
         name: 'Helius',

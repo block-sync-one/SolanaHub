@@ -13,6 +13,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { JupStoreService } from 'src/app/services';
 import { UnstakePathComponent } from './unstake-path/unstake-path.component';
 import { IonButton, IonLabel } from '@ionic/angular/standalone';
+import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
 @Component({
   selector: 'unstake-form',
   templateUrl: './unstake-form.component.html',
@@ -22,7 +23,8 @@ import { IonButton, IonLabel } from '@ionic/angular/standalone';
     InputComponent,
     ReactiveFormsModule,
     UnstakePathComponent,
-    IonButton
+    IonButton,
+    FreemiumModule
   ]
 })
 export class UnstakeFormComponent  implements OnInit {

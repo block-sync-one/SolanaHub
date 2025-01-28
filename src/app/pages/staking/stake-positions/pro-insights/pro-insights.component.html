@@ -1,7 +1,7 @@
 <div id="pro-insights" class="ion-padding">
   <div id="pro-insights-header">
     <ion-text>Insights</ion-text>
-    <!-- <pro-badge/> -->
+    <pro-badge/>
   </div>
   <div id="pro-chart">
     <div class="pro-group" id="pro-chart-header">
@@ -22,18 +22,24 @@
     <ion-label >Total rewards</ion-label>
     <ion-text>{{ totalRewards }} SOL</ion-text>
   </div>
-  @if(stakePosition.inactive_stake > 0){
+  @if(stakePosition?.inactive_stake > 0){
   <div class="pro-group">
     <ion-label>inactive balance(MEV)</ion-label>
-    <ion-text>{{ stakePosition.inactive_stake }} SOL <ion-button fill="clear" size="small" (click)="withdraw()">withdraw</ion-button></ion-text>
+    <div id="pro-inactive-balance">
+
+      <ion-text>{{ utilService.fixedNumber(stakePosition?.inactive_stake) }} SOL 
+      </ion-text>
+      <ion-button fill="clear" size="small" (click)="withdraw()">withdraw</ion-button>
+    </div>
   </div>
   }
   <div  class="pro-group">
     <ion-label>Start date</ion-label>
     <ion-text id="pro-start-date">
-      @if(epochDate$ | async ){ {{ epochDate$ | async | date }} }
-     
-      <ion-label>EPOCH {{ stakePosition.activation_epoch }}</ion-label>
+      @if(stakePosition?.proInsights?.startDate ){ {{ stakePosition.proInsights.startDate | date }} }
+      @if(stakePosition.type === 'native'){
+        <ion-label>EPOCH {{ stakePosition.activation_epoch}}</ion-label>
+      }
     </ion-text>
   </div>
   <div  class="pro-group" id="pro-authorities">

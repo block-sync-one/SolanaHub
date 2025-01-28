@@ -5,7 +5,11 @@
 #pro-chart {
     margin-block-end: 8px;
 }
-
+#pro-insights-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 #pro-chart-header {
     display: flex;
     justify-content: space-between;
@@ -14,6 +18,7 @@
     margin-block-end: 19px;
 
     div {
+        display: none;
         width: 88px;
     }
 
@@ -71,7 +76,14 @@ ion-text {
         margin-block-end: 8px;
     }
 }
-
+#pro-inactive-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 ion-button {
     --box-shadow: 0 0;
+    min-height: 20px;
+    font-size: 11px;
+    font-weight: 600;
 }

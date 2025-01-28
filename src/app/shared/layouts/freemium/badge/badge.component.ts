@@ -4,7 +4,7 @@ import { PopupPlanComponent } from '@app/shared/layouts/freemium';
 import { FreemiumService } from '../freemium.service';
 
 @Component({
-  selector: 'freemium-badge',
+  selector: 'pro-badge',
   templateUrl: './badge.component.html',
   styleUrls: ['./badge.component.scss'],
 })

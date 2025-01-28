@@ -15,6 +15,7 @@ import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft, Token 
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';
 import { WatchModeService } from './watch-mode.service';
+import { VirtualStorageService } from './virtual-storage.service';
 ;
 @Injectable({
   providedIn: 'root'
@@ -44,6 +45,7 @@ export class SolanaHelpersService {
     private _walletStore: WalletStore,
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
+    private _vrs:VirtualStorageService
   ) {
     // prep setup
     this.getValidatorsList()
@@ -66,24 +68,46 @@ export class SolanaHelpersService {
   private _validatorsList: Validator[] =  []
   
   public async getValidatorsList(): Promise<Validator[]> {
-    if (this._validatorsList.length > 0) {
-
-
-      return this._validatorsList;
-    } else {
-
-      let validatorsList: Validator[] = [];
+    // Try to get cached data from localStorage
+    const cachedData = this._vrs.localStorage.getData('validatorsList');
+    const cachedTimestamp = this._vrs.localStorage.getData('validatorsListTimestamp');
+    const fetchAndUpdateValidators = async (): Promise<Validator[]> => {
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
-
-        validatorsList = result
+        
+        // Update localStorage with new data and timestamp
+        this._vrs.localStorage.saveData('validatorsList', JSON.stringify(result));
+        this._vrs.localStorage.saveData('validatorsListTimestamp', Date.now().toString());
+        
+        this._validatorsList = result;
+        return result;
       } catch (error) {
         console.error(error);
+        return this._validatorsList;
       }
-      this._validatorsList = validatorsList;
-      return validatorsList
     }
+    if (cachedData) {
+      this._validatorsList = JSON.parse(cachedData);
+      
+      // Check if cache is older than 2 days
+      const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
+      const isStale = !cachedTimestamp || (Date.now() - Number(cachedTimestamp)) > TWO_DAYS_MS;
+      
+      // Return cached data immediately
+      if (!isStale) {
+        return this._validatorsList;
+      }
+      
+      // If stale, fetch new data in background
+      fetchAndUpdateValidators();
+      return this._validatorsList;
+    }
+
+    // No cached data, fetch from API
+    return fetchAndUpdateValidators();
   }
+
+
 
   public getAvgApy() {
     return this._apiService.get(`https://api.stakewiz.com/cluster_stats`).pipe(

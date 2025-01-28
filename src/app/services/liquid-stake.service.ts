@@ -29,7 +29,9 @@ export class LiquidStakeService {
     private _shs: SolanaHelpersService,
     private _utils: UtilService,
     private _apiService: ApiService,
-  ) { }
+  ) { 
+    this.getStakePoolList()
+  }
   private _initMarinade(publicKey: PublicKey) {
 
     const config = new MarinadeConfig({

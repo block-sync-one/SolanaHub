@@ -1,13 +1,14 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
 import { IonLabel, IonSegmentButton, IonSegment, IonSkeletonText, IonText, IonIcon, IonButton } from "@ionic/angular/standalone";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { LiquidProInsights, NativeProInsights, StakeAccount, StakeService } from '../../stake.service';
+import { ProInsights, StakeAccount, StakeService } from '../../stake.service';
 import { LiquidStakeToken } from '../../stake.service';
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { SolanaHelpersService, UtilService } from 'src/app/services';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
+import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
 
 Chart.register(zoomPlugin);
 
@@ -16,31 +17,39 @@ Chart.register(zoomPlugin);
   templateUrl: './pro-insights.component.html',
   styleUrls: ['./pro-insights.component.scss'],
   standalone: true,
-  imports: [AsyncPipe,IonButton, IonIcon, CopyTextDirective, IonText,DatePipe, IonSkeletonText, IonSegment, IonSegmentButton, IonLabel, ChipComponent]
+  imports: [
+    AsyncPipe,
+    IonButton, 
+    IonIcon, 
+    CopyTextDirective, 
+    IonText,
+    DatePipe, 
+    IonSkeletonText, 
+    IonSegment, 
+    IonSegmentButton, 
+    IonLabel, 
+    ChipComponent,
+    FreemiumModule
+  ]
 })
 
 export class ProInsightsComponent implements AfterViewInit {
-  private _utilService = inject(UtilService);
+  public utilService = inject(UtilService);
   private _stakeService = inject(StakeService);
   private _shs = inject(SolanaHelpersService)
   @Input() stakePosition: StakeAccount | LiquidStakeToken | any
   @ViewChild('chartEl', { static: true }) chartEl: ElementRef;
   chartData: Chart;
   public stakeRewardsData = []
-  selectedPeriod = '1d';
   totalRewards = null;
-  startDate = '2024-01-01';
-  startEpoch = 550;
-  public epochDate$;
   public isLoading = true;
   constructor() { }
 
  async ngAfterViewInit() {
-    this.epochDate$ = this.getEpochUnixTime(this.stakePosition.activation_epoch)
-    this.initChart();
+   this.initChart();
     await this.getProInsights()
     this.isLoading = false;
-    this.chartData.update();
+    this.initChart()
   }
 
   private initChart() {
@@ -75,8 +84,8 @@ export class ProInsightsComponent implements AfterViewInit {
               callback: (value, index, ticks) => {
                 const lowestReward = Math.min(...this.stakeRewardsData?.map(data => data.reward));
                 const highestReward = Math.max(...this.stakeRewardsData?.map(data => data.reward));
-                if (index === 0) return lowestReward;
-                if (index === ticks.length - 1) return highestReward;
+                if (index === 0) return lowestReward < 0.001 ? 0 : lowestReward;
+                if (index === ticks.length - 1) return highestReward < 0.001 ? 0 : highestReward;
                 return '';
               }
             },
@@ -133,7 +142,14 @@ export class ProInsightsComponent implements AfterViewInit {
                   label += ': ';
                 }
                 if (context.parsed.y !== null) {
-                  label += new DecimalPipe('en-US').transform(context.parsed.y) + ' SOL';
+                  const value = context.parsed.y;
+                  // For very small numbers (less than 0.001), show up to 6 decimal places
+                  // For larger numbers, show up to 3 decimal places
+                  const minimumFractionDigits = value < 0.001 ? 6 : 3;
+                  const maximumFractionDigits = value < 0.001 ? 6 : 3;
+                  label += new DecimalPipe('en-US').transform(value, 
+                    `1.${minimumFractionDigits}-${maximumFractionDigits}`
+                  ) + ' SOL';
                 }
                 return label;
               }
@@ -163,40 +179,35 @@ export class ProInsightsComponent implements AfterViewInit {
   }
 
   public shortAddress(address: string): string {
-    return this._utilService.addrUtil(address).addrShort;
+    return this.utilService.addrUtil(address).addrShort;
   }
 
   public async withdraw() {
-    const res = await this._stakeService.withdrawExcessiveBalance(this.stakePosition)
-    if(res) {
-      this.stakePosition.inactive_stake = 0
-    } 
+    try {
+      const res = await this._stakeService.withdrawExcessiveBalance(this.stakePosition)
+      if(res) {
+        this.stakePosition.inactive_stake = 0
+      } 
+    } catch (error) {
+      console.error('Error withdrawing excessive balance', error);
+    }
   }
-  public async getEpochUnixTime(startEpoch: any) {
-    console.log('startEpoch', startEpoch);
-    
-
-    const slotsPerEpoch = 432000
-    const blockTime = await this._shs.connection.getBlockTime(startEpoch * slotsPerEpoch)
-    
-    const date = new Date(blockTime * 1000)
-    console.log('date', date);
-    return date
-  }
+ 
   public async getProInsights() {
     try {
-      const res: NativeProInsights | LiquidProInsights | any = await this._stakeService.getProInsights(this.stakePosition)
+      const res: ProInsights  = await this._stakeService.getProInsights(this.stakePosition)
       this.stakePosition.proInsights = res
-      const stakeRewards = res.stakeRewards
-      this.stakeRewardsData = stakeRewards.map((stakeReward: any) => ({
+      
+      this.stakeRewardsData = res.stakeRewards.map((stakeReward) => ({
         epoch: stakeReward.epoch,
-        reward: stakeReward.reward
+        reward: stakeReward.reward_amount
       }))
-      this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0);
-      this.stakePosition.proInsights.startDate = new Date(stakeRewards[stakeRewards.length - 1].effective_time)
-      console.log('res', res);
+      this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0).toFixedNoRounding(4);
+      this.stakePosition.proInsights.startDate = new Date(res.stakeRewards[res.stakeRewards.length - 1].effective_time)
+      return res
     } catch (error) {
       console.error('Error getting pro insights', error);
+      return null
     }
     
   }

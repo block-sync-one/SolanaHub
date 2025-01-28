@@ -87,6 +87,9 @@ getStakeName(stake: any): string {
 }
 
 getAccountShortAddress(stake: any): string {
+  if(stake.type === 'liquid'){
+    return this._utilService.addrUtil(stake.mint).addrShort;
+  }
   return this._utilService.addrUtil(stake.address).addrShort;
 }
 getStakeApy(stake: any): number {
