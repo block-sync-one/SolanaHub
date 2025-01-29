@@ -11,6 +11,7 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PercentPipe } from '@angular/common';
 import { StakeFormComponent } from './stake-form/stake-form.component';
 import { UnstakeFormComponent } from './unstake-form/unstake-form.component';
+import { StakeService } from '../stake.service';
 
 
 @Component({
@@ -32,17 +33,12 @@ import { UnstakeFormComponent } from './unstake-form/unstake-form.component';
 })
 export class StakeBoxWrapperComponent implements OnInit {
   public loading = signal(false);
-  public hubSOLApy = signal(null);
-  public hubSOLExchangeRate = signal(null);
+  public hubSOLpool = this._stakeService.hubSOLpool;
 
   constructor(
-    private _lss: LiquidStakeService,
+    private _stakeService: StakeService,
   ) {
-    this._lss.getStakePoolList().then(sp => {
-      const {apy, exchangeRate} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
-      this.hubSOLApy.set(apy)
-      this.hubSOLExchangeRate.set(exchangeRate)
-    })
+
   }
 
   async ngOnInit() {

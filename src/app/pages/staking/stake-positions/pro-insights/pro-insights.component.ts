@@ -59,8 +59,10 @@ export class ProInsightsComponent implements AfterViewInit {
     const config: ChartConfiguration = {
       type: 'bar',
       data: {
-        labels: this.isLoading ? Array(5).fill('Loading...') : this.stakeRewardsData.map(data => `Epoch ${data.epoch}`),
-        datasets: [{
+        labels: this.isLoading ? Array(5).fill('Loading...') : this.stakeRewardsData.map(data => 
+          `Epoch ${data.epoch}`),
+          // ${this.utilService.datePipe.transform(data.date, 'shortDate')} /
+          datasets: [{
           label: 'Rewards',
           data: this.isLoading ? Array(5).fill(0.5) : this.stakeRewardsData.map(data => data.reward),
           backgroundColor: this.isLoading ? 'rgba(200,200,200,0.3)' : 'rgba(184,71,148)',
@@ -182,6 +184,10 @@ export class ProInsightsComponent implements AfterViewInit {
     return this.utilService.addrUtil(address).addrShort;
   }
 
+  public onSelectRewardType(event: any) {
+    console.log(event)
+  }
+
   public async withdraw() {
     try {
       const res = await this._stakeService.withdrawExcessiveBalance(this.stakePosition)
@@ -200,6 +206,7 @@ export class ProInsightsComponent implements AfterViewInit {
       
       this.stakeRewardsData = res.stakeRewards.map((stakeReward) => ({
         epoch: stakeReward.epoch,
+        date: stakeReward.effective_time,
         reward: stakeReward.reward_amount
       }))
       this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0).toFixedNoRounding(4);

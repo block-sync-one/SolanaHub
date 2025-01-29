@@ -39,7 +39,7 @@ ion-radio {
     .option-content {
         display: flex;
             flex-direction: column;
-            height: 97px;
+            height: 98px;
             gap: 8px;
     }
 
@@ -59,8 +59,10 @@ ion-radio {
     .details {
         display: flex;
         flex-direction: column;
-        gap: 8px;
-
+        gap: 9px;
+        .miss-price{
+            align-items: center;
+        }
         .miss-price, .duration, .receive {
             display: flex;
             gap: 0 4px;
@@ -126,6 +128,7 @@ chip div{
     font-size: 16px;
     display: block;
     margin-bottom: 16px;
+    color: var(--ion-color-dark);
   }
 
   .steps {

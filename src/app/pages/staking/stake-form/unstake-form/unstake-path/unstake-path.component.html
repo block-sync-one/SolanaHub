@@ -15,11 +15,20 @@
             <div class="details">
               <div class="miss-price">
                 <span class="label">Slippage:</span>
-                <chip><ion-icon name="funnel-outline" />0.01%</chip>
+                <chip>
+                  <div>
+                    <ion-icon name="funnel-outline" /><span>0.01%</span>
+                  </div>
+                </chip>
               </div>
               <div class="receive">
-                <span class="label">Receive</span>
-                <span class="amount">11.676152597 SOL</span>
+                <span class="label">Min Receive</span>
+                <span class="amount">@if(!loading){
+                  {{ swapReceive | number: '1.4' }} SOL 
+                }
+                  @else{
+                  <ion-skeleton-text animated />
+                  }</span>
               </div>
             </div>
           </div>
@@ -33,7 +42,11 @@
               <chip color="primary">
                 <div>
                   <ion-icon name="time" />
-                  <span>Slow • 16 hours</span>
+                  <div>Slow • @if(ETA) {
+                    {{ ETA }}
+                  } @else {
+                    <ion-skeleton-text animated style="width: 40px;" />
+                  }</div>
                 </div>
 
               </chip>
@@ -45,9 +58,18 @@
                 <span class="label">0.00035 SOL</span>
               </div>
               <div class="receive">
-                <span class="label">Receive</span>
-                <span class="amount">11.78 SOL
-                  <chip color="active" name="+2%" />
+                <span class="label">Min Receive</span>
+                <span class="amount">
+                  @if(!loading){
+                  {{ slowUnstakeReceive | number: '1.4' }} SOL 
+                  @if(slowUnstakeReceive > 0){
+                  <chip color="active" [name]="'+'+(getUnstakePercentageDiff() | percent: '1.2')" />
+                  }
+                }
+                  @else{
+                  <ion-skeleton-text animated />
+                  }
+                  
                 </span>
               </div>
             </div>
@@ -58,30 +80,31 @@
   </ion-radio-group>
 
 </div>
-<ion-popover trigger="tooltip-icon" position="bottom" side="start" cssClass="slow-unstake-tooltip" triggerAction="click" showBackdrop="false">
+<ion-popover trigger="tooltip-icon" position="bottom" side="start" cssClass="slow-unstake-tooltip" triggerAction="click"
+  showBackdrop="false">
   <ng-template>
-  
-      <div id="slow-unstake-tooltip">
-        <ion-label>How slow unstake works</ion-label>
-        <div class="steps">
-          <div class="step">
-            <span class="step-number">1</span>
-            <span class="step-text">Initiate the process and confirm the transaction</span>
-          </div>
-          <div class="step">
-            <span class="step-number">2</span>
-            <span class="step-text">Allow funds to transfer into a staking account</span>
-          </div>
-          <div class="step">
-            <span class="step-number">3</span>
-            <span class="step-text">Complete process by deactivating the stake account</span>
-          </div>
-          <div class="step">
-            <span class="step-number">4</span>
-            <span class="step-text">Anticipate the next Epoch to withdraw funds</span>
-          </div>
+
+    <div id="slow-unstake-tooltip">
+      <ion-label>How slow unstake works</ion-label>
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <span class="step-text">Initiate the process and confirm the transaction</span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-text">Allow funds to transfer into a staking account</span>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <span class="step-text">Complete process by deactivating the stake account</span>
+        </div>
+        <div class="step">
+          <span class="step-number">4</span>
+          <span class="step-text">Anticipate the next Epoch to withdraw funds</span>
         </div>
       </div>
-   
+    </div>
+
   </ng-template>
 </ion-popover>

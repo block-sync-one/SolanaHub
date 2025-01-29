@@ -5,12 +5,12 @@
   </div>
   <div id="pro-chart">
     <div class="pro-group" id="pro-chart-header">
-      <ion-label>reward history</ion-label>
+      <ion-label>Reward history</ion-label>
       <div>
 
-        <ion-segment>
-          <ion-segment-button value="1d">YTD</ion-segment-button>
-          <ion-segment-button value="7d">1Y</ion-segment-button>
+        <ion-segment value="SOL" (ionChange)="onSelectRewardType($event)">
+          <ion-segment-button value="SOL">SOL</ion-segment-button>
+          <ion-segment-button value="USD">USD</ion-segment-button>
         </ion-segment>
       </div>
     </div>

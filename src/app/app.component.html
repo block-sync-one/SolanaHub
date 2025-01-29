@@ -68,6 +68,11 @@
                     {{notifIndicator()}}
                   </ion-chip>
                   }
+                  @if(p.title === 'Staking' && hubSOLpoolIndicator()){
+                  <ion-chip color="primary">
+                    {{hubSOLpoolIndicator().apy | percent:'1.0-2'}}
+                  </ion-chip>
+                  }
                   }
                 </ion-item>
                 }

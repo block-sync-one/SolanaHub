@@ -93,7 +93,7 @@ export class StakingPage implements OnInit {
       );
     });
 
-    this._lss.getStakePoolList().then(pl => this.stakePools.set(pl));
+   
   }
 
 }

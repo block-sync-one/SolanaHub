@@ -1,4 +1,5 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
+import { StakePool } from 'src/app/models/stake-pool.model';
 import { LAMPORTS_PER_SOL, PublicKey, StakeProgram } from '@solana/web3.js';
 import { BehaviorSubject, filter, map, switchMap, from } from 'rxjs';
 import { Validator } from 'src/app/models/stakewiz.model';
@@ -138,7 +139,7 @@ export class StakeService {
     private _httpFetchService: HttpFetchService,
     private _util: UtilService
   ) {
-    this.getHubSOLAPY()
+   
 
   }
 
@@ -202,13 +203,7 @@ export class StakeService {
   }
 
 
-  public hubSOLApy = signal(null);
-  public getHubSOLAPY(): void {
-    this._lss.getStakePoolList().then(sp => {
-      const {apy} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
-      this.hubSOLApy.set(apy)
-     
-    })
-  }
+  public hubSOLpool: WritableSignal<StakePool> = this._lss.hubSOLpool;
+
 }
 

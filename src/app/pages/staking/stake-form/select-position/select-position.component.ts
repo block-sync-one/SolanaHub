@@ -37,10 +37,10 @@ export class SelectPositionComponent  implements OnInit {
   ) { }
   public positions$ = this._stakeService.activePositions$.pipe(
     map(positions => {
-      positions = positions.filter(p => p.symbol != 'hubSOL');
       // add SOL item from the wallet only for stake form
-
+      
       if (this.formType === 'stake') {
+        positions = positions.filter(p => p.symbol != 'hubSOL');
         const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112");
         if(sol) {
           positions.push({
@@ -49,6 +49,9 @@ export class SelectPositionComponent  implements OnInit {
             type: 'liquid'
           } as LiquidStakeToken);
         }
+      }
+      if (this.formType === 'unstake') {
+        positions = positions.filter(p => p.type == 'liquid');
       }
       return positions;
     })

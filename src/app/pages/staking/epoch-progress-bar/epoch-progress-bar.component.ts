@@ -50,7 +50,7 @@ export class EpochProgressBarComponent implements OnInit {
       .subscribe({
         next: (data) => {
           this.progress = data.timepassInPercentgae;
-          this.ETA = data.ETA;
+          this.ETA = 'ETA: ' + data.ETA;
           this.isLoading = false;
         }
       });

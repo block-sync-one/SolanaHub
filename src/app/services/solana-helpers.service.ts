@@ -153,7 +153,7 @@ export class SolanaHelpersService {
         const days = Math.floor(remaining_seconds / 86400);
         const hours = Math.floor(remaining_seconds / 3600) - (days * 24);
         const minutes = Math.floor(remaining_seconds / 60) - (days * 1440) - (hours * 60);
-        data.ETA = `ETA ${days}d ${hours}h ${minutes}m`
+        data.ETA = `${days}d ${hours}h ${minutes}m`
         data.timepassInPercentgae = elapsed_seconds / duration_seconds
         return data
       }),

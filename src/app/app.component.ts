@@ -110,7 +110,7 @@ export class AppComponent implements OnInit {
     }))
 
   public notifIndicator = this._notifService.notifIndicator;
-  public hubSOLApyIndicator = this._stakingService.hubSOLApy;
+  public hubSOLpoolIndicator = this._stakingService.hubSOLpool;
   public isCaptchaVerified$ = this._captchaService.captchaVerified$;
   public adShouldShow = computed(() => this.isWalletConnected() && this._freemiumService.isAdEnabled());
   public isWalletConnected = signal(false);

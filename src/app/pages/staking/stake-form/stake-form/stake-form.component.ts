@@ -160,7 +160,6 @@ export class StakeFormComponent  implements OnInit {
       route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
       route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
 
-      this.swapState.set('executing Stake');
       const tx = await this._jupStore.swapTx(route);
       await this._txi.sendMultipleTxn([tx]);
       

@@ -8,12 +8,15 @@
     [amountControl]="unstakeForm.controls['inputAmount']"
       />
   <unstake-path 
+  [swapReceive]="swapReceive()"
+  [slowUnstakeReceive]="slowUnstakeReceive()"
+  [loading]="loading()"
   [unstakePath]="unstakePath()" 
   (onSelectPath)="selectUnstakePath($event)" 
   />
   <div id="stake-button-wrapper">
-    <ion-button expand="block" color="primary" (click)="submitUnstake()">
-      <ion-label>Unstake</ion-label>
+    <ion-button expand="block" [disabled]="unstakeState() === 'preparing transaction'" color="primary" (click)="submitForm()">
+      <ion-label>{{unstakeState()}}</ion-label>
     </ion-button>
   </div>
     </form>

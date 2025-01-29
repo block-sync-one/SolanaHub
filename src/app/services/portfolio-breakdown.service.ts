@@ -193,7 +193,7 @@ export class PortfolioBreakdownService {
       acc[key].breakdown.push({
         walletAddressShort: this._utils.addrUtil(entry.walletAddress).addrShort,
         walletAddress: entry.walletAddress,
-        balance: entry.holdings[0].balance,
+        balance: entry?.holdings?.[0]?.balance,
         value: entry.value
       });
 

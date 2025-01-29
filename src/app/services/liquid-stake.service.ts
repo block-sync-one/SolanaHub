@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { UtilService } from './util.service';
 import { SolanaHelpersService } from './solana-helpers.service';
 import { ApiService } from './api.service';
@@ -21,6 +21,7 @@ export class LiquidStakeService {
 
   readonly restAPI = this._utils.serverlessAPI
   public stakePools: StakePool[] = []
+  public hubSOLpool: WritableSignal<StakePool> = signal(null);
   public marinadeSDK: Marinade;
   constructor(
     private _toasterService: ToasterService,
@@ -51,6 +52,7 @@ export class LiquidStakeService {
       const result = await (await fetch(`${this.restAPI}/api/get-stake-pools`)).json();
       stakePools = result //result.filter(s => poolIncludes.includes(s.poolName.toLowerCase()));
       this.stakePools = result;
+      this.hubSOLpool.set(result.find((s: StakePool) => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX"))
     }
     catch (error) {
       console.error(error);

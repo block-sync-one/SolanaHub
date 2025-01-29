@@ -14,6 +14,15 @@ import { JupStoreService } from 'src/app/services';
 import { UnstakePathComponent } from './unstake-path/unstake-path.component';
 import { IonButton, IonLabel } from '@ionic/angular/standalone';
 import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
+
+interface UnstakeFormData {
+  inputToken: Token;
+  outputToken: Token;
+  tokenPool: any; // Replace with proper type
+  inputAmount: string;
+  slippage: number;
+}
+
 @Component({
   selector: 'unstake-form',
   templateUrl: './unstake-form.component.html',
@@ -27,7 +36,42 @@ import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
     FreemiumModule
   ]
 })
-export class UnstakeFormComponent  implements OnInit {
+export class UnstakeFormComponent implements OnInit {
+  // Form
+  public unstakeForm: FormGroup;
+
+  // Tokens
+  public wallet$: Observable<WalletExtended> = this._shs.walletExtended$;
+  public readonly tokenOut: Token = {
+    address: "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
+    chainId: 101,
+    decimals: 9,
+    name: "SolanaHub Staked SOL",
+    symbol: "hubSOL",
+    logoURI: "assets/images/hubSOL.svg",
+  };
+  public readonly tokenIn: Token = {
+    address: "So11111111111111111111111111111111111111112",
+    decimals: 9,
+    chainId: 101,
+    name: "SOL",
+    symbol: "SOL",
+    logoURI: "assets/images/sol.svg",
+    balance: null,
+    type: 'liquid'
+  };
+
+  // Signals
+  public loading = signal(false);
+  public unstakeState = signal<'swap' | 'unstake' | 'preparing transaction' | 'executing Unstake' | 'Unstake'>('swap');
+  public unstakePath = signal<'instant' | 'slow'>('instant');
+  public jupTokens = signal<JupToken[]>(null);
+  public slippage = signal(0.5);
+  public swapReceive = signal(0);
+  public slowUnstakeReceive = signal(0);
+  public lstExchangeRate = signal(null);
+  public bestRoute: WritableSignal<JupRoute> = signal(null);
+
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
@@ -36,117 +80,141 @@ export class UnstakeFormComponent  implements OnInit {
     private _lss: LiquidStakeService,
     private _stakeService: StakeService,
     private _txi: TxInterceptorService
-  ) {
-    this._lss.getStakePoolList().then(sp => {
-      const {apy, exchangeRate} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
-      this.hubSOLApy.set(apy)
-      this.hubSOLExchangeRate.set(exchangeRate)
-    })
+  ) {}
+
+  ngOnInit(): void {
+    this.initializeForm();
+    this.setupFormSubscriptions();
   }
 
-  public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
-  public tokenOut: Token = {
-    "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
-    "chainId": 101,
-    "decimals": 9,
-    "name": "SolanaHub Staked SOL",
-    "symbol": "hubSOL",
-    "logoURI": "assets/images/hubSOL.svg",
-  }
-  public tokenIn: Token = {
-    "address": "So11111111111111111111111111111111111111112",
-    "decimals": 9,
-    "chainId": 101,
-    "name": "SOL",
-    "symbol": "SOL",
-    "logoURI": "assets/images/sol.svg",
-     balance: null,
-    type: 'liquid'
-  }
-  public loading = signal(false);
-
-  public jupTokens = signal(null as JupToken[])
-  public slippage = signal(0.5);
-  public getInTokenPrice = signal(null);
-  public getOutTokenPrice = signal(null);
-  public hubSOLApy = signal(null);
-  public hubSOLExchangeRate = signal(null);
-  public bestRoute: WritableSignal<JupRoute> = signal(null);
-  public unstakeForm: FormGroup;
-  ngOnInit() {
+  private initializeForm(): void {
     this.unstakeForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
       outputToken: [this.tokenIn, [Validators.required]],
+      tokenPool: [null],
       inputAmount: ['', [Validators.required]],
       slippage: [50, [Validators.required]]
-    })
-
-    this.unstakeForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-
-      this.calcBestRoute()
-      if (!values.inputAmount) {
-        this.bestRoute.set(null)
-      }
-    })
-
+    });
   }
 
-  async calcBestRoute() {
-    const { inputToken, outputToken, inputAmount, slippage } = this.unstakeForm.value
-    this.getInTokenPrice.set(null)
-    this.getOutTokenPrice.set(null)
-    this.bestRoute.set(null)
-    // const inputAmount = values.inputAmount
-    if (this.unstakeForm.valid) {
-      this.loading.set(true)
-      const route = await this._jupStore.computeBestRoute(inputAmount, inputToken, outputToken, slippage)
-      const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals).toString()
-      const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals).toString()
+  private async setupFormSubscriptions(): Promise<void> {
+    // Initialize token pool
+    const sp = await this._lss.getStakePoolList();
+    const tokenPool = sp.find(s => s.tokenMint === this.unstakeForm.get('inputToken').value.address);
+    this.unstakeForm.patchValue({ tokenPool }, { emitEvent: false });
 
+    // Subscribe to input token changes
+    this.unstakeForm.get('inputToken').valueChanges.subscribe(async (inputToken) => {
+      await this._setPool(inputToken);
+    });
 
-      route.outAmount = outAmount
-      route.otherAmountThreshold = minOutAmount
+    // Subscribe to form changes for route calculations
+    this.unstakeForm.valueChanges.subscribe(async (values: UnstakeFormData) => {
+      if (values.inputAmount) {
+       
+          this.calcSwapRoute(),
+          this.calcUnstakeRoute()
+       
+      } 
+      if (!values.inputAmount) {
+        this.bestRoute.set(null);
+      }
+      console.log(this.loading());
+    });
+  }
 
-      // this._getSelectedTokenPrice(values, route.outAmount)
+  public async calcSwapRoute(): Promise<void> {
+    if (!this.unstakeForm.valid) return;
 
-
-      //  this.formControl.patchValue(definitelyValidValue);
+    try {
+      this.loading.set(true);
+      const { inputToken, outputToken, inputAmount, slippage } = this.unstakeForm.value;
+      
+      const route = await this._jupStore.computeBestRoute(inputAmount, inputToken, outputToken, slippage);
+      
+      const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals).toString();
+      const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals).toString();
+      
+      route.outAmount = outAmount;
+      route.otherAmountThreshold = minOutAmount;
+      console.log(route)
+      this.swapReceive.set(Number(minOutAmount));
       this.bestRoute.set(route)
-      //  const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
-      //  this.toReceive.set(minimumReceived)
-      this.loading.set(false)
-      // console.log(this.bestRoute());
-
+      console.log(this.loading());
+      
+    } finally {
+      this.loading.set(false);
     }
   }
 
-  public unstakePath = signal('instant')
-  public getOutValue() {
-    const { inputToken } = this.unstakeForm.value
-
-    // setTimeout(() => {
-    return inputToken.type === 'native' 
-    ? inputToken.balance / this.hubSOLExchangeRate() 
-    : this.bestRoute()?.outAmount
-    // });
+  private async _setPool(inputToken: Token){
+    const sp = await this._lss.getStakePoolList();
+    const tokenPool = sp.find(s => s.tokenMint === inputToken.address);
+    this.unstakeForm.patchValue({ tokenPool }, { emitEvent: false });
   }
-  selectUnstakePath(unstakePath: 'instant' | 'slow') {
-    
-    this.unstakePath.set(unstakePath)
-    this.unstakeForm.controls['validatorVoteIdentity'].reset()
-    this.unstakeForm.controls['stakingPath'].setValue(unstakePath)
-    // if (stakePath === 'native') {
-    //   this.stakeForm.controls['validatorVoteIdentity'].addValidators(Validators.required)
-    //   this._removeStakePoolControl()
-    // }
-    // if (stakePath === 'liquid') {
-    //   this.stakeForm.controls['validatorVoteIdentity'].removeValidators(Validators.required);
-    //   this._addStakePoolControl()
-    // }
-    
-  }
-  submitUnstake() {
-    console.log('submitUnstake')
+  public async calcUnstakeRoute(): Promise<void> {
+    const { inputAmount, tokenPool } = this.unstakeForm.value;
+    const unstakeReceive = Number(inputAmount * tokenPool.exchangeRate);
+    this.slowUnstakeReceive.set(unstakeReceive);
   }
 
+  public selectUnstakePath(path: 'instant' | 'slow'): void {
+    this.unstakePath.set(path);
+    this.unstakeState.set(path === 'instant' ? 'swap' : 'unstake');
+  }
+
+  // public submitForm(): void {
+  //   this.unstakeState.set('preparing transaction');
+  //   this.unstakePath() === 'instant' ? this.submitSwap() : this.submitUnstake();
+  // }
+  submitForm(){
+    this.unstakeState.set('preparing transaction');
+    if (this.unstakePath() === 'instant') {
+      this.submitSwap()
+    } else {
+      this.submitUnstake()
+    }
+  }
+  private async submitUnstake(): Promise<void> {
+    try {
+      const { inputAmount, tokenPool } = this.unstakeForm.value;
+      await this._lss.unstake(tokenPool, inputAmount);
+    } catch (error) {
+      console.error('Unstake failed:', error);
+      this.unstakeState.set('unstake');
+    }
+  }
+  
+  private async submitSwap(): Promise<void> {
+    try {
+
+
+      const route = { ...this.bestRoute() };
+      if (!route) {
+        throw new Error('No valid swap route found');
+      }
+
+      // Calculate amounts using single-line operations
+      const { decimals } = this.unstakeForm.value.outputToken;
+      const multiplier = Math.pow(10, decimals);
+      
+      route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
+      route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
+
+      console.log(route);
+      
+      const tx = await this._jupStore.swapTx(route);
+      console.log(tx)
+      await this._txi.sendMultipleTxn([tx]);
+      
+      this.unstakeState.set('Unstake');
+    } catch (error) {
+      this.unstakeState.set('Unstake');
+      console.error('Swap failed:', error);
+      throw error; // Re-throw to be handled by caller if needed
+    } finally {
+      // Reset state after a delay
+      setTimeout(() => this.unstakeState.set('Unstake'), 2000);
+    }
+  }
 }
