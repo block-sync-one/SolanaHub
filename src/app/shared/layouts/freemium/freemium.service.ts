@@ -17,7 +17,7 @@ interface Account {
 export class FreemiumService {
   public readonly isPremium = computed(() => this._account()?.isPremium ?? false);
   public readonly stake = computed(() => this._account()?.stake ?? 0);
-  public readonly isAdEnabled = computed(() => !this.isPremium() && this._showAd());
+  public readonly isAdEnabled = computed(() => this._account() && !this._account().isPremium && this._showAd());
   private _account = signal<Account | null>(null);
   private _premiumServices = new Map<PremiumActions, Premium>();
   static DEFAULT_PLATFORM_FEE = 3000000; // Default to 0.003 SOL if platform fee is not set
