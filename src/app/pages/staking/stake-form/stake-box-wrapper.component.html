@@ -1,27 +1,32 @@
 <div id="stake-container">
-  <div id="stake-form">
-    <div id="segment-stake-wrapper">
-      <ion-segment value="stake" mode="ios" #segmentedView>
-        <ion-segment-button value="stake">
-          <ion-label>Stake
-            @if(hubSOLpool()) {
-            <chip color="primary" [name]="(hubSOLpool().apy | percent:'1.0-2') + ' APY'" />
-            }@else {
-            <ion-skeleton-text style="width: 50px;" animated />
-            }
-          </ion-label>
-        </ion-segment-button>
-        <ion-segment-button value="unstake">
-          <ion-label>Unstake</ion-label>
-        </ion-segment-button>
-      </ion-segment>
-    </div>
-    @if(segmentedView.value === 'stake') {
-    <stake-form />
+  <div id="form-wrapper">
+    <div id="stake-form">
+      <div id="segment-stake-wrapper">
+        <ion-segment value="stake" mode="ios" #segmentedView>
+          <ion-segment-button value="stake">
+            <ion-label>Stake
+              @if(hubSOLpool()) {
+              <chip color="primary" [name]="(hubSOLpool().apy | percent:'1.0-2') + ' APY'" />
+              }@else {
+              <ion-skeleton-text style="width: 50px;" animated />
+              }
+            </ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="unstake">
+            <ion-label>Unstake</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </div>
+      @if(segmentedView.value === 'stake') {
+      <stake-form />
 
-    }
+      }
+      @if(segmentedView.value === 'unstake') {
+      <unstake-form />
+      }
+    </div>
     @if(segmentedView.value === 'unstake') {
-    <unstake-form />
+    <pro-upgrade-message *appIsPremiumAction="'unstake-lst'" />
     }
   </div>
   <div id="validator-insights">

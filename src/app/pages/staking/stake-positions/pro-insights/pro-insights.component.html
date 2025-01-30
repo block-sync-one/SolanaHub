@@ -6,18 +6,19 @@
   <div id="pro-chart">
     <div class="pro-group" id="pro-chart-header">
       <ion-label>Reward history</ion-label>
-      <div>
+      <!-- <div>
 
         <ion-segment value="SOL" (ionChange)="onSelectRewardType($event)">
           <ion-segment-button value="SOL">SOL</ion-segment-button>
           <ion-segment-button value="USD">USD</ion-segment-button>
         </ion-segment>
-      </div>
+      </div> -->
     </div>
     <div style="margin: 0 auto;width: 100%;height: 110px;">
       <canvas #chartEl></canvas>
     </div>
   </div>
+  @if(stakePosition?.type === 'native'){
   <div class="pro-group">
     <ion-label >Total rewards</ion-label>
     <ion-text>{{ totalRewards }} SOL</ion-text>
@@ -27,7 +28,7 @@
     <ion-label>inactive balance(MEV)</ion-label>
     <div id="pro-inactive-balance">
 
-      <ion-text>{{ utilService.fixedNumber(stakePosition?.inactive_stake) }} SOL 
+      <ion-text>{{ stakePosition?.inactive_stake | number: '1.5'}} SOL 
       </ion-text>
       <ion-button fill="clear" size="small" (click)="withdraw()">withdraw</ion-button>
     </div>
@@ -57,4 +58,8 @@
     <chip name="unlocked" color="focus"/> 
     }
   </div>
+}
+@if(stakePosition?.type === 'liquid'){
+others
+}
 </div>

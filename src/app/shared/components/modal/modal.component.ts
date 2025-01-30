@@ -4,24 +4,15 @@ import { NFT, Stake, Validator } from 'src/app/models';
 import { IonButton, IonImg, IonText } from '@ionic/angular/standalone'
 
 import { NativeStakeService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
-import { PublicKey, Transaction, VersionedTransaction } from '@solana/web3.js';
-import { ValidatorsModalComponent } from 'src/app/pages/staking/form/validators-modal/validators-modal.component';
-// import { InstantUnstakeModalComponent } from 'src/app/pages/staking/positions/stake/instant-unstake-modal/instant-unstake-modal.component';
-// import { MergeModalComponent } from 'src/app/pages/staking/positions/stake/merge-modal/merge-modal.component';
-// import { SplitModalComponent } from 'src/app/pages/staking/positions/stake/split-modal/split-modal.component';
-// import { TransferAuthModalComponent } from 'src/app/pages/staking/positions/stake/transfer-auth-modal/transfer-auth-modal.component';
+import { PublicKey } from '@solana/web3.js';
 import { TokenListComponent } from 'src/app/pages/swap/token-list/token-list.component';
-// import { DelegateLSTModalComponent } from 'src/app/pages/staking/positions/stake/delegate-lst/delegate-lst-modal.component';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { SendNftModalComponent } from 'src/app/pages/collectibles/send-nft-modal/send-nft-modal.component';
 import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal/list-nft-modal.component';
-import { BurnNftModalComponent } from 'src/app/pages/collectibles/burn-nft-modal/burn-nft-modal.component';
 import { NftsService } from 'src/app/services/nfts.service';
-// import { UnstakeLstModalComponent } from 'src/app/pages/staking/positions/stake/unstake-lst-modal/unstake-lst-modal.component';
 import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
-import { StashModalComponent } from 'src/app/pages/stash/stash-modal/stash-modal.component';
 import { ChipComponent } from "../chip/chip.component";
-import { ModalUpgradeMessageComponent } from "../../layouts/freemium";
+import {  ProUpgradeMessageComponent } from "../../layouts/freemium";
 import { FreemiumService } from "../../layouts/freemium/freemium.service";
 import { IsPremiumServiceDirective } from "../../directives/is-premium-service.directive";
 import { SplitModalComponent } from '@app/pages/staking/stake-positions/stake/split-modal/split-modal.component';
@@ -37,7 +28,6 @@ import { TransferAuthModalComponent } from '@app/pages/staking/stake-positions/s
   imports: [
     IonButton,
     IonImg,
-    ValidatorsModalComponent,
     MergeModalComponent,
     SplitModalComponent,
     TransferAuthModalComponent,
@@ -47,7 +37,7 @@ import { TransferAuthModalComponent } from '@app/pages/staking/stake-positions/s
     FaqModalComponent,
     ChipComponent,
     IonText,
-    ModalUpgradeMessageComponent,
+    ProUpgradeMessageComponent,
     IsPremiumServiceDirective
   ]
 

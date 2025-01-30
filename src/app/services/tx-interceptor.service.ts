@@ -41,9 +41,15 @@ export class TxInterceptorService {
     return memoInstruction
   }
 
-  public async sendTx(txParam: (TransactionInstruction | Transaction)[], walletOwner: PublicKey, extraSigners?: Keypair[] | Signer[], record?: Record, type?: PremiumActions): Promise<string> {
+  public async sendTx(
+    txParam: (TransactionInstruction | Transaction)[],
+    walletOwner: PublicKey,
+    extraSigners?: Keypair[] | Signer[],
+    record?: Record,
+    type?: PremiumActions
+  ): Promise<string | null> {
     try {
-
+      console.log('sendTx', txParam, walletOwner, extraSigners, record, type);
 
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
@@ -56,7 +62,7 @@ export class TxInterceptorService {
       console.log("Platform fee tx", serviceFeeInst);
       if (serviceFeeInst) transaction.add(serviceFeeInst)
 
-    let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
+      let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
 
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
 
@@ -202,12 +208,9 @@ export class TxInterceptorService {
   }
 
   private async _getPriorityFeeEst(transaction: Transaction | VersionedTransaction) {
-    console.log('get tx fee', transaction);
-
     // if transaction is array then return array of
     // Extract all account keys from the transaction
     const accountKeys = transaction instanceof Transaction ? transaction.compileMessage().accountKeys : transaction.message.staticAccountKeys;
-    console.log('accountKeys', accountKeys);
     // Convert PublicKeys to base58 strings
     const publicKeys = accountKeys.map(key => key.toBase58());
 

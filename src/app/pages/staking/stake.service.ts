@@ -191,10 +191,26 @@ export class StakeService {
     }
   }
 
-  public async getProInsights(position: StakeAccount): Promise<ProInsights> {
+  public async getProInsights(position: StakeAccount | LiquidStakeToken): Promise<ProInsights> {
     try {
-      return await this._httpFetchService.get<ProInsights>(
-        `/api/portfolio/get-stake-pro?account_address=${position.address}&type=${position.type}&activation_epoch=${position.activation_epoch}`
+      let data = {}
+      console.log(position)
+      if(position.type === "native") {
+        data = {
+          account_address: position.address,
+          type: position.type,
+          activation_epoch: position['activation_epoch']
+        }
+      } else {
+        data = {
+          type: position.type,
+          lst: position
+        }
+      }
+      return await this._httpFetchService.post<ProInsights>(
+        `/api/portfolio/get-stake-pro`, 
+          data
+        
       );
     } catch (error) {
       console.error('Error fetching pro insights', error);

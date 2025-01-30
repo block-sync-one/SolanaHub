@@ -39,7 +39,7 @@ ion-radio {
     .option-content {
         display: flex;
             flex-direction: column;
-            height: 98px;
+            height: 105px;
             gap: 8px;
     }
 
@@ -61,7 +61,7 @@ ion-radio {
         flex-direction: column;
         gap: 9px;
         .miss-price{
-            align-items: center;
+            align-items: baseline;
         }
         .miss-price, .duration, .receive {
             display: flex;
@@ -164,3 +164,8 @@ chip div{
   }
 }
 
+
+
+:host ::ng-deep app-platform-fee .fee{
+flex-direction: row-reverse;
+}

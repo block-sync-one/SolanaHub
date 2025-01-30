@@ -300,14 +300,8 @@ export class LiquidStakeService {
 
   }
 
-  public async unstake(pool: StakePool, sol: number) {
+  public async unstake(pool: StakePool, sol: number): Promise<string | null> {
 
-    // single validator pools
-    // const SVP = ['hub','driftSOL', 'bonkSOL','juicySOL','superfastSOL', 'powerSOL','compassSOL']
-    // // Multi validator sanctum pools
-    // const MVP = ['jupSOL']
-    // sol = sol)
-    console.log(sol);
 
     const { publicKey } = this._shs.getCurrentWallet()
     const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
@@ -333,7 +327,8 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      const tx = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      return tx
     } else {
 
       let transaction = await withdrawStake(
@@ -344,9 +339,11 @@ export class LiquidStakeService {
         false
       );
 
-      await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      const tx = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      return tx
 
     }
+    return null
   }
   private _floorLastDecimal(num) {
     const decimalPlaces = num.toString().split('.')[1]?.length || 0;

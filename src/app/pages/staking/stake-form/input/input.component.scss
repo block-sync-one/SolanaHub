@@ -19,11 +19,10 @@
         position: relative;
         z-index: 1;
         border-radius: 12px;
-        // background: #EFF0F0;
         text-align: right;
         min-height: 74px;
         --padding-end: 12px;
-        border: 1px solid #EFF0F0;
+        border: 1px solid var(--ion-color-border);
 
         
     }
@@ -47,7 +46,7 @@
         --padding-end: 0;
         --border-width: 1px;
         --border-style: solid;
-        --border-color: #EFF0F0;
+        --border-color: var(--ion-color-border);;
         min-height: 40px;
         --padding-bottom: 0;
         --padding-top: 0;

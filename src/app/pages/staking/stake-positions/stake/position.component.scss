@@ -12,8 +12,14 @@
     padding: 16px;
 
     ion-icon {
-        color: var(--ion-color-dark);
         cursor: pointer;
+        color: var(--ion-color-dark);
+        &.pro-insights-icon{
+            color: var(--pro-color);
+        }
+        &.pro-insights-open{
+            color: var(--ion-color-dark);
+        }
     }
 }
 

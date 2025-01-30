@@ -41,7 +41,7 @@
     ion-button {
         margin-inline-end: 4px;
         --border-radius: 100px;
-        --background: #EFF0F0;
+        --background: var(--ion-color-border);;
         --color: rgba(0, 0, 0, 0.35);
         font-size: 10px;
         height: 23px;

@@ -17,6 +17,7 @@ import { catchError } from 'rxjs/operators';
 import { take } from 'rxjs';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
+import { PlatformFeeComponent } from '@app/shared/components/platform-fee/platform-fee.component';
 @Component({
   selector: 'unstake-path',
   templateUrl: './unstake-path.component.html',
@@ -35,13 +36,15 @@ import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
     IonContent,
     IonSkeletonText,
     DecimalPipe,
-    PercentPipe
+    PercentPipe,
+    PlatformFeeComponent
   ]
 })
 export class UnstakePathComponent implements OnInit, OnChanges {
   @Input() swapReceive: number = 0
   @Input() slowUnstakeReceive: number = 0
   @Input() loading: boolean = false
+  @Input() platformFeeInSOL: number = 0
   @ViewChild('selectedPath', { static: false }) selectedPath: IonRadioGroup;
   @Input() unstakePath: string = 'instant'
   @Output() onSelectPath = new EventEmitter()

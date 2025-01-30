@@ -14,9 +14,6 @@
     <ion-img (click)="closeModal()" id="close-modal" src="assets/images/close-icon.svg" />
   </div>
   @switch (componentName) {
-  @case ("validators-modal") {
-  <validators-modal (onSelectValidator)="emittedValue.set($event)" [validatorsList]="data()" />
-  }
 
   @case ("merge-modal") {
   <merge-modal [targetStake]="data.stake" [stakeAccounts]="data.stakeAccounts"
@@ -56,4 +53,4 @@
   </div>
   }
 </div>
-<app-modal-message *appIsPremiumAction="componentName"/>
+<pro-upgrade-message *appIsPremiumAction="componentName"/>

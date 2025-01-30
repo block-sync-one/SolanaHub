@@ -1,17 +1,19 @@
 :host{
         max-width: 100%;
 }
-#stake-form {
-    width: 542px;
-    max-width: 100%;
-    padding: 16px 16px 8px 16px;
+#form-wrapper {
     border: 1px solid var(--ion-color-border);
     background-color: var(--ion-color-light);
     border-radius: 12px;
+    margin-bottom: 16px;
+}
+#stake-form {
+    width: 570px;
+    max-width: 100%;
+    padding: 16px 16px 8px 16px;
     display: flex;
     flex-direction: column;
     gap: 16px;
-    margin-bottom: 16px;
 }
 
 ion-segment {

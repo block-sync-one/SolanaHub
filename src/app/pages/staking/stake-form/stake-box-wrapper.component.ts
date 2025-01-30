@@ -12,6 +12,9 @@ import { PercentPipe } from '@angular/common';
 import { StakeFormComponent } from './stake-form/stake-form.component';
 import { UnstakeFormComponent } from './unstake-form/unstake-form.component';
 import { StakeService } from '../stake.service';
+import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
+import { ProUpgradeMessageComponent } from '@app/shared/layouts/freemium/pro-upgrade-message/pro-upgrade-message.component';
+import { IsPremiumServiceDirective } from '@app/shared/directives';
 
 
 @Component({
@@ -28,7 +31,10 @@ import { StakeService } from '../stake.service';
     IonSkeletonText,
     PercentPipe,
     StakeFormComponent,
-    UnstakeFormComponent
+    UnstakeFormComponent,
+    FreemiumModule,
+    ProUpgradeMessageComponent,
+    IsPremiumServiceDirective
   ]
 })
 export class StakeBoxWrapperComponent implements OnInit {

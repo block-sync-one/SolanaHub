@@ -46,7 +46,7 @@
     </div>
     
     <div class="action-icons">
-      <ion-icon name="sparkles-outline" (click)="openProInsightsPopover($event, stake)"/>
+      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="proInsightIsOpen" (click)="openProInsightsPopover($event, stake)"/>
 
       <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"/>
     </div>

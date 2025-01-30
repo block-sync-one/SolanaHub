@@ -45,7 +45,7 @@ export class SolanaHelpersService {
     private _walletStore: WalletStore,
     private _utils: UtilService,
     private _watchModeService: WatchModeService,
-    private _vrs:VirtualStorageService
+    private _vrs: VirtualStorageService
   ) {
     // prep setup
     this.getValidatorsList()
@@ -65,8 +65,8 @@ export class SolanaHelpersService {
   }
 
 
-  private _validatorsList: Validator[] =  []
-  
+  private _validatorsList: Validator[] = []
+
   public async getValidatorsList(): Promise<Validator[]> {
     // Try to get cached data from localStorage
     const cachedData = this._vrs.localStorage.getData('validatorsList');
@@ -74,11 +74,11 @@ export class SolanaHelpersService {
     const fetchAndUpdateValidators = async (): Promise<Validator[]> => {
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
-        
+
         // Update localStorage with new data and timestamp
         this._vrs.localStorage.saveData('validatorsList', JSON.stringify(result));
         this._vrs.localStorage.saveData('validatorsListTimestamp', Date.now().toString());
-        
+
         this._validatorsList = result;
         return result;
       } catch (error) {
@@ -88,16 +88,16 @@ export class SolanaHelpersService {
     }
     if (cachedData) {
       this._validatorsList = JSON.parse(cachedData);
-      
+
       // Check if cache is older than 2 days
       const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
       const isStale = !cachedTimestamp || (Date.now() - Number(cachedTimestamp)) > TWO_DAYS_MS;
-      
+
       // Return cached data immediately
       if (!isStale) {
         return this._validatorsList;
       }
-      
+
       // If stale, fetch new data in background
       fetchAndUpdateValidators();
       return this._validatorsList;
@@ -207,29 +207,6 @@ export class SolanaHelpersService {
 
   }
 
-  // try {
-  //   const mintPubkey = new PublicKey(mintAddressPK);
-  //   // const ownerAta = await this.getOrCreateTokenAccountInstruction(mintAddressPK, walletOwner, walletOwner);
-  //   const account = await getAssociatedTokenAddress(mintPubkey, walletOwner);
-  //   const decimals = await this.connection.getParsedAccountInfo(mintPubkey);
-
-  //   console.log(account, decimals);
-
-  //   let txIns: TransactionInstruction = createBurnCheckedInstruction(
-  //     account, // PublicKey of Owner's Associated Token Account
-  //     mintPubkey, // Public Key of the Token Mint Address
-  //     walletOwner, // Public Key of Owner's Wallet
-  //     1, // amount, if your decimals is 8, 10^8 for 1 token
-  //     1
-  //   );
-  //   console.log(txIns,account);
-
-  //   return txIns;
-  // } catch (error) {
-  //   console.error(error);
-  //   return null
-  // }
-
   async getOrCreateTokenAccountInstruction(mint: PublicKey, user: PublicKey, payer: PublicKey | null = null): Promise<TransactionInstruction | null> {
     try {
       const userTokenAccountAddress = await getAssociatedTokenAddress(mint, user, false);
@@ -276,4 +253,65 @@ export class SolanaHelpersService {
       return null
     }
   }
+
+
+  // Main function to get the Unix timestamp of a specific epoch
+  async getEpochTimestamp(epoch) {
+
+
+    // Function to calculate the starting slot for a specific epoch
+    const calculateStartingSlot = (epoch, firstNormalSlot, firstNormalEpoch, slotsPerEpoch) => {
+      return firstNormalSlot + (epoch - firstNormalEpoch) * slotsPerEpoch;
+    }
+
+    const findValidSlot = async (startingSlot: number) => {
+      let currentSlot = startingSlot;
+      let attempts = 0;
+      const maxAttempts = 50;
+      const incrementBy = 1000;
+
+      while (attempts < maxAttempts) {
+        try {
+          const blockTime = await this.connection.getBlockTime(currentSlot);
+          if (blockTime !== null) {
+            return { slot: currentSlot, blockTime };
+          }
+        } catch (error) {
+          // Log error but continue the loop
+          console.log(`Failed to get block time for slot ${currentSlot}: ${error.message}`);
+          // If error contains information about first available block, use that
+          if (error.message?.includes('First available block:')) {
+            const match = error.message.match(/First available block: (\d+)/);
+            if (match) {
+              currentSlot = parseInt(match[1]);
+              continue;
+            }
+          }
+        }
+        currentSlot += incrementBy;
+        attempts++;
+      }
+      return null;
+    }
+
+    try {
+
+      const { firstNormalSlot, firstNormalEpoch, slotsPerEpoch } = {
+        slotsPerEpoch: 432000,
+        firstNormalEpoch: 0,
+        firstNormalSlot: 0
+      };
+
+      const startingSlot = await calculateStartingSlot(epoch, firstNormalSlot, firstNormalEpoch, slotsPerEpoch);
+      console.log(`Starting Slot for Epoch ${epoch}: ${startingSlot}`);
+
+      const { slot, blockTime } = await findValidSlot(startingSlot);
+      console.log(`Unix Timestamp for Epoch ${epoch}: ${blockTime} (from slot ${slot})`);
+      return blockTime * 1000
+    } catch (error) {
+      console.error("Error:", error.message);
+      return null
+    }
+  }
+
 }

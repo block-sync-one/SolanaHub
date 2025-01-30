@@ -29,21 +29,21 @@ Chart.register(zoomPlugin);
     IonSegmentButton, 
     IonLabel, 
     ChipComponent,
-    FreemiumModule
+    FreemiumModule,
+    DecimalPipe
   ]
 })
 
 export class ProInsightsComponent implements AfterViewInit {
   public utilService = inject(UtilService);
   private _stakeService = inject(StakeService);
-  private _shs = inject(SolanaHelpersService)
   @Input() stakePosition: StakeAccount | LiquidStakeToken | any
   @ViewChild('chartEl', { static: true }) chartEl: ElementRef;
   chartData: Chart;
   public stakeRewardsData = []
   totalRewards = null;
   public isLoading = true;
-  constructor() { }
+  constructor(private _shs: SolanaHelpersService) { }
 
  async ngAfterViewInit() {
    this.initChart();
@@ -53,6 +53,7 @@ export class ProInsightsComponent implements AfterViewInit {
   }
 
   private initChart() {
+    
     this.chartData ? this.chartData.destroy() : null
     const ctx = this.chartEl.nativeElement
 
@@ -100,10 +101,18 @@ export class ProInsightsComponent implements AfterViewInit {
             beginAtZero: false // Set this to true if you want the Y-axis to start at 0
           },
           x: {
-            min: this.stakeRewardsData?.length - 5,
-            max: this.stakeRewardsData?.length - 1,
             ticks: {
-              callback: (value, index, ticks) => index === ticks.length - 1 || index === 0 ? this.stakeRewardsData[index]?.epoch : ''
+              maxRotation: 0,
+              minRotation: 0,
+              callback: function(value, index, ticks) {
+                // Show only first and last labels
+                if (index === 0 || index === this.stakeRewardsData.length - 1) {
+                  const label = this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
+                  console.log(label)
+                  return label
+                }
+                return '';
+              }.bind(this)
             },
             border: {
               display: false,
@@ -210,7 +219,9 @@ export class ProInsightsComponent implements AfterViewInit {
         reward: stakeReward.reward_amount
       }))
       this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0).toFixedNoRounding(4);
-      this.stakePosition.proInsights.startDate = new Date(res.stakeRewards[res.stakeRewards.length - 1].effective_time)
+      this._shs.getEpochTimestamp(this.stakePosition.activation_epoch).then((res) => {
+        this.stakePosition.proInsights.startDate = new Date(res)
+      })
       return res
     } catch (error) {
       console.error('Error getting pro insights', error);
@@ -218,4 +229,5 @@ export class ProInsightsComponent implements AfterViewInit {
     }
     
   }
+  
 }

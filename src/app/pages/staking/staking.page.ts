@@ -1,19 +1,10 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
-import { FormComponent } from './form/form.component';
 import {
   IonGrid,
   IonRow,
   IonCol,
-  IonHeader,
-  IonImg,
-  IonButton,
-  IonButtons,
-  IonMenuButton,
   IonSkeletonText,
-  IonProgressBar,
   IonContent,
-  IonIcon
 } from '@ionic/angular/standalone';
 import { JupStoreService, NativeStakeService,  SolanaHelpersService,  UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';

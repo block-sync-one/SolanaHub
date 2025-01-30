@@ -21,6 +21,7 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { LiquidStakeToken, StakeAccount } from '../../stake.service';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
+import { FreemiumService, PopupPlanComponent } from '@app/shared/layouts/freemium';
 @Component({
   selector: 'position',
   templateUrl: './position.component.html',
@@ -53,7 +54,8 @@ export class PositionComponent implements OnInit{
   constructor(
     private _jupStore: JupStoreService,
     private _popoverController: PopoverController,
-    private _utilService: UtilService
+    private _utilService: UtilService,
+    private _freemiumService: FreemiumService
     ) {
     addIcons({lockClosedOutline,waterOutline,copyOutline,sparklesOutline,ellipsisVertical});
   }
@@ -98,8 +100,21 @@ getStakeApy(stake: any): number {
 getStakeBalance(stake: any): string {
   return this._utilService.fixedNumber(stake?.balance);
 }
+async openFreemiumAccessPopup() {
+  const modal = await this._popoverController.create({
+    component: PopupPlanComponent,
+    cssClass: 'freemium-popup'
+  });
+  modal.present();
+}
+public proInsightIsOpen = false;
 async openProInsightsPopover(e: Event, stake: any): Promise<void> {
-  console.log('openProInsights', stake);
+  if (!this._freemiumService.isPremium()) {
+
+    this.openFreemiumAccessPopup();
+  } else {
+
+  this.proInsightIsOpen = true;
   const modal = await this._popoverController.create({
     component: ProInsightsComponent,
     componentProps: {stakePosition: stake},
@@ -114,6 +129,11 @@ async openProInsightsPopover(e: Event, stake: any): Promise<void> {
     arrow: false,
     keyboardClose: true,
   });
-  await modal.present();
+  modal.present();
+  const { role } = await modal.onDidDismiss();
+  if(role === 'backdrop'){
+    this.proInsightIsOpen = false;
+  }
+}
 }
 }

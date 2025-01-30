@@ -13,7 +13,8 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { JupStoreService } from 'src/app/services';
 import { UnstakePathComponent } from './unstake-path/unstake-path.component';
 import { IonButton, IonLabel } from '@ionic/angular/standalone';
-import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
+import { FreemiumService } from '@app/shared/layouts/freemium';
+import { PremiumActions } from '@app/enums';
 
 interface UnstakeFormData {
   inputToken: Token;
@@ -32,13 +33,13 @@ interface UnstakeFormData {
     InputComponent,
     ReactiveFormsModule,
     UnstakePathComponent,
-    IonButton,
-    FreemiumModule
+    IonButton
   ]
 })
 export class UnstakeFormComponent implements OnInit {
   // Form
   public unstakeForm: FormGroup;
+  public platformFeeInSOL = signal(0);
 
   // Tokens
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$;
@@ -79,7 +80,8 @@ export class UnstakeFormComponent implements OnInit {
     private _util: UtilService,
     private _lss: LiquidStakeService,
     private _stakeService: StakeService,
-    private _txi: TxInterceptorService
+    private _txi: TxInterceptorService,
+    private _freemiumService: FreemiumService
   ) {}
 
   ngOnInit(): void {
@@ -111,15 +113,12 @@ export class UnstakeFormComponent implements OnInit {
     // Subscribe to form changes for route calculations
     this.unstakeForm.valueChanges.subscribe(async (values: UnstakeFormData) => {
       if (values.inputAmount) {
-       
           this.calcSwapRoute(),
           this.calcUnstakeRoute()
-       
       } 
       if (!values.inputAmount) {
         this.bestRoute.set(null);
       }
-      console.log(this.loading());
     });
   }
 
@@ -156,6 +155,7 @@ export class UnstakeFormComponent implements OnInit {
     const { inputAmount, tokenPool } = this.unstakeForm.value;
     const unstakeReceive = Number(inputAmount * tokenPool.exchangeRate);
     this.slowUnstakeReceive.set(unstakeReceive);
+    this.platformFeeInSOL.set(this._freemiumService.calculatePlatformFeeInSOL(PremiumActions.UNSTAKE_LST, unstakeReceive));
   }
 
   public selectUnstakePath(path: 'instant' | 'slow'): void {
@@ -163,10 +163,6 @@ export class UnstakeFormComponent implements OnInit {
     this.unstakeState.set(path === 'instant' ? 'swap' : 'unstake');
   }
 
-  // public submitForm(): void {
-  //   this.unstakeState.set('preparing transaction');
-  //   this.unstakePath() === 'instant' ? this.submitSwap() : this.submitUnstake();
-  // }
   submitForm(){
     this.unstakeState.set('preparing transaction');
     if (this.unstakePath() === 'instant') {
@@ -178,7 +174,10 @@ export class UnstakeFormComponent implements OnInit {
   private async submitUnstake(): Promise<void> {
     try {
       const { inputAmount, tokenPool } = this.unstakeForm.value;
-      await this._lss.unstake(tokenPool, inputAmount);
+      console.log(tokenPool, inputAmount)
+      const signature = await this._lss.unstake(tokenPool, inputAmount);
+
+      this.unstakeState.set('Unstake');
     } catch (error) {
       console.error('Unstake failed:', error);
       this.unstakeState.set('unstake');
@@ -201,10 +200,7 @@ export class UnstakeFormComponent implements OnInit {
       route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
       route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
 
-      console.log(route);
-      
       const tx = await this._jupStore.swapTx(route);
-      console.log(tx)
       await this._txi.sendMultipleTxn([tx]);
       
       this.unstakeState.set('Unstake');

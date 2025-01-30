@@ -55,7 +55,9 @@
             <div class="details">
               <div class="miss-price">
                 <span class="label">platform fee:</span>
-                <span class="label">0.00035 SOL</span>
+                <span class="label">
+                  <app-platform-fee [feeInSOL]="platformFeeInSOL | number: '1.4' " ></app-platform-fee>
+                </span>
               </div>
               <div class="receive">
                 <span class="label">Min Receive</span>

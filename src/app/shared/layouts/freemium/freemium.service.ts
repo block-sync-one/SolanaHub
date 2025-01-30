@@ -115,7 +115,7 @@ export class FreemiumService {
     return SystemProgram.transfer({
       fromPubkey: walletPk,
       toPubkey: new PublicKey(environment.platformFeeCollector),
-      lamports: this._premiumServices.get(type).valueInSol * LAMPORTS_PER_SOL,
+      lamports: Math.floor(this._premiumServices.get(type).valueInSol * LAMPORTS_PER_SOL),
     });
   }
 
