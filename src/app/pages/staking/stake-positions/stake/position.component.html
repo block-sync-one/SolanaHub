@@ -37,17 +37,16 @@
           <chip class="stake-apy" color="primary" [name]="'APY ' + getStakeApy(stake) + '%'" />
         }
         <div class="account-value">
-          <div class="sol-amount">{{getStakeBalance(stake)}} {{stake.symbol == 'staked-SOL' ? 'SOL' : stake.symbol}}</div>
+          <div class="sol-amount">{{getStakeBalance(stake)}} {{stake.symbol === 'staked-SOL' ? 'SOL' : stake.symbol}}</div>
           <div class="usd-value">{{stake?.balance * solPrice() * stake.exchangeRate | currency}}</div>
         </div>
       }@else{
         <ion-skeleton-text style="width: 30px;" animated />
       }
     </div>
-    
-    <div class="action-icons">
-      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="proInsightIsOpen" (click)="openProInsightsPopover($event, stake)"/>
 
+    <div class="action-icons">
+      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="proInsightIsOpen" IsPro [IsProCallback]="openProInsightsPopover.bind(this)"/>
       <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"/>
     </div>
   </div>

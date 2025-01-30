@@ -4,10 +4,11 @@ import { ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addCircleOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from '@app/services';
-import { FreemiumService, PopupPlanComponent } from "@app/shared/layouts/freemium";
+import { FreemiumService } from "@app/shared/layouts/freemium";
 import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-popup.component";
 import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
 import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
+import { IsProDirective } from "@app/shared/directives/is-pro.directive";
 
 @Component({
   selector: 'portfolio-menu',
@@ -18,6 +19,7 @@ import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
     IonIcon,
     PortfolioBoxComponent,
     FreemiumModule,
+    IsProDirective,
   ]
 })
 export class PortfolioMenuComponent {
@@ -27,7 +29,6 @@ export class PortfolioMenuComponent {
     private _portfolioService: PortfolioService,
     private _utils: UtilService,
     private _shs: SolanaHelpersService,
-    private _freemiumService: FreemiumService,
     private _modalCtrl: ModalController
   ) {
     addIcons({ addCircleOutline });
@@ -52,26 +53,10 @@ export class PortfolioMenuComponent {
     })
   )
 
-  openPortfolioSetup(walletAddress?: string) {
+  async openAddPortfolioPopup(walletAddress?: string) {
     if (this.walletBoxSpinnerService.spinner())
       return;
 
-    if (this._freemiumService.isPremium()) {
-      this.openAddPortfolioPopup(walletAddress);
-    } else {
-      this.openFreemiumAccessPopup();
-    }
-  }
-
-  async openFreemiumAccessPopup() {
-    const modal = await this._modalCtrl.create({
-      component: PopupPlanComponent,
-      cssClass: 'freemium-popup'
-    });
-    modal.present();
-  }
-
-  async openAddPortfolioPopup(walletAddress?: string) {
     const modal = await this._modalCtrl.create({
       component: AddPortfolioPopupComponent,
       cssClass: 'multi-wallet-modal',

@@ -9,6 +9,7 @@ import {
 import { CommonModule } from '@angular/common';
 import { ChipComponent } from '../../components/chip/chip.component';
 import {RouterLink} from "@angular/router";
+import {IsProDirective} from "@app/shared/directives/is-pro.directive";
 
 
 @NgModule({
@@ -18,16 +19,17 @@ import {RouterLink} from "@angular/router";
     RoadComponent,
     AdComponent,
   ],
-    imports: [
-        ChipComponent,
-        CommonModule,
-        IonIcon,
-        IonButton,
-        IonImg,
-        IonLabel,
-        RouterLink,
-        IonContent
-    ],
+  imports: [
+    ChipComponent,
+    CommonModule,
+    IonIcon,
+    IonButton,
+    IonImg,
+    IonLabel,
+    RouterLink,
+    IonContent,
+    IsProDirective
+  ],
   exports: [
     PopupPlanComponent,
     BadgeComponent,

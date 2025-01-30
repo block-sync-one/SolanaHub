@@ -15,7 +15,7 @@
       [wallet]="wallet"
       (delete)="delete($event)"
       (toggle)="toggle($event)"
-      (update)="openPortfolioSetup($event)"
+      (update)="openAddPortfolioPopup($event)"
       (reload)="reload($event)"/>
   }
 
@@ -23,7 +23,7 @@
     <portfolio-box/>
   }
   @if (canAddWallet()) {
-    <div id="portfolio-menu-add-area" (click)="openPortfolioSetup()">
+    <div id="portfolio-menu-add-area" IsPro [IsProCallback]="openAddPortfolioPopup.bind(this)">
       <div id="portfolio-button-add">
         <ion-icon name="add-circle-outline"></ion-icon>
         <span>Add wallet</span>
