@@ -59,18 +59,14 @@ export interface StakePositions {
   liquid: LiquidStakeToken[];
 }
 export interface ProInsights {
-  stakeRewards?: StakeRewards[]
+  valueAccrued?: StakeRewards[]
   type: string
 }
 interface StakeRewards {
   epoch: number
-  effective_slot: number
-  effective_time_unix: number
   effective_time: string
   reward_amount: number
-  change_percentage: number
-  post_balance: number
-  commission: number
+  projectedValue: number
 }
 @Injectable({
   providedIn: 'root'
@@ -194,7 +190,6 @@ export class StakeService {
   public async getProInsights(position: StakeAccount | LiquidStakeToken): Promise<ProInsights> {
     try {
       let data = {}
-      console.log(position)
       if(position.type === "native") {
         data = {
           account_address: position.address,
@@ -207,11 +202,12 @@ export class StakeService {
           lst: position
         }
       }
-      return await this._httpFetchService.post<ProInsights>(
-        `/api/portfolio/get-stake-pro`, 
-          data
-        
-      );
+      const res = await fetch(`${this._lss.restAPI}/api/portfolio/get-stake-pro`, {
+        method: 'POST',
+        body: JSON.stringify(data)
+      })
+      const insights = await res.json()
+      return insights
     } catch (error) {
       console.error('Error fetching pro insights', error);
       throw error;

@@ -5,7 +5,7 @@
   </div>
   <div id="pro-chart">
     <div class="pro-group" id="pro-chart-header">
-      <ion-label>Reward history</ion-label>
+      <ion-label>Value Accrued</ion-label>
       <!-- <div>
 
         <ion-segment value="SOL" (ionChange)="onSelectRewardType($event)">
@@ -16,12 +16,13 @@
     </div>
     <div style="margin: 0 auto;width: 100%;height: 110px;">
       <canvas #chartEl></canvas>
+
     </div>
   </div>
   @if(stakePosition?.type === 'native'){
   <div class="pro-group">
     <ion-label >Total rewards</ion-label>
-    <ion-text>{{ totalRewards }} SOL</ion-text>
+    <ion-text>{{ totalRewards | number: '1.4'}} SOL</ion-text>
   </div>
   @if(stakePosition?.inactive_stake > 0){
   <div class="pro-group">

@@ -1,7 +1,9 @@
 :host {
     text-transform: capitalize;
 }
-
+#pro-insights {
+    background: var(--ion-color-light);
+}
 #pro-chart {
     margin-block-end: 8px;
 }

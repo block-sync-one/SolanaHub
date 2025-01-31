@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical, lockClosedOutline, sparklesOutline, waterOutline } from 'ionicons/icons';
 import {
@@ -7,8 +7,9 @@ import {
   IonContent,
   IonImg,
   IonChip,
-  IonIcon,
-} from '@ionic/angular/standalone';
+  IonAccordion,
+  IonAccordionGroup,
+  IonIcon, IonRow } from '@ionic/angular/standalone';
 
 import { CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { JupStoreService, UtilService } from 'src/app/services';
@@ -27,25 +28,24 @@ import { FreemiumService, PopupPlanComponent } from '@app/shared/layouts/freemiu
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss'],
   standalone: true,
-  imports: [
+  imports: [ 
     CurrencyPipe,
     IonSkeletonText,
     IonImg,
-
     IonIcon,
-
     CurrencyPipe,
     CopyTextDirective,
     TooltipModule,
-
     ChipComponent,
-
-
+    IonAccordion,
+    IonAccordionGroup,
+    IonRow,
+    ProInsightsComponent,
     IonIcon
   ]
 })
 export class PositionComponent implements OnInit{
-  // @Input() stake: Stake = null;
+  @Output() openProInsight = new EventEmitter<boolean>();
   @Input() stake: LiquidStakeToken | StakeAccount = null
   @Input() stakeAccounts: StakeAccount[] | LiquidStakeToken[] = null
   public toolTipPos = TooltipPosition.LEFT
@@ -100,40 +100,9 @@ getStakeApy(stake: any): number {
 getStakeBalance(stake: any): string {
   return this._utilService.fixedNumber(stake?.balance);
 }
-async openFreemiumAccessPopup() {
-  const modal = await this._popoverController.create({
-    component: PopupPlanComponent,
-    cssClass: 'freemium-popup'
-  });
-  modal.present();
-}
-public proInsightIsOpen = false;
-async openProInsightsPopover(e: Event, stake: any): Promise<void> {
-  if (!this._freemiumService.isPremium()) {
-
-    this.openFreemiumAccessPopup();
-  } else {
-
-  this.proInsightIsOpen = true;
-  const modal = await this._popoverController.create({
-    component: ProInsightsComponent,
-    componentProps: {stakePosition: stake},
-    event: e,
-    alignment: 'center',
-    side: 'end',
-    backdropDismiss: true,
-    showBackdrop: false,
-    animated: true,
-    cssClass:'pro-insights-modal',
-    mode: 'ios',
-    arrow: false,
-    keyboardClose: true,
-  });
-  modal.present();
-  const { role } = await modal.onDidDismiss();
-  if(role === 'backdrop'){
-    this.proInsightIsOpen = false;
-  }
-}
+isOpenProInsight = false;
+emitOpenProInsight(){
+  this.isOpenProInsight = !this.isOpenProInsight;
+  this.openProInsight.emit();
 }
 }

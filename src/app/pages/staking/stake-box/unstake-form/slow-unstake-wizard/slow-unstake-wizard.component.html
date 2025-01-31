@@ -1,0 +1,23 @@
+@if(slowUnstakeWizard() === 'signed'){
+  <div class="slow-unstake-container-wizard">
+    <ion-label>Getting stake account...</ion-label>
+    <position />
+  </div>
+  }
+  @if(slowUnstakeWizard() === 'account-ready'){
+  <div class="slow-unstake-container-wizard">
+    <div class="wizard-position">
+      <ion-label>Funds are ready to unstake!</ion-label>
+      <position [stake]="stakePosition" />
+    </div>
+    <div class="wizard-epoch">
+      <div class="wizard-account-state">
+        <chip name="active" color="focus" /> 
+        <ion-icon name="arrow-forward-outline" />
+        <chip name="deactivated" color="danger" />
+      </div>
+      <epoch-progress-bar />
+      <ion-text>Unstaked funds will be available for withdrawal by next Epoch</ion-text>
+    </div>
+  </div>
+  }

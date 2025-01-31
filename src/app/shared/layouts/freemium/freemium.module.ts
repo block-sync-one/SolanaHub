@@ -10,13 +10,12 @@ import { CommonModule } from '@angular/common';
 import { ChipComponent } from '../../components/chip/chip.component';
 import {RouterLink} from "@angular/router";
 
-
 @NgModule({
   declarations: [
     PopupPlanComponent,
     BadgeComponent,
     RoadComponent,
-    AdComponent,
+    AdComponent
   ],
     imports: [
         ChipComponent,

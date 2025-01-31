@@ -1,4 +1,6 @@
-<div class="stake-card">
+
+
+<div class="stake-card" slot="header" >
   <div class="stake-info">
     <!-- identifier Profile Section -->
     <div class="identifier-profile">
@@ -25,6 +27,7 @@
         </div>
       }@else{
         <ion-skeleton-text class="skeleton-name" animated />
+        <ion-skeleton-text style="width: 60px;" animated />
       }
     </div>
   </div>
@@ -46,9 +49,12 @@
     </div>
     
     <div class="action-icons">
-      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="proInsightIsOpen" (click)="openProInsightsPopover($event, stake)"/>
+      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="isOpenProInsight" 
+      id="toggle-btn" fill="clear" (click)="emitOpenProInsight()"
+      />
 
       <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"/>
     </div>
   </div>
 </div>
+

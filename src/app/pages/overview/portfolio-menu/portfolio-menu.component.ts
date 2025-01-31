@@ -8,7 +8,6 @@ import { FreemiumService, PopupPlanComponent } from "@app/shared/layouts/freemiu
 import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-popup.component";
 import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
 import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
-
 @Component({
   selector: 'portfolio-menu',
   templateUrl: './portfolio-menu.component.html',
@@ -17,7 +16,7 @@ import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
   imports: [
     IonIcon,
     PortfolioBoxComponent,
-    FreemiumModule,
+    FreemiumModule
   ]
 })
 export class PortfolioMenuComponent {
@@ -56,11 +55,11 @@ export class PortfolioMenuComponent {
     if (this.walletBoxSpinnerService.spinner())
       return;
 
-    if (this._freemiumService.isPremium()) {
+    // if (this._freemiumService.isPremium()) {
       this.openAddPortfolioPopup(walletAddress);
-    } else {
-      this.openFreemiumAccessPopup();
-    }
+    // } else {
+    //   this.openFreemiumAccessPopup();
+    // }
   }
 
   async openFreemiumAccessPopup() {

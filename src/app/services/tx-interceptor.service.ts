@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 
 import { BlockheightBasedTransactionConfirmationStrategy, ComputeBudgetProgram, Keypair, PublicKey, Signer, SystemProgram, Transaction, TransactionBlockhashCtor, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { Record, toastData } from '../models';
@@ -40,7 +40,7 @@ export class TxInterceptorService {
     })
     return memoInstruction
   }
-
+  public txState = signal<string>('idle');
   public async sendTx(
     txParam: (TransactionInstruction | Transaction)[],
     walletOwner: PublicKey,
@@ -50,7 +50,7 @@ export class TxInterceptorService {
   ): Promise<string | null> {
     try {
       console.log('sendTx', txParam, walletOwner, extraSigners, record, type);
-
+      this.txState.set('preparing');
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }
       let transaction: Transaction = new Transaction(txArgs).add(...txParam);
@@ -63,7 +63,7 @@ export class TxInterceptorService {
       if (serviceFeeInst) transaction.add(serviceFeeInst)
 
       let signedTx = await this._shs.getCurrentWallet().signTransaction(transaction) as Transaction;
-
+      this.txState.set('signed');
       if (extraSigners?.length > 0) signedTx.partialSign(...extraSigners)
 
       //LMT: check null signatures
@@ -73,9 +73,10 @@ export class TxInterceptorService {
         }
       }
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-
+      console.log('rawTransaction', rawTransaction, signedTx);
 
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
+      this.txState.set('sent');
       const url = `${this._util.explorer}/tx/${signature}?cluster=${environment.solanaEnv}`
       const txSend: toastData = {
         message: `Transaction Submitted`,
@@ -93,6 +94,7 @@ export class TxInterceptorService {
         va.track(record.message, record.data)
       }
       await this._shs.connection.confirmTransaction(config, 'processed')
+      this.txState.set('confirmed');
       const txCompleted: toastData = {
         message: 'Transaction Completed',
         segmentClass: "toastInfo"
@@ -103,6 +105,7 @@ export class TxInterceptorService {
       setTimeout(() => {
         this._fetchPortfolioService.triggerFetch()
       }, 500);
+      this.txState.set('idle');
       return signature
     } catch (error) {
       console.warn(error);
