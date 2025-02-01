@@ -196,12 +196,16 @@ export class PortfolioService {
       await this.syncPortfolios(address);
       this.updateCurrentWalletSignals(this.mainWalletAddress());
 
-      await this._freemiumService.updateAccountStatus();
-      if (this._freemiumService.isPremium()) {
-        await this.loadLinkedWallets();
-      } else {
-        this.removedAllLinkedWallets();
-      }
+      this._watchModeService.watchMode$.subscribe(async (watchmode) => {
+        if(!watchmode) {
+          await this._freemiumService.updateAccountStatus();
+          if (this._freemiumService.isPremium()) {
+            await this.loadLinkedWallets();
+          } else {
+            this.removedAllLinkedWallets();
+          }
+        }
+      }).unsubscribe()
     }
   }
 
