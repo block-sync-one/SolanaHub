@@ -28,6 +28,7 @@ import { WatchModeService } from './watch-mode.service';
 import { RoutingPath } from '../shared/constants';
 import { PortfolioDataKeys, WalletDataKeys } from "../enums";
 import { HttpFetchService } from './http-fetch.service';
+import { FreemiumService } from "@app/shared/layouts/freemium";
 
 // Add new type definition
 type FetchType = 'full' | 'partial';
@@ -86,7 +87,8 @@ export class PortfolioService {
     private _toastService: ToasterService,
     private _fetchPortfolioService: PortfolioFetchService,
     private _watchModeService: WatchModeService,
-    private walletBoxSpinnerService: WalletBoxSpinnerService
+    private walletBoxSpinnerService: WalletBoxSpinnerService,
+    private _freemiumService: FreemiumService
   ) {
     this.observeMainAddressSync();
     this.getPlatformsData()
@@ -189,11 +191,17 @@ export class PortfolioService {
     if (!wallet) return;
     const address = this.extractAddressOnWalletChanges(wallet);
 
-    if(address != this.mainWalletAddress()) { // the wallet connect callback is executed twice
+    if (address != this.mainWalletAddress()) {
       this.mainWalletAddress.set(address);
-      await this.syncPortfolios(address)
-      this.updateCurrentWalletSignals(this.mainWalletAddress())
-      this.loadLinkedWallets()
+      await this.syncPortfolios(address);
+      this.updateCurrentWalletSignals(this.mainWalletAddress());
+
+      await this._freemiumService.updateAccountStatus();
+      if (this._freemiumService.isPremium()) {
+        await this.loadLinkedWallets();
+      } else {
+        this.removedAllLinkedWallets();
+      }
     }
   }
 
@@ -676,6 +684,7 @@ export class PortfolioService {
   }
 
   private clearCurrentPortfolioData() {
+    this.mainWalletAddress.set(null)
     this.walletAssets.set(null)
     this.tokens.set(null)
     this.nfts.set(null)
@@ -694,14 +703,14 @@ export class PortfolioService {
 
   public async loadLinkedWallets() {
     // Get existing linked wallets from localStorage
-    const linkedWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
+    const linkedWallets = JSON.parse(this._vrs.localStorage.getData(PortfolioDataKeys.LIKED_WALLETS) || '[]');
 
     // Sync portfolios for all linked wallets sequentially
     for (const wallet of linkedWallets) {
-      const { address, nickname } = wallet;
-      if(!this.containsWallet(address)) {
+      const {address, nickname} = wallet;
+      if (!this.containsWallet(address)) {
         await this.syncPortfolios(address, false, nickname);
-      } else {
+      } else if (address === this.mainWalletAddress()) {
         // Remove connected address if it was part of the likedWallets
         this.removedLinkedWallet(address)
       }
@@ -713,7 +722,7 @@ export class PortfolioService {
     const connectedWalletAddress = this._shs.getCurrentWallet().publicKey.toBase58();
 
     // Get existing linked wallets from localStorage
-    const existingWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
+    const existingWallets = JSON.parse(this._vrs.localStorage.getData(PortfolioDataKeys.LIKED_WALLETS) || '[]');
 
     // Create new array with existing wallets
     let linkedWallets = [...existingWallets];
@@ -735,16 +744,19 @@ export class PortfolioService {
       .slice(0, this.MAX_LINKED_WALLETS);
 
     // Save to localStorage
-    this._vrs.localStorage.saveData('linkedWallets', JSON.stringify(linkedWallets));
+    this._vrs.localStorage.saveData(PortfolioDataKeys.LIKED_WALLETS, JSON.stringify(linkedWallets));
   }
 
-
   removedLinkedWallet(address: string): void {
-    const linkedWallets = JSON.parse(this._vrs.localStorage.getData('linkedWallets') || '[]');
+    const linkedWallets = JSON.parse(this._vrs.localStorage.getData(PortfolioDataKeys.LIKED_WALLETS) || '[]');
     const index = linkedWallets.findIndex(item => item.address === address);
     if (index !== -1) {
       linkedWallets.splice(index, 1);
-      this._vrs.localStorage.saveData('linkedWallets', JSON.stringify(linkedWallets));
+      this._vrs.localStorage.saveData(PortfolioDataKeys.LIKED_WALLETS, JSON.stringify(linkedWallets));
     }
+  }
+
+  removedAllLinkedWallets(): void {
+    this._vrs.localStorage.removeData(PortfolioDataKeys.LIKED_WALLETS);
   }
 }

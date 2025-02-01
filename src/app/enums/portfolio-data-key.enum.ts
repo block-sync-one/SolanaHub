@@ -7,7 +7,8 @@ export enum PortfolioDataKeys {
   WALLET_HISTORY = "walletHistory",
   NETWORTH = "netWorth",
   ENABLED = "enabled",
-  NICKNAME = "nickname"
+  NICKNAME = "nickname",
+  LIKED_WALLETS = "linkedWallets"
 }
 
 export enum WalletDataKeys {
