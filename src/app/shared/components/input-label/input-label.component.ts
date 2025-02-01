@@ -25,7 +25,7 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
 
       if(this.walletTokens()){
         this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
-        console.log('this.asset', this.asset, this.walletTokens(),this.asset.balance)
+        // console.log('this.asset', this.asset, this.walletTokens(),this.asset.balance)
       }
     })
    }

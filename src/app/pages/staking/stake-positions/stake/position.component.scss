@@ -15,10 +15,10 @@
         cursor: pointer;
         color: var(--ion-color-dark);
         &.pro-insights-icon{
-            color: var(--pro-color);
+            color: var(--ion-color-dark);
         }
         &.pro-insights-open{
-            color: var(--ion-color-dark);
+            color: var(--pro-color);
         }
     }
 }

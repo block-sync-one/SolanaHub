@@ -46,12 +46,12 @@ export class SelectPositionComponent  implements OnInit {
           positions.push({
             ...sol,
             exchangeRate: 1,
-            type: 'liquid'
+            source: 'liquid'
           } as LiquidStakeToken);
         }
       }
       if (this.formType === 'unstake') {
-        positions = positions.filter(p => p.type == 'liquid');
+        positions = positions.filter(p => p.source == 'liquid');
       }
       return positions;
     })

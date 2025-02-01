@@ -6,10 +6,10 @@
     <div class="identifier-profile">
       @if(stake){
         <ion-img [src]="getLogoURI(stake)" />
-        @if(stake.type === 'native'){
+        @if(stake.source === 'native'){
           <ion-icon name="lock-closed-outline" class="account-type"></ion-icon>
         }
-        @if(stake.type === 'liquid'){
+        @if(stake.source === 'liquid'){
           <ion-icon name="water-outline" class="account-type"></ion-icon>
         }
       }@else{
@@ -50,8 +50,10 @@
 
     
     <div class="action-icons">
-      <ion-icon name="sparkles-outline" class="pro-insights-icon" [class.pro-insights-open]="isOpenProInsight" 
-      id="toggle-btn" fill="clear" IsPro [IsProCallback]="emitOpenProInsight.bind(this)"
+      <ion-icon name="sparkles-outline" class="pro-insights-icon" 
+      [class.pro-insights-open]="isOpenProInsight" 
+      id="toggle-btn" fill="clear" 
+      IsPro [IsProCallback]="emitOpenProInsight.bind(this)"
       />
 
       <ion-icon (click)="presentPopover($event)" name="ellipsis-vertical"/>

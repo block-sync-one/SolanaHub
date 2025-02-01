@@ -1,66 +1,132 @@
 <div id="pro-insights" class="ion-padding">
   <div id="pro-insights-header">
     <ion-text>Insights</ion-text>
-    <pro-badge/>
+    <pro-badge></pro-badge>
   </div>
   <div id="pro-chart">
     <div class="pro-group" id="pro-chart-header">
       <ion-label>Value Accrued</ion-label>
-      <!-- <div>
-
-        <ion-segment value="SOL" (ionChange)="onSelectRewardType($event)">
-          <ion-segment-button value="SOL">SOL</ion-segment-button>
-          <ion-segment-button value="USD">USD</ion-segment-button>
-        </ion-segment>
-      </div> -->
     </div>
-    <div style="margin: 0 auto;width: 100%;height: 110px;">
+    <div style="margin: 0 auto; width: 100%; height: 110px;">
       <canvas #chartEl></canvas>
-
     </div>
   </div>
-  @if(stakePosition?.type === 'native'){
-  <div class="pro-group">
-    <ion-label >Total rewards</ion-label>
-    <ion-text>{{ totalRewards | number: '1.4'}} SOL</ion-text>
-  </div>
-  @if(stakePosition?.inactive_stake > 0){
-  <div class="pro-group">
-    <ion-label>inactive balance(MEV)</ion-label>
-    <div id="pro-inactive-balance">
 
-      <ion-text>{{ stakePosition?.inactive_stake | number: '1.5'}} SOL 
+  <ng-container *ngIf="stakePosition?.source === 'native'">
+    <div class="pro-group">
+      <ion-label>Total Observed Rewards</ion-label>
+      <div id="pro-total-rewards">
+        <ion-text>{{ totalRewards | number: '1.4' }} SOL</ion-text>
+        <chip name="next est. reward: {{ getNextEstimatedReward() | number: '1.4' }} SOL in {{ ETA }}" color="active"></chip>
+      </div>
+    </div>
+
+    <ng-container *ngIf="stakePosition?.inactive_stake > 0">
+      <div class="pro-group">
+        <ion-label>Inactive Balance (MEV)</ion-label>
+        <div id="pro-inactive-balance">
+          <ion-text>{{ stakePosition?.inactive_stake | number: '1.5' }} SOL</ion-text>
+          <ion-button fill="clear" size="small" (click)="withdraw()">Withdraw</ion-button>
+        </div>
+      </div>
+    </ng-container>
+
+    <div class="pro-group">
+      <ion-label>Start Date</ion-label>
+      <ion-text id="pro-start-date">
+        <ng-container *ngIf="stakePosition?.proInsights?.startDate">
+          {{ stakePosition.proInsights.startDate | date }}
+        </ng-container>
+        <ng-container *ngIf="stakePosition.source === 'native'">
+          <small>EPOCH {{ stakePosition.activation_epoch }}</small>
+        </ng-container>
       </ion-text>
-      <ion-button fill="clear" size="small" (click)="withdraw()">withdraw</ion-button>
     </div>
-  </div>
-  }
-  <div  class="pro-group">
-    <ion-label>Start date</ion-label>
-    <ion-text id="pro-start-date">
-      @if(stakePosition?.proInsights?.startDate ){ {{ stakePosition.proInsights.startDate | date }} }
-      @if(stakePosition.type === 'native'){
-        <ion-label>EPOCH {{ stakePosition.activation_epoch}}</ion-label>
-      }
-    </ion-text>
-  </div>
-  <div  class="pro-group" id="pro-authorities">
-    <ion-label>Authorities</ion-label>
-    <ion-label>{{shortAddress(stakePosition.authorities.staker)}} <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.staker" appCopyText></ion-icon> <chip name="staker"/></ion-label>
-    <ion-label>{{shortAddress(stakePosition.authorities.withdrawer)}} <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.withdrawer" appCopyText></ion-icon> <chip name="withdrawer"/></ion-label>
-  </div>
-  <div  class="pro-group">
-    <ion-label>Account status</ion-label>
-    @if(stakePosition.locked){
-    <chip name="locked"/> 
-    <ion-text>locked until {{stakePosition.lockedDue | date}}</ion-text>
-    }
-    @else{
-    <chip name="unlocked" color="focus"/> 
-    }
-  </div>
-}
-@if(stakePosition?.type === 'liquid'){
-others
-}
+
+    <div class="pro-group" id="pro-authorities">
+      <ion-label>Authorities</ion-label>
+      <ion-label>
+        {{ shortAddress(stakePosition.authorities.staker) }}
+        <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.staker" appCopyText></ion-icon>
+        <chip name="staker"></chip>
+      </ion-label>
+      <ion-label>
+        {{ shortAddress(stakePosition.authorities.withdrawer) }}
+        <ion-icon name="copy-outline" [copyText]="stakePosition.authorities.withdrawer" appCopyText></ion-icon>
+        <chip name="withdrawer"></chip>
+      </ion-label>
+    </div>
+
+    <div class="pro-group">
+      <ion-label>Account Status</ion-label>
+      <ng-container *ngIf="stakePosition.locked">
+        <div style="display: flex; align-items: center; gap: 4px;">
+          <chip name="locked" color="danger"></chip>
+          <small>Locked until {{ stakePosition.lockedDue | date }}</small>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="!stakePosition.locked">
+        <chip name="unlocked" color="focus"></chip>
+      </ng-container>
+    </div>
+  </ng-container>
+
+  <ng-container *ngIf="stakePosition?.source === 'liquid'">
+    <div class="pro-group">
+      <ion-label>
+        TRUE APY
+        <ion-icon name="information-circle-outline" [tooltip]="trueAPYTooltip"></ion-icon>
+        <ng-template #trueAPYTooltip>
+          <div>
+            <ion-label>
+              The "true APY" is calculated by averaging the exchange rates from the most recent epochs of data.
+              We look at up to 182 epochs (1 year), or all available data if there are fewer than 182 epochs.
+              By summing up the exchange rates from these epochs and dividing by the number of epochs considered, we get an average rate.
+              This average gives us a more stable view of the yield over time, smoothing out any short-term changes.
+            </ion-label>
+          </div>
+        </ng-template>
+      </ion-label>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <ion-text>{{ stakePosition.proInsights?.trueAPY | number: '1.2' }}%</ion-text>
+        <small>Based on {{ stakePosition.proInsights?.valueAccrued?.length }} observed Epochs</small>
+      </div>
+    </div>
+
+    <div class="pro-group" id="pro-authorities">
+      <ion-label>Stake Pool Type</ion-label>
+      <ion-text>
+        <ng-container *ngIf="stakePosition.type === 'spl' || stakePosition.type === 'SanctumSplMulti'">
+          Multi validators pool <ion-icon name="people-circle-outline"></ion-icon>
+        </ng-container>
+        <ng-container *ngIf="stakePosition.type === 'SanctumSpl'">
+          Single validator pool <ion-icon name="person-circle-outline"></ion-icon>
+        </ng-container>
+      </ion-text>
+    </div>
+
+    <div class="pro-group" id="pro-authorities">
+      <ion-label>Total Value Locked</ion-label>
+      <ion-text>{{ getTotalValueLocked() | currency }}</ion-text>
+    </div>
+
+    <div class="pro-group" id="pro-authorities">
+      <ion-label>Holders</ion-label>
+      <ion-text>{{ stakePosition.holders | number }}</ion-text>
+    </div>
+
+    <div class="pro-group" id="pro-authorities">
+      <ion-label>Authorities</ion-label>
+      <ion-label>
+        {{ shortAddress(stakePosition.tokenMint) }}
+        <ion-icon name="copy-outline" [copyText]="stakePosition.tokenMint" appCopyText></ion-icon>
+        <chip name="Token Mint"></chip>
+      </ion-label>
+      <ion-label>
+        {{ shortAddress(stakePosition.poolPublicKey) }}
+        <ion-icon name="copy-outline" [copyText]="stakePosition.poolPublicKey" appCopyText></ion-icon>
+        <chip name="Pool Address"></chip>
+      </ion-label>
+    </div>
+  </ng-container>
 </div>

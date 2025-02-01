@@ -1,4 +1,4 @@
-import { AfterContentInit, Component, EventEmitter, Input, OnInit, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AfterContentInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, signal, SimpleChanges, TemplateRef, ViewChild } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { copyOutline, ellipsisVertical, lockClosedOutline, sparklesOutline, waterOutline } from 'ionicons/icons';
 import {
@@ -49,6 +49,7 @@ export class PositionComponent implements OnInit{
   @Output() openProInsight = new EventEmitter<boolean>();
   @Input() stake: LiquidStakeToken | StakeAccount = null
   @Input() stakeAccounts: StakeAccount[] | LiquidStakeToken[] = null
+  @Input() isOpenProInsight = false
   public toolTipPos = TooltipPosition.LEFT
   public solPrice = this._jupStore.solPrice;
 
@@ -89,7 +90,7 @@ getStakeName(stake: any): string {
 }
 
 getAccountShortAddress(stake: any): string {
-  if(stake.type === 'liquid'){
+  if(stake.source === 'liquid'){
     return this._utilService.addrUtil(stake.mint).addrShort;
   }
   return this._utilService.addrUtil(stake.address).addrShort;
@@ -100,9 +101,8 @@ getStakeApy(stake: any): number {
 getStakeBalance(stake: any): string {
   return this._utilService.fixedNumber(stake?.balance);
 }
-isOpenProInsight = false;
 emitOpenProInsight(){
-  this.isOpenProInsight = !this.isOpenProInsight;
   this.openProInsight.emit();
+
 }
 }

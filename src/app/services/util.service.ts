@@ -194,7 +194,7 @@ export class UtilService {
     const absNum = Math.abs(num);
 
     // Find the minimum number of decimal places needed
-    let decimalPlaces = 3; // Start with minimum 2 decimal places
+    let decimalPlaces = 2; // Start with minimum 2 decimal places
     let tempNum = absNum;
     while (tempNum < 0.01 && tempNum > 0) {
       tempNum *= 10;
