@@ -30,13 +30,6 @@ export class FreemiumService {
     private _vrs: VirtualStorageService,
   ) {
     this._initializeService();
-    // effect(() => {
-    setTimeout(() => {
-
-      this._updateAccount();
-    }, 4000);
-
-    // });
   }
 
   /**
@@ -136,7 +129,7 @@ export class FreemiumService {
     }
   }
 
-  private async _updateAccount(): Promise<void> {
+  public async updateAccountStatus(): Promise<void> {
     const walletAddress = this._shs.getCurrentWallet()?.publicKey?.toString();
     console.log('walletAddress', walletAddress);
     if (!walletAddress) {

@@ -22,13 +22,13 @@ import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
 import { LiquidStakeToken, StakeAccount } from '../../stake.service';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
-import { FreemiumService, PopupPlanComponent } from '@app/shared/layouts/freemium';
+import { IsProDirective } from "@app/shared/directives/is-pro.directive";
 @Component({
   selector: 'position',
   templateUrl: './position.component.html',
   styleUrls: ['./position.component.scss'],
   standalone: true,
-  imports: [ 
+  imports: [
     CurrencyPipe,
     IonSkeletonText,
     IonImg,
@@ -41,7 +41,8 @@ import { FreemiumService, PopupPlanComponent } from '@app/shared/layouts/freemiu
     IonAccordionGroup,
     IonRow,
     ProInsightsComponent,
-    IonIcon
+    IonIcon,
+    IsProDirective
   ]
 })
 export class PositionComponent implements OnInit{
@@ -55,13 +56,12 @@ export class PositionComponent implements OnInit{
     private _jupStore: JupStoreService,
     private _popoverController: PopoverController,
     private _utilService: UtilService,
-    private _freemiumService: FreemiumService
     ) {
     addIcons({lockClosedOutline,waterOutline,copyOutline,sparklesOutline,ellipsisVertical});
   }
 ngOnInit(): void {
 
-  
+
 }
   async presentPopover(e: Event) {
 
