@@ -1,23 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { StakeService } from '../stake.service';
 import { map, ReplaySubject, shareReplay } from 'rxjs';
 import { PositionComponent } from './stake/position.component';
 import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { IonSkeletonText,  IonLabel, IonText } from "@ionic/angular/standalone";
+import { IonSkeletonText,  IonLabel, IonText, IonAccordionGroup, IonAccordion } from "@ionic/angular/standalone";
 import { JupStoreService } from 'src/app/services';
 import { StakeEpochComponent } from './stake-epoch/stake-epoch.component';
+import { ProInsightsComponent } from './pro-insights/pro-insights.component';
 
 @Component({
   selector: 'stake-positions',
   templateUrl: './stake-positions.component.html',
   styleUrls: ['./stake-positions.component.scss'],
   standalone: true,
-  imports: [StakeEpochComponent, IonText, IonLabel, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe]
+  imports: [ProInsightsComponent, StakeEpochComponent, IonText, IonLabel, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe, IonAccordionGroup, IonAccordion]
 })
 export class StakePositionsComponent implements OnInit {
   public solPrice = this._jupStore.solPrice;
   constructor(private _jupStore: JupStoreService,private _stakeService: StakeService) { }
+  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
 
   ngOnInit() { }
   public positions$ = this._stakeService.stakePositions$.pipe(
@@ -93,4 +95,18 @@ export class StakePositionsComponent implements OnInit {
         return '';
     }
   }
+  alternateClick(ev){
+    if(ev.target.id !== 'toggle-btn'){
+      ev.stopPropagation()
+    }
+  }
+  toggleAccordion () {
+    const nativeEl = this.accordionGroup;
+    if (nativeEl.value === 'first') {
+      nativeEl.value = undefined;
+    } else {
+      nativeEl.value = 'first';
+    }
+
+  };
 }

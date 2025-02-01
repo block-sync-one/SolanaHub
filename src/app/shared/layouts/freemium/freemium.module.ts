@@ -11,13 +11,12 @@ import { ChipComponent } from '../../components/chip/chip.component';
 import {RouterLink} from "@angular/router";
 import {IsProDirective} from "@app/shared/directives/is-pro.directive";
 
-
 @NgModule({
   declarations: [
     PopupPlanComponent,
     BadgeComponent,
     RoadComponent,
-    AdComponent,
+    AdComponent
   ],
   imports: [
     ChipComponent,

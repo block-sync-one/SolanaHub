@@ -8,7 +8,7 @@ import {
 } from '@ionic/angular/standalone';
 import { JupStoreService, NativeStakeService,  SolanaHelpersService,  UtilService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
-import { StakeBoxWrapperComponent } from './stake-form/stake-box-wrapper.component';
+import { StakeBoxWrapperComponent } from './stake-box/stake-box-wrapper.component';
 import { PageHeaderComponent } from 'src/app/shared/components/page-header/page-header.component';
 
 import { addIcons } from 'ionicons';

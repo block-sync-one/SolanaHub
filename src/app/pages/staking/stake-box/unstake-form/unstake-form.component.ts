@@ -1,21 +1,23 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, computed } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Token, WalletExtended } from 'src/app/models';
 import { JupToken } from 'src/app/models';
 import { JupRoute } from 'src/app/models';
 import { Observable } from 'rxjs';
-import { SolanaHelpersService } from 'src/app/services';
+import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { StakeService } from '../../stake.service';
 import { UtilService } from 'src/app/services';
 import { TxInterceptorService } from 'src/app/services';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { JupStoreService } from 'src/app/services';
 import { UnstakePathComponent } from './unstake-path/unstake-path.component';
-import { IonButton, IonLabel } from '@ionic/angular/standalone';
+import { IonButton, IonLabel, IonIcon } from '@ionic/angular/standalone';
 import { FreemiumService } from '@app/shared/layouts/freemium';
 import { PremiumActions } from '@app/enums';
-
+import { addIcons } from 'ionicons';
+import { arrowForwardOutline } from 'ionicons/icons';
+import { SlowUnstakeWizardComponent } from './slow-unstake-wizard/slow-unstake-wizard.component';
 interface UnstakeFormData {
   inputToken: Token;
   outputToken: Token;
@@ -33,7 +35,8 @@ interface UnstakeFormData {
     InputComponent,
     ReactiveFormsModule,
     UnstakePathComponent,
-    IonButton
+    IonButton,
+    SlowUnstakeWizardComponent
   ]
 })
 export class UnstakeFormComponent implements OnInit {
@@ -64,7 +67,7 @@ export class UnstakeFormComponent implements OnInit {
 
   // Signals
   public loading = signal(false);
-  public unstakeState = signal<'swap' | 'unstake' | 'preparing transaction' | 'executing Unstake' | 'Unstake'>('swap');
+  public unstakeState = signal<'swap' | 'unstake' | 'preparing transaction' | 'Deactivate account' | 'Unstake'>('swap');
   public unstakePath = signal<'instant' | 'slow'>('instant');
   public jupTokens = signal<JupToken[]>(null);
   public slippage = signal(0.5);
@@ -72,6 +75,7 @@ export class UnstakeFormComponent implements OnInit {
   public slowUnstakeReceive = signal(0);
   public lstExchangeRate = signal(null);
   public bestRoute: WritableSignal<JupRoute> = signal(null);
+  public slowUnstakeWizard = computed(() => this._txi.txState());
 
   constructor(
     private _shs: SolanaHelpersService,
@@ -81,8 +85,11 @@ export class UnstakeFormComponent implements OnInit {
     private _lss: LiquidStakeService,
     private _stakeService: StakeService,
     private _txi: TxInterceptorService,
-    private _freemiumService: FreemiumService
-  ) {}
+    private _freemiumService: FreemiumService,
+    private _nss: NativeStakeService
+  ) {
+    addIcons({arrowForwardOutline});
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -176,8 +183,11 @@ export class UnstakeFormComponent implements OnInit {
       const { inputAmount, tokenPool } = this.unstakeForm.value;
       console.log(tokenPool, inputAmount)
       const signature = await this._lss.unstake(tokenPool, inputAmount);
-
-      this.unstakeState.set('Unstake');
+      if(signature){
+        // set deactive account for slow unstake
+        this.unstakeState.set('Deactivate account');
+        this.completeDeactivateAccount();
+      }
     } catch (error) {
       console.error('Unstake failed:', error);
       this.unstakeState.set('unstake');
@@ -211,6 +221,13 @@ export class UnstakeFormComponent implements OnInit {
     } finally {
       // Reset state after a delay
       setTimeout(() => this.unstakeState.set('Unstake'), 2000);
+    }
+  }
+  public async completeDeactivateAccount(): Promise<void> {
+    const walletOwner = this._shs.getCurrentWallet()
+    const res = await this._nss.deactivateStakeAccount(this._lss.unstakeAccount().toBase58(), walletOwner as WalletExtended)
+    if(res){
+      this.unstakeState.set('Unstake');
     }
   }
 }

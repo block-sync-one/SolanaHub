@@ -10,7 +10,7 @@ import { EpochProgressBarComponent } from '../../epoch-progress-bar/epoch-progre
       <ion-label>724</ion-label>
     </div>
     <div id="progress-bar">
-      <epoch-progress-bar/>
+      <epoch-progress-bar [showTimeRemaining]="true"/>
     </div>
   </div>
   `,

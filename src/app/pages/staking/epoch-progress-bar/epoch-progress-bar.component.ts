@@ -1,5 +1,5 @@
 import { NgIf, PercentPipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IonProgressBar, IonText } from "@ionic/angular/standalone";
 import { catchError, take } from 'rxjs';
 import { SolanaHelpersService } from 'src/app/services';
@@ -11,14 +11,18 @@ import { SolanaHelpersService } from 'src/app/services';
       [value]="progress" 
       [class.animate]="isLoading">
     </ion-progress-bar>
+    @if(showTimeRemaining){
     <ion-text>
       <ng-container *ngIf="!error; else errorTpl">
+        <div>
         Progress: {{progress | percent}} • Time remaining: ~{{ETA || 'Calculating...'}}
+        </div>
       </ng-container>
       <ng-template #errorTpl>
         <span class="error">Failed to load epoch data</span>
       </ng-template>
     </ion-text>
+    }
   `,
   styleUrls: ['./epoch-progress-bar.component.scss'],
   standalone: true,
@@ -29,6 +33,7 @@ export class EpochProgressBarComponent implements OnInit {
   ETA = '';
   isLoading = true;
   error: boolean = false;
+  @Input() showTimeRemaining = false
 
   constructor(private _shs: SolanaHelpersService) { }
 

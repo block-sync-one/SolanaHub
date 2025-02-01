@@ -1,4 +1,4 @@
-<stake-epoch/>
+<stake-epoch />
 <div id="positions-container">
   <div id="positions-header">
     <ion-label>Positions</ion-label>
@@ -26,7 +26,8 @@
       <div class="header-item">
         <div class="group-title">
           <ion-label>{{group.state}} </ion-label>
-          <chip [name]="group.positions.length + ' • ' + (group.totalValue | currency)" [color]="getGroupColor(group.state)" />
+          <chip [name]="group.positions.length + ' • ' + (group.totalValue | currency)"
+            [color]="getGroupColor(group.state)" />
         </div>
         <ion-text>{{group.description}}</ion-text>
       </div>
@@ -43,7 +44,15 @@
 
 
     @for (position of group.positions; track $index) {
-    <position [stake]="position" [stakeAccounts]="group.positions" />
+    <ion-accordion-group #accordionGroup>
+      <ion-accordion value="first" toggleIconSlot="end">
+        <position (click)="alternateClick($event)" id="toggle-btn" [stake]="position" slot="header" #positionRef (openProInsight)="toggleAccordion()" [stakeAccounts]="group.positions" />
+        
+        <div slot="content">
+          <pro-insights #proInsights [stakePosition]="position"  [isOpen]="positionRef.isOpenProInsight" />
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
     }
   </div>
   }@empty {

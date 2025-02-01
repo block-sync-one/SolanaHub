@@ -1,6 +1,6 @@
 ion-progress-bar{
   height: 4px;
-  margin-block-end: 8px;
+
 }
 ion-progress-bar::part(track) {
   background: var(--ion-color-border);
@@ -24,7 +24,9 @@ ion-progress-bar::part(progress) {
 .error {
   color: var(--ion-color-danger);
 }
-
+div{
+  margin-block-start: 8px;
+}
 @keyframes progress-indeterminate {
   from { opacity: 0.4; }
   to { opacity: 1; }

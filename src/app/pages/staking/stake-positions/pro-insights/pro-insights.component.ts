@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, inject, Input, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IonLabel, IonSegmentButton, IonSegment, IonSkeletonText, IonText, IonIcon, IonButton } from "@ionic/angular/standalone";
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsights, StakeAccount, StakeService } from '../../stake.service';
@@ -18,15 +18,11 @@ Chart.register(zoomPlugin);
   styleUrls: ['./pro-insights.component.scss'],
   standalone: true,
   imports: [
-    AsyncPipe,
     IonButton, 
     IonIcon, 
     CopyTextDirective, 
     IonText,
     DatePipe, 
-    IonSkeletonText, 
-    IonSegment, 
-    IonSegmentButton, 
     IonLabel, 
     ChipComponent,
     FreemiumModule,
@@ -34,10 +30,11 @@ Chart.register(zoomPlugin);
   ]
 })
 
-export class ProInsightsComponent implements AfterViewInit {
+export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy {
   public utilService = inject(UtilService);
   private _stakeService = inject(StakeService);
   @Input() stakePosition: StakeAccount | LiquidStakeToken | any
+  @Input() isOpen = false;
   @ViewChild('chartEl', { static: true }) chartEl: ElementRef;
   chartData: Chart;
   public stakeRewardsData = []
@@ -45,12 +42,20 @@ export class ProInsightsComponent implements AfterViewInit {
   public isLoading = true;
   constructor(private _shs: SolanaHelpersService) { }
 
- async ngAfterViewInit() {
-   this.initChart();
-    await this.getProInsights()
+  async ngAfterViewInit() {
+    this.initChart();
     this.isLoading = false;
-    this.initChart()
   }
+  async ngOnChanges(changes: SimpleChanges): Promise<void> {
+    console.log(this.isOpen)
+    if (this.isOpen) {
+      this.isLoading = true;
+      await this.getProInsights();
+      this.isLoading = false;
+      this.initChart();
+    }
+  }
+
 
   private initChart() {
     
@@ -64,7 +69,7 @@ export class ProInsightsComponent implements AfterViewInit {
           `Epoch ${data.epoch}`),
           // ${this.utilService.datePipe.transform(data.date, 'shortDate')} /
           datasets: [{
-          label: 'Rewards',
+          label: this.stakePosition.type === 'native' ? 'Rewards' : 'Value',
           data: this.isLoading ? Array(5).fill(0.5) : this.stakeRewardsData.map(data => data.reward),
           backgroundColor: this.isLoading ? 'rgba(200,200,200,0.3)' : 'rgba(184,71,148)',
           borderWidth: 0,
@@ -85,10 +90,12 @@ export class ProInsightsComponent implements AfterViewInit {
           y: {
             ticks: {
               callback: (value, index, ticks) => {
-                const lowestReward = Math.min(...this.stakeRewardsData?.map(data => data.reward));
-                const highestReward = Math.max(...this.stakeRewardsData?.map(data => data.reward));
-                if (index === 0) return lowestReward < 0.001 ? 0 : lowestReward;
-                if (index === ticks.length - 1) return highestReward < 0.001 ? 0 : highestReward;
+                if (!this.stakeRewardsData?.length) return '';
+                
+                const lowestReward = Math.min(...this.stakeRewardsData.map(data => data.reward));
+                const highestReward = Math.max(...this.stakeRewardsData.map(data => data.reward));
+                if (index === 0) return lowestReward < 0.001 ? lowestReward.toFixedNoRounding(3) : lowestReward.toFixedNoRounding(3);
+                if (index === ticks.length - 1) return highestReward < 0.001 ? highestReward.toFixedNoRounding(3) : highestReward.toFixedNoRounding(3);
                 return '';
               }
             },
@@ -183,7 +190,31 @@ export class ProInsightsComponent implements AfterViewInit {
           }
         },
         events: this.isLoading ? [] : undefined,
-      }
+      },
+      plugins: [{
+        id: 'centerText',
+        afterDraw: (chart: any) => {
+          const ctx = chart.ctx;
+          const width = chart.width;
+          const height = chart.height;
+          
+          ctx.save();
+          if (this.stakeRewardsData.length === 0 && !this.isLoading) {
+            // Clear the area where we'll draw the text
+            ctx.clearRect(0, 0, width, height);
+            
+            // Set text properties
+            ctx.font = '13px Inter';
+            ctx.fillStyle = '#B84794';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Draw the text
+            ctx.fillText('No accrued value', width / 2, height / 2);
+          }
+          ctx.restore();
+        }
+      }]
     };
 
     this.chartData = new Chart(ctx, config);
@@ -213,21 +244,28 @@ export class ProInsightsComponent implements AfterViewInit {
       const res: ProInsights  = await this._stakeService.getProInsights(this.stakePosition)
       this.stakePosition.proInsights = res
       
-      this.stakeRewardsData = res.stakeRewards.map((stakeReward) => ({
+      this.stakeRewardsData = res.valueAccrued.map((stakeReward) => ({
         epoch: stakeReward.epoch,
         date: stakeReward.effective_time,
-        reward: stakeReward.reward_amount
+        reward: this.stakePosition.type === 'native' ? stakeReward.reward_amount : stakeReward.projectedValue
       }))
-      this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr.reward, 0).toFixedNoRounding(4);
+      this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr?.reward, 0) || 0
+
+      console.log(this.totalRewards)
+     if(this.stakePosition.type === 'native'){
       this._shs.getEpochTimestamp(this.stakePosition.activation_epoch).then((res) => {
         this.stakePosition.proInsights.startDate = new Date(res)
       })
+     }
       return res
     } catch (error) {
       console.error('Error getting pro insights', error);
       return null
     }
     
+  }
+  ngOnDestroy(): void {
+    this.chartData?.destroy();
   }
   
 }
