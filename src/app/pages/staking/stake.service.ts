@@ -8,7 +8,7 @@ import { HttpFetchService } from 'src/app/services/http-fetch.service';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 
 
-export interface LiquidStakeToken {
+export interface LiquidStakeToken extends StakePool{
   chainId: number
   address: string
   symbol: string
@@ -19,13 +19,14 @@ export interface LiquidStakeToken {
   balance: any
   price: number
   value: number
-  frozen?: boolean
-  type: string
-  apy?: number
+  frozen: boolean
+  source: string
+  type: 'spl' | 'SanctumSplMulti' | 'SanctumSpl'
+  apy: number
   exchangeRate: number
-  poolPublicKey?: string
-  tokenMint?: string
-  state?: string
+  poolPublicKey: string
+  tokenMint: string
+  state: string
   proInsights?: ProInsights
 }
 
@@ -38,7 +39,7 @@ export interface StakeAccount {
   amount: number
   role: Array<string>
   state: string
-  type: string
+  source: string
   voter: string
   deactivationEpoch?: number
   active_stake: number
@@ -60,7 +61,7 @@ export interface StakePositions {
 }
 export interface ProInsights {
   valueAccrued?: StakeRewards[]
-  type: string
+  source: string
 }
 interface StakeRewards {
   epoch: number
@@ -190,15 +191,15 @@ export class StakeService {
   public async getProInsights(position: StakeAccount | LiquidStakeToken): Promise<ProInsights> {
     try {
       let data = {}
-      if(position.type === "native") {
+      if(position.source === "native") {
         data = {
           account_address: position.address,
-          type: position.type,
+          source: position.source,
           activation_epoch: position['activation_epoch']
         }
       } else {
         data = {
-          type: position.type,
+          source: position.source,
           lst: position
         }
       }

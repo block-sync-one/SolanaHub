@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { StakeService } from '../stake.service';
 import { map, ReplaySubject, shareReplay } from 'rxjs';
 import { PositionComponent } from './stake/position.component';
@@ -9,6 +9,17 @@ import { JupStoreService } from 'src/app/services';
 import { StakeEpochComponent } from './stake-epoch/stake-epoch.component';
 import { ProInsightsComponent } from './pro-insights/pro-insights.component';
 
+// Add these interfaces/types at the top
+interface StakeGroup {
+  state: StakeState;
+  description: string;
+  totalValue: number;
+  avgAPY: number | null;
+  positions: any[]; // Type this properly based on your position interface
+}
+
+type StakeState = 'active' | 'inactive' | 'deactivating' | 'activating';
+
 @Component({
   selector: 'stake-positions',
   templateUrl: './stake-positions.component.html',
@@ -17,96 +28,117 @@ import { ProInsightsComponent } from './pro-insights/pro-insights.component';
   imports: [ProInsightsComponent, StakeEpochComponent, IonText, IonLabel, IonSkeletonText, PositionComponent, AsyncPipe, ChipComponent, CurrencyPipe, IonAccordionGroup, IonAccordion]
 })
 export class StakePositionsComponent implements OnInit {
-  public solPrice = this._jupStore.solPrice;
-  constructor(private _jupStore: JupStoreService,private _stakeService: StakeService) { }
-  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
+  // Move constants outside of the data stream
+  private readonly STAKE_STATES: StakeState[] = ['active', 'inactive', 'deactivating', 'activating'];
+  private readonly STATE_DESCRIPTIONS = {
+    active: "Your stake earns stake rewards every epoch",
+    inactive: "Your stake is ready for withdrawal",
+    deactivating: "Your stake will be withdrawable next epoch",
+    activating: "Your stake starts earning rewards next epoch"
+  } as const;
 
-  ngOnInit() { }
+  private readonly STATE_COLORS = {
+    active: 'focus',
+    deactivating: 'danger',
+    activating: 'active',
+    inactive: ''
+  } as const;
+
+  currentAccordionIndex: number | null = null;
+  public solPrice = this._jupStore.solPrice;
+
+  @ViewChild('accordionGroup', { static: true }) accordionGroup!: IonAccordionGroup;
+  @ViewChildren('positionRef') positionRef!: QueryList<PositionComponent>;
+
   public positions$ = this._stakeService.stakePositions$.pipe(
     map(positions => {
       if (!positions) return null;
 
-      const states = ['active', 'inactive', 'deactivating', 'activating'];
-      const stateDesc = {
-        active: "Your stake earns stake rewards every epoch",
-        inactive: "Your stake is ready for withdrawal",
-        deactivating: "Your stake will be withdrawable next epoch",
-        activating: "Your stake starts earning rewards next epoch"
-      }
-      const groups = states.map(state => {
-        const nativePositions = positions?.native.filter(position => position.state === state);
+      const groups = this.STAKE_STATES.map(state => {
+        const nativePositions = positions.native.filter(position => position.state === state);
+        const avgAPY = this.calculateAverageAPY(state, nativePositions, positions.liquid);
+        const totalValue = this.calculateTotalValue(state, nativePositions, positions.liquid);
 
-        // Calculate APY only for active group
-        let avgAPY = null;
-        if (state === 'active') {
-
-
-          const nativeAPY = nativePositions.length > 0
-            ? nativePositions.reduce((acc, position) => {
-              return acc + (Number(position.validator?.total_apy) || 0);
-            }, 0) / nativePositions.length
-            : 0;
-
-          const liquidAPY = positions?.liquid?.length > 0
-            ? positions.liquid.reduce((acc, position) => {
-              return acc + (Number(position.apy) || 0);
-            }, 0) / positions.liquid.length
-            : 0;
-          // Weighted average of native and liquid APYs
-          const totalPositions = nativePositions.length + (positions?.liquid?.length || 0);
-          avgAPY = totalPositions > 0
-            ? ((nativeAPY * nativePositions.length + liquidAPY * (positions?.liquid?.length || 0)) / totalPositions).toFixed(2)
-            : 0;
-        }
-
-        const totalNativeValue = nativePositions.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0);
-        // Only include liquid value for active state
-        const totalLiquidValue = state === 'active' 
-          ? positions?.liquid?.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0) || 0
-          : 0;
-        const totalValue = Number(totalNativeValue) + Number(totalLiquidValue);
-        const group = {
+        const group: StakeGroup = {
           state,
-          description: stateDesc[state],
+          description: this.STATE_DESCRIPTIONS[state],
           totalValue,
           avgAPY,
           positions: nativePositions
-        }
+        };
         return group;
       });
 
-      // include liquid positions into active group
-      groups.find(group => group.state === 'active').positions.push(...positions?.liquid as any);
+      // Add liquid positions to active group
+      const activeGroup = groups.find(group => group.state === 'active');
+      if (activeGroup && positions.liquid) {
+        activeGroup.positions.push(...positions.liquid);
+      }
 
       return groups;
     }),
     shareReplay(1)
   );
 
-  getGroupColor(state: string): string {
-    switch (state) {
-      case 'active':
-        return 'focus';
-      case 'deactivating':
-        return 'danger';
-      case 'activating':
-        return 'active';
-      default:
-        return '';
-    }
-  }
-  alternateClick(ev){
-    if(ev.target.id !== 'toggle-btn'){
-      ev.stopPropagation()
-    }
-  }
-  toggleAccordion () {
-    const nativeEl = this.accordionGroup;
-    if (nativeEl.value === 'first') {
-      nativeEl.value = undefined;
-    } else {
-      nativeEl.value = 'first';
-    }
+  constructor(
+    private _jupStore: JupStoreService,
+    private _stakeService: StakeService
+  ) { }
 
-  };
+  ngOnInit(): void { }
+
+  onAccordionChange(event: { detail: { value: number } }): void {
+    this.currentAccordionIndex = event.detail.value;
+  }
+
+  getGroupColor(state: StakeState): string {
+    return this.STATE_COLORS[state];
+  }
+
+  alternateClick(ev: MouseEvent): void {
+    if ((ev.target as HTMLElement).id !== 'toggle-btn') {
+      ev.stopPropagation();
+    }
+    
+    setTimeout(() => {
+      this.positionRef.forEach((position, index) => {
+        position.isOpenProInsight = Number(this.currentAccordionIndex) === index;
+      });
+    }, 100);
+  }
+
+  toggleAccordion(): void {
+    this.accordionGroup.value = this.accordionGroup.value === 'first' ? undefined : 'first';
+  }
+
+  private calculateAverageAPY(state: StakeState, nativePositions: any[], liquidPositions?: any[]): number | null {
+    if (state !== 'active') return null;
+
+    const nativeAPY = this.calculatePositionsAPY(nativePositions);
+    const liquidAPY = liquidPositions ? this.calculatePositionsAPY(liquidPositions) : 0;
+    
+    const totalPositions = nativePositions.length + (liquidPositions?.length || 0);
+    return totalPositions > 0
+      ? Number(((nativeAPY * nativePositions.length + liquidAPY * (liquidPositions?.length || 0)) / totalPositions).toFixed(2))
+      : 0;
+  }
+
+  private calculatePositionsAPY(positions: any[]): number {
+    return positions.length > 0
+      ? positions.reduce((acc, position) => acc + (Number(position.validator?.total_apy || position.apy) || 0), 0) / positions.length
+      : 0;
+  }
+
+  private calculateTotalValue(state: StakeState, nativePositions: any[], liquidPositions?: any[]): number {
+    const totalNativeValue = nativePositions.reduce(
+      (acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 
+      0
+    );
+
+    const totalLiquidValue = state === 'active' && liquidPositions
+      ? liquidPositions.reduce((acc, position) => acc + position.balance * position.exchangeRate * this.solPrice(), 0)
+      : 0;
+
+    return Number(totalNativeValue) + Number(totalLiquidValue);
+  }
 }

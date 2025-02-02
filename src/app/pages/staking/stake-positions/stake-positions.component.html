@@ -43,17 +43,29 @@
     </div>
 
 
+    <ion-accordion-group #accordionGroup (ionChange)="onAccordionChange($event)">
     @for (position of group.positions; track $index) {
-    <ion-accordion-group #accordionGroup>
-      <ion-accordion value="first" toggleIconSlot="end">
-        <position (click)="alternateClick($event)" id="toggle-btn" [stake]="position" slot="header" #positionRef (openProInsight)="toggleAccordion()" [stakeAccounts]="group.positions" />
+      <ion-accordion [value]="$index" toggleIconSlot="end">
+        <position 
+        (click)="alternateClick($event)" 
+        (openProInsight)="toggleAccordion()" 
+        id="toggle-btn" 
+        [stake]="position" 
+        slot="header" 
+        #positionRef 
+        [stakeAccounts]="group.positions" 
+        />
         
         <div slot="content">
-          <pro-insights #proInsights [stakePosition]="position"  [isOpen]="positionRef.isOpenProInsight" />
+          <pro-insights 
+          #proInsights 
+          [stakePosition]="position"  
+          [isOpen]="positionRef.isOpenProInsight" 
+          />
         </div>
       </ion-accordion>
-    </ion-accordion-group>
     }
+  </ion-accordion-group>
   </div>
   }@empty {
 

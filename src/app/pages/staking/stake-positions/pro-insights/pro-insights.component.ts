@@ -4,11 +4,17 @@ import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsights, StakeAccount, StakeService } from '../../stake.service';
 import { LiquidStakeToken } from '../../stake.service';
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
-import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { NgIf, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
 import zoomPlugin from 'chartjs-plugin-zoom';
-import { SolanaHelpersService, UtilService } from 'src/app/services';
+import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
+import { addIcons } from 'ionicons';
+import { personCircleOutline, copyOutline, informationCircleOutline } from 'ionicons/icons';
+import { peopleCircleOutline } from 'ionicons/icons';
+import { catchError } from 'rxjs/operators';
+import { take } from 'rxjs';
+import { TooltipModule } from '@app/shared/layouts/tooltip/tooltip.module';
 
 Chart.register(zoomPlugin);
 
@@ -18,15 +24,18 @@ Chart.register(zoomPlugin);
   styleUrls: ['./pro-insights.component.scss'],
   standalone: true,
   imports: [
-    IonButton, 
-    IonIcon, 
-    CopyTextDirective, 
+    IonButton,
+    IonIcon,
+    CopyTextDirective,
     IonText,
-    DatePipe, 
-    IonLabel, 
+    DatePipe,
+    IonLabel,
     ChipComponent,
     FreemiumModule,
-    DecimalPipe
+    DecimalPipe,
+    CurrencyPipe,
+    TooltipModule,
+    NgIf
   ]
 })
 
@@ -40,15 +49,18 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
   public stakeRewardsData = []
   totalRewards = null;
   public isLoading = true;
-  constructor(private _shs: SolanaHelpersService) { }
+  constructor(private _shs: SolanaHelpersService, private _jupStoreService: JupStoreService) {
+    addIcons({copyOutline,informationCircleOutline,peopleCircleOutline,personCircleOutline});
+   }
 
   async ngAfterViewInit() {
     this.initChart();
     this.isLoading = false;
   }
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
-    console.log(this.isOpen)
     if (this.isOpen) {
+      this.getNextEpoch()
+      console.log(this.stakePosition)
       this.isLoading = true;
       await this.getProInsights();
       this.isLoading = false;
@@ -58,18 +70,37 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
 
 
   private initChart() {
-    
+
     this.chartData ? this.chartData.destroy() : null
     const ctx = this.chartEl.nativeElement
+    var gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, 'rgba(203,98,175,0.1)');
 
-    const config: ChartConfiguration = {
-      type: 'bar',
-      data: {
+    const lineSettings = {
+      labels: this.stakeRewardsData.map(data => `Epoch ${data.epoch}`), // X-axis labels
+      datasets: [{
+        label: 'Valued',
+        data: this.stakeRewardsData.map(data => data.reward), // Y-axis data points
+        backgroundColor: gradient,
+        borderColor: '#B84794',
+        borderWidth: 2,
+        tension: 0.4, // This will make the line chart smoother
+        fill: true,
+      }],
+      animation: this.isLoading ? {
+        duration: 1000,
+        loop: true,
+        delay: (context) => context.dataIndex * 100
+      } : undefined
+    }
+
+    const barSettings = {
+
         labels: this.isLoading ? Array(5).fill('Loading...') : this.stakeRewardsData.map(data => 
           `Epoch ${data.epoch}`),
           // ${this.utilService.datePipe.transform(data.date, 'shortDate')} /
           datasets: [{
-          label: this.stakePosition.type === 'native' ? 'Rewards' : 'Value',
+          label: 'Rewards',
           data: this.isLoading ? Array(5).fill(0.5) : this.stakeRewardsData.map(data => data.reward),
           backgroundColor: this.isLoading ? 'rgba(200,200,200,0.3)' : 'rgba(184,71,148)',
           borderWidth: 0,
@@ -79,7 +110,13 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
             delay: (context) => context.dataIndex * 100
           } : undefined
         }]
-      },
+    
+
+    }
+    const config: ChartConfiguration = {
+
+      type: this.stakePosition.source === 'native' ? 'bar' : 'line',
+      data: this.stakePosition.source === 'native' ? barSettings : lineSettings,
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -91,11 +128,11 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
             ticks: {
               callback: (value, index, ticks) => {
                 if (!this.stakeRewardsData?.length) return '';
-                
+
                 const lowestReward = Math.min(...this.stakeRewardsData.map(data => data.reward));
                 const highestReward = Math.max(...this.stakeRewardsData.map(data => data.reward));
-                if (index === 0) return lowestReward < 0.001 ? lowestReward.toFixedNoRounding(3) : lowestReward.toFixedNoRounding(3);
-                if (index === ticks.length - 1) return highestReward < 0.001 ? highestReward.toFixedNoRounding(3) : highestReward.toFixedNoRounding(3);
+                if (index === 0) return lowestReward < 0.001 ? this.utilService.fixedNumber(lowestReward) : this.utilService.fixedNumber(lowestReward);
+                if (index === ticks.length - 1) return highestReward < 0.001 ? this.utilService.fixedNumber(highestReward) : this.utilService.fixedNumber(highestReward);
                 return '';
               }
             },
@@ -115,8 +152,7 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
                 // Show only first and last labels
                 if (index === 0 || index === this.stakeRewardsData.length - 1) {
                   const label = this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
-                  console.log(label)
-                  return label
+                  return label;
                 }
                 return '';
               }.bind(this)
@@ -163,9 +199,9 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
                   const value = context.parsed.y;
                   // For very small numbers (less than 0.001), show up to 6 decimal places
                   // For larger numbers, show up to 3 decimal places
-                  const minimumFractionDigits = value < 0.001 ? 6 : 3;
-                  const maximumFractionDigits = value < 0.001 ? 6 : 3;
-                  label += new DecimalPipe('en-US').transform(value, 
+                  const minimumFractionDigits = value < 0.001 ? 6 : 2;
+                  const maximumFractionDigits = value < 0.001 ? 6 : 2;
+                  label += new DecimalPipe('en-US').transform(value,
                     `1.${minimumFractionDigits}-${maximumFractionDigits}`
                   ) + ' SOL';
                 }
@@ -186,6 +222,9 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
                 enabled: true
               },
               mode: 'x',
+              onZoomComplete: ({ chart }) => {
+                chart.update('none'); // Update the chart without animation
+              }
             }
           }
         },
@@ -197,18 +236,18 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
           const ctx = chart.ctx;
           const width = chart.width;
           const height = chart.height;
-          
+
           ctx.save();
           if (this.stakeRewardsData.length === 0 && !this.isLoading) {
             // Clear the area where we'll draw the text
             ctx.clearRect(0, 0, width, height);
-            
+
             // Set text properties
             ctx.font = '13px Inter';
             ctx.fillStyle = '#B84794';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            
+
             // Draw the text
             ctx.fillText('No accrued value', width / 2, height / 2);
           }
@@ -231,41 +270,63 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
   public async withdraw() {
     try {
       const res = await this._stakeService.withdrawExcessiveBalance(this.stakePosition)
-      if(res) {
+      if (res) {
         this.stakePosition.inactive_stake = 0
-      } 
+      }
     } catch (error) {
       console.error('Error withdrawing excessive balance', error);
     }
   }
- 
+
   public async getProInsights() {
     try {
-      const res: ProInsights  = await this._stakeService.getProInsights(this.stakePosition)
+      const res: ProInsights = await this._stakeService.getProInsights(this.stakePosition)
       this.stakePosition.proInsights = res
-      
+
       this.stakeRewardsData = res.valueAccrued.map((stakeReward) => ({
         epoch: stakeReward.epoch,
         date: stakeReward.effective_time,
-        reward: this.stakePosition.type === 'native' ? stakeReward.reward_amount : stakeReward.projectedValue
+        reward: this.stakePosition.source === 'native' ? stakeReward.reward_amount : stakeReward.projectedValue
       }))
       this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr?.reward, 0) || 0
 
       console.log(this.totalRewards)
-     if(this.stakePosition.type === 'native'){
-      this._shs.getEpochTimestamp(this.stakePosition.activation_epoch).then((res) => {
-        this.stakePosition.proInsights.startDate = new Date(res)
-      })
-     }
+      if (this.stakePosition.source === 'native') {
+        this._shs.getEpochTimestamp(this.stakePosition.activation_epoch).then((res) => {
+          this.stakePosition.proInsights.startDate = new Date(res)
+        })
+      }
       return res
     } catch (error) {
       console.error('Error getting pro insights', error);
       return null
     }
-    
+
   }
   ngOnDestroy(): void {
     this.chartData?.destroy();
   }
-  
+  getTotalValueLocked(){
+    return this.stakePosition.totalStake * this._jupStoreService.solPrice()
+  }
+  getNextEstimatedReward(){
+    return this.stakePosition.balance * (this.stakePosition.validator?.apy_estimate / 100) / 182
+  }
+  public ETA: string = ''
+  getNextEpoch(){
+    this._shs.getEpochInfo()
+    .pipe(
+      take(1),
+      catchError((err) => {
+        console.error('Failed to load epoch info:', err);
+        return [];
+      })
+    ).subscribe({
+      next: (data) => {
+        
+        this.ETA = data.ETA;
+        
+      }
+    });
+  }
 }

@@ -1,26 +1,27 @@
 :host {
     text-transform: capitalize;
 }
+
 #pro-insights {
     background: var(--ion-color-light);
 }
+
 #pro-chart {
     margin-block-end: 8px;
 }
-#pro-insights-header {
+
+#pro-insights-header,
+#pro-chart-header {
     display: flex;
     align-items: center;
     gap: 8px;
 }
+
 #pro-chart-header {
-    display: flex;
     justify-content: space-between;
-    align-items: center;
-    border: 0;
     margin-block-end: 19px;
 
     div {
-        // display: none;
         width: 88px;
     }
 
@@ -30,12 +31,10 @@
         font-weight: 600;
         line-height: 16px;
     }
-
 }
 
 ion-icon {
     font-size: 12px;
-    cursor: pointer;
 }
 
 .pro-group {
@@ -51,6 +50,14 @@ ion-label {
     display: flex;
     gap: 4px;
     align-items: center;
+    margin-block-end: 2px;
+}
+
+#pro-total-rewards,
+#pro-inactive-balance {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 ion-text {
@@ -58,31 +65,26 @@ ion-text {
     font-size: 16px;
     font-weight: 600;
     line-height: 24px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    ion-icon {
+        font-size: 16px;
+    }
 }
 
 #pro-start-date {
-
     display: flex;
     align-items: flex-end;
     gap: 4px;
-
-    ion-label {
-        font-size: 11px;
-        font-weight: 400;
-
-    }
 }
 
-#pro-authorities {
-    ion-label {
-        margin-block-end: 8px;
-    }
+small {
+    font-size: 11px;
+    font-weight: 400;
 }
-#pro-inactive-balance {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+
 ion-button {
     --box-shadow: 0 0;
     min-height: 20px;
