@@ -88,7 +88,7 @@
         </ng-template>
       </ion-label>
       <div style="display: flex; align-items: center; gap: 4px;">
-        <ion-text>{{ stakePosition.proInsights?.trueAPY | number: '1.2' }}%</ion-text>
+        <ion-text>{{ stakePosition.proInsights?.trueAPY / 10| percent:'1.2' }}</ion-text>
         <small>Based on {{ stakePosition.proInsights?.valueAccrued?.length }} observed Epochs</small>
       </div>
     </div>

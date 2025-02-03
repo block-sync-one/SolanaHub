@@ -15,16 +15,20 @@
             <div class="details">
               <div class="miss-price">
                 <span class="label">Slippage:</span>
-                <chip>
+                <chip >
                   <div>
-                    <ion-icon name="funnel-outline" /><span>0.01%</span>
+                    <span>Dynamic</span>
+                    <ion-icon name="color-wand-outline" [tooltip]="dynamicSlippageTooltip"></ion-icon>
                   </div>
+                  <ng-template #dynamicSlippageTooltip>
+                    <ion-label>Dynamic slippage: 50-300 BPS for optimal performance</ion-label>
+                  </ng-template>
                 </chip>
               </div>
               <div class="receive">
                 <span class="label">Min Receive</span>
                 <span class="amount">@if(!loading){
-                  {{ swapReceive | number: '1.4' }} SOL 
+                  {{ swapReceive || 0 | number: '1.4' }} SOL 
                 }
                   @else{
                   <ion-skeleton-text animated />

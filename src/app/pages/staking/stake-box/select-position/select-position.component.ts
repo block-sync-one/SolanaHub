@@ -6,12 +6,13 @@ import {
   IonLabel,
   IonImg
 } from '@ionic/angular/standalone';
-import { LiquidStakeToken, StakeService } from '../../stake.service';
+import { LiquidStakeToken, StakeAccount } from '@app/models';
+import { StakeService } from '@app/pages/staking/stake.service';
 import { AsyncPipe } from '@angular/common';
 import { filter, map } from 'rxjs';
 import { PositionComponent } from '../../stake-positions/stake/position.component';
 import { PopoverController } from '@ionic/angular';
-import { PortfolioService } from 'src/app/services';
+import { NativeStakeService, PortfolioService } from 'src/app/services';
 
 @Component({
   selector: 'app-select-position',
@@ -33,14 +34,21 @@ export class SelectPositionComponent  implements OnInit {
   constructor(
     private _stakeService: StakeService, 
     private _popoverController: PopoverController,
-    private _portfolioService: PortfolioService
+    private _portfolioService: PortfolioService,
+    private _nss: NativeStakeService
   ) { }
   public positions$ = this._stakeService.activePositions$.pipe(
-    map(positions => {
+    map((positions: (LiquidStakeToken | StakeAccount)[]) => {
       // add SOL item from the wallet only for stake form
+      console.log(positions);
       
       if (this.formType === 'stake') {
-        positions = positions.filter(p => p.symbol != 'hubSOL');
+        positions = positions.filter(p => 
+          p.symbol !== 'hubSOL' && 
+          (!('validator' in p) || p.validator.vote_identity === this._nss.SolanaHubVoteKey)
+        );
+        console.log(positions);
+        
         const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112");
         if(sol) {
           positions.push({
@@ -60,7 +68,7 @@ export class SelectPositionComponent  implements OnInit {
 
   }
 
-  onSelectAsset(event: any) {
-    this._popoverController.dismiss(event);
+  onSelectAsset(position: StakeAccount | LiquidStakeToken) {
+    this._popoverController.dismiss(position);
   }
 }

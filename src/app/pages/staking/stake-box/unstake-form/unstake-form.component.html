@@ -6,21 +6,16 @@
   <unstake-path [swapReceive]="swapReceive()" [slowUnstakeReceive]="slowUnstakeReceive()" [loading]="loading()"
     [unstakePath]="unstakePath()" [platformFeeInSOL]="platformFeeInSOL()" (onSelectPath)="selectUnstakePath($event)" />
 
-  @if(unstakePath() === 'slow'){
-  <slow-unstake-wizard />
-  }
+
+  <slow-unstake-wizard [stakePosition]="stakePositionToUnstake" [wizard]="unstakeWizard" />
+ 
 
   <div id="stake-button-wrapper">
-    @if(unstakeState() === 'Deactivate account'){
-    <ion-button expand="block" [disabled]="unstakeState() === 'preparing transaction'" color="primary"
-      (click)="completeDeactivateAccount()">
-      <ion-label>{{unstakeState()}}</ion-label>
-    </ion-button>
-    }@else {
-    <ion-button expand="block" [disabled]="unstakeState() === 'preparing transaction'" color="primary"
+ 
+    <ion-button expand="block" [disabled]="unstakeForm.invalid || unstakeState() === 'preparing transaction' || unstakeState() === 'Deactivate account'" color="primary"
       (click)="submitForm()">
       <ion-label>{{unstakeState()}}</ion-label>
     </ion-button>
-    }
+
   </div>
 </form>

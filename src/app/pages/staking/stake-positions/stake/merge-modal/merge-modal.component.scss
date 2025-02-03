@@ -101,6 +101,8 @@ ion-text {
 :host ::ng-deep position {
   border: 1px solid var(--ion-color-border);
   border-radius: 12px;
+  overflow: hidden;
+  margin-block-end: 12px;
   chip{
     display: none;
   }

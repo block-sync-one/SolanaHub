@@ -82,7 +82,6 @@ export class MemberStatsComponent implements OnChanges {
           ...acc,
           [key]: value
         }), {}) as any;
-        console.log(member.hubSOLBreakdown);
 
       if(Object.keys(member.hubSOLBreakdown).length > 0){
      this.pointCategories.push({title: 'Snapshot', key:'hubSOLBreakdown', tooltip: 'Your current hubSOL holding according to last snapshot.'})

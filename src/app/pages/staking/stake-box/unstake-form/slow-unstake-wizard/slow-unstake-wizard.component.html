@@ -1,10 +1,11 @@
-@if(slowUnstakeWizard() === 'signed'){
+
+@if(wizard() === 'prep-account'){
   <div class="slow-unstake-container-wizard">
     <ion-label>Getting stake account...</ion-label>
     <position />
   </div>
   }
-  @if(slowUnstakeWizard() === 'account-ready'){
+  @if(wizard() === 'account-ready'){
   <div class="slow-unstake-container-wizard">
     <div class="wizard-position">
       <ion-label>Funds are ready to unstake!</ion-label>

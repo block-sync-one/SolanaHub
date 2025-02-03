@@ -1,10 +1,10 @@
-import { Component, OnInit, signal, WritableSignal, computed } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, computed, effect } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Token, WalletExtended } from 'src/app/models';
+import { StakeAccount, Token, WalletExtended } from 'src/app/models';
 import { JupToken } from 'src/app/models';
 import { JupRoute } from 'src/app/models';
-import { Observable } from 'rxjs';
+import { Observable, take, takeLast } from 'rxjs';
 import { NativeStakeService, SolanaHelpersService } from 'src/app/services';
 import { StakeService } from '../../stake.service';
 import { UtilService } from 'src/app/services';
@@ -31,7 +31,7 @@ interface UnstakeFormData {
   templateUrl: './unstake-form.component.html',
   styleUrls: ['./unstake-form.component.scss'],
   standalone: true,
-  imports: [IonLabel, 
+  imports: [IonLabel,
     InputComponent,
     ReactiveFormsModule,
     UnstakePathComponent,
@@ -75,8 +75,10 @@ export class UnstakeFormComponent implements OnInit {
   public slowUnstakeReceive = signal(0);
   public lstExchangeRate = signal(null);
   public bestRoute: WritableSignal<JupRoute> = signal(null);
-  public slowUnstakeWizard = computed(() => this._txi.txState());
+  public unstakeWizard: WritableSignal<string> = signal(null)// computed(() => this._txi.txState() === 'signed' ? 'prep-account' : 'account-ready');
 
+  public stakePositionToUnstake: StakeAccount = null;
+  public counter = 0;
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
@@ -86,9 +88,16 @@ export class UnstakeFormComponent implements OnInit {
     private _stakeService: StakeService,
     private _txi: TxInterceptorService,
     private _freemiumService: FreemiumService,
-    private _nss: NativeStakeService
+    private _nss: NativeStakeService,
   ) {
-    addIcons({arrowForwardOutline});
+    addIcons({ arrowForwardOutline });
+    effect(() => {
+
+      if (this._txi.txState() === 'signed' && this._lss.unstakeAccount() && this.unstakeWizard() !== 'account-ready') {
+        this.unstakeWizard.set('prep-account');
+      }
+
+    }, { allowSignalWrites: true });
   }
 
   ngOnInit(): void {
@@ -120,9 +129,9 @@ export class UnstakeFormComponent implements OnInit {
     // Subscribe to form changes for route calculations
     this.unstakeForm.valueChanges.subscribe(async (values: UnstakeFormData) => {
       if (values.inputAmount) {
-          this.calcSwapRoute(),
+        this.calcSwapRoute(),
           this.calcUnstakeRoute()
-      } 
+      }
       if (!values.inputAmount) {
         this.bestRoute.set(null);
       }
@@ -135,25 +144,24 @@ export class UnstakeFormComponent implements OnInit {
     try {
       this.loading.set(true);
       const { inputToken, outputToken, inputAmount, slippage } = this.unstakeForm.value;
-      
+
       const route = await this._jupStore.computeBestRoute(inputAmount, inputToken, outputToken, slippage);
-      
+
       const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals).toString();
       const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals).toString();
-      
+
       route.outAmount = outAmount;
       route.otherAmountThreshold = minOutAmount;
-      console.log(route)
+
       this.swapReceive.set(Number(minOutAmount));
       this.bestRoute.set(route)
-      console.log(this.loading());
-      
+
     } finally {
       this.loading.set(false);
     }
   }
 
-  private async _setPool(inputToken: Token){
+  private async _setPool(inputToken: Token) {
     const sp = await this._lss.getStakePoolList();
     const tokenPool = sp.find(s => s.tokenMint === inputToken.address);
     this.unstakeForm.patchValue({ tokenPool }, { emitEvent: false });
@@ -166,68 +174,106 @@ export class UnstakeFormComponent implements OnInit {
   }
 
   public selectUnstakePath(path: 'instant' | 'slow'): void {
+    //reset unstake account
+    this._lss.unstakeAccount.set(null)
     this.unstakePath.set(path);
     this.unstakeState.set(path === 'instant' ? 'swap' : 'unstake');
   }
 
-  submitForm(){
+  async submitForm() {
     this.unstakeState.set('preparing transaction');
     if (this.unstakePath() === 'instant') {
-      this.submitSwap()
+      await this.submitSwap()
+      setTimeout(() => {
+        this.unstakeState.set('swap');
+      }, 30000);
     } else {
-      this.submitUnstake()
+      await this.submitUnstake()
+      setTimeout(() => {
+        this.unstakeState.set('unstake');
+      }, 30000);
     }
+
   }
   private async submitUnstake(): Promise<void> {
     try {
       const { inputAmount, tokenPool } = this.unstakeForm.value;
-      console.log(tokenPool, inputAmount)
-      const signature = await this._lss.unstake(tokenPool, inputAmount);
-      if(signature){
-        // set deactive account for slow unstake
-        this.unstakeState.set('Deactivate account');
-        this.completeDeactivateAccount();
+
+      // Attempt to unstake tokens
+      const unstakeSuccess = await this._lss.unstake(tokenPool, inputAmount);
+      
+      if (unstakeSuccess) {
+        const walletPublicKey = this._shs.getCurrentWallet().publicKey.toString();
+        
+        // Update stake positions and handle the unstaked account
+        await this._stakeService.updateStakePositions(walletPublicKey, 'native');
+        
+        // Find and process the newly created unstake position
+        this._stakeService.nativePositions$.pipe(take(1)).subscribe(positions => {
+          const unstakeAccountAddress = this._lss.unstakeAccount().toBase58();
+          this.stakePositionToUnstake = positions.find(
+            position => position.address === unstakeAccountAddress
+          );
+          
+          if (this.stakePositionToUnstake) {
+            this.unstakeWizard.set('account-ready');
+            this.completeDeactivateAccount();
+          }
+        });
       }
     } catch (error) {
       console.error('Unstake failed:', error);
       this.unstakeState.set('unstake');
     }
   }
-  
+
   private async submitSwap(): Promise<void> {
     try {
-
-
       const route = { ...this.bestRoute() };
-      if (!route) {
-        throw new Error('No valid swap route found');
-      }
+      if (!route) throw new Error('No valid swap route found');
 
-      // Calculate amounts using single-line operations
-      const { decimals } = this.unstakeForm.value.outputToken;
-      const multiplier = Math.pow(10, decimals);
+      // Convert amounts to proper decimals for the blockchain
+      const decimals = this.unstakeForm.value.outputToken.decimals;
+      const multiplier = 10 ** decimals;
       
-      route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
-      route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
+      route.outAmount = Math.floor(Number(route.outAmount) * multiplier).toString();
+      route.otherAmountThreshold = Math.floor(Number(route.otherAmountThreshold) * multiplier).toString();
 
+      // Execute swap transaction
       const tx = await this._jupStore.swapTx(route);
-      await this._txi.sendMultipleTxn([tx]);
+      const success = await this._txi.sendMultipleTxn([tx]);
       
-      this.unstakeState.set('Unstake');
+      if (success) {
+        this._lss._triggerUpdate.next({ type: 'full' });
+      }
     } catch (error) {
-      this.unstakeState.set('Unstake');
       console.error('Swap failed:', error);
-      throw error; // Re-throw to be handled by caller if needed
+      throw error;
     } finally {
-      // Reset state after a delay
+      this.unstakeState.set('Unstake');
       setTimeout(() => this.unstakeState.set('Unstake'), 2000);
     }
   }
+
   public async completeDeactivateAccount(): Promise<void> {
-    const walletOwner = this._shs.getCurrentWallet()
-    const res = await this._nss.deactivateStakeAccount(this._lss.unstakeAccount().toBase58(), walletOwner as WalletExtended)
-    if(res){
-      this.unstakeState.set('Unstake');
+    try {
+      const { publicKey } = this._shs.getCurrentWallet();
+      this.unstakeState.set('Deactivate account');
+      const success = await this._nss.deactivateStakeAccount(
+        this.stakePositionToUnstake.address, 
+        publicKey
+      );
+      
+      if (success) {
+        this.unstakeState.set('Unstake');
+        this.unstakeWizard.set(null);
+        this._lss.unstakeAccount.set(null);
+      }
+    } catch (error) {
+      console.error('Failed to deactivate stake account:', error);
+      // Reset states on failure
+      this.unstakeState.set('unstake');
     }
   }
+
 }

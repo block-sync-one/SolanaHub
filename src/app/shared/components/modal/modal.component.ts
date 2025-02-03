@@ -74,19 +74,10 @@ export class ModalComponent implements AfterViewInit {
 
     switch (this.componentName) {
 
-      case 'delegate-lst-modal':
-        const pool = this.emittedValue().pool;
-        this._lss.stakePoolStakeAccount(this.data.stake, pool)
-        break;
-      case 'unstake-lst-modal':
-        this._lss.unstake(this.emittedValue().pool, this.emittedValue().amount)
-        break;
       case 'split-modal':
-
         this._nss.splitStakeAccounts(wallet.publicKey, new PublicKey(this.data.stake.address), this.emittedValue().newStakeAccount, this.emittedValue().amount)
         break;
       case 'merge-modal':
-
         const accountsToMerge = this.emittedValue().accountsToMerge.map((acc: Stake) => new PublicKey(acc.address))
         this._nss.mergeStakeAccounts(wallet.publicKey, new PublicKey(this.data.stake.address), accountsToMerge);
         break;
@@ -97,12 +88,6 @@ export class ModalComponent implements AfterViewInit {
 
         break;
 
-      // case 'burn-nft-modal':
-      //   const nftsToBurn: NFT[] = this.emittedValue().nftsToBurn;
-      //   let burnIns = await this._nfts.burnNft(nftsToBurn, wallet.publicKey.toBase58());
-      //   const record = { message: 'nfts', data: { action: 'burn', numberOfNfts: nftsToBurn.length } }
-      //   this._txi.sendMultipleTxn(burnIns, null, record)
-      //   break;
       case 'send-nft-modal':
         const nftsToTransfer: NFT[] = this.emittedValue().nftsToTransfer;
         const from_Address = wallet.publicKey.toBase58()

@@ -634,7 +634,6 @@ export class PortfolioService {
   }
 
   public async _portfolioStaking(walletAddress: string, staking?: any) {
-    // const stakeAccounts = (await this._nss.getOwnerNativeStake(walletAddress)).sort((a, b) => a.balance > b.balance ? -1 : 1);
 
     const validators: Validator[] = await this._shs.getValidatorsList()
     const stateEnum = {
@@ -657,10 +656,7 @@ export class PortfolioService {
 
     this.staking.set(stakeAccountsSonar)
 
-    // const getStakeAccountsWithInfaltionRewards = await this._nss.getStakeRewardsInflation(stakeAccounts)
-    // this.staking.set(getStakeAccountsWithInfaltionRewards)
-    // this.updateWalletDataByKey(walletAddress, PortfolioDataKeys.STAKING, this.staking());
-    // console.log('getStakeAccountsWithInfaltionRewards', this.staking());
+
   }
 
   public filteredTxHistory = (filterByAddress?: string, filterByAction?: string) => {

@@ -6,69 +6,11 @@ import { Validator } from 'src/app/models/stakewiz.model';
 import { NativeStakeService, PortfolioService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
 import { HttpFetchService } from 'src/app/services/http-fetch.service';
 import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import { ProInsights, LiquidStakeToken, StakeAccount, StakePositions } from '@app/models';
 
 
-export interface LiquidStakeToken extends StakePool{
-  chainId: number
-  address: string
-  symbol: string
-  mint: string
-  name: string
-  decimals: number
-  logoURI: string
-  balance: any
-  price: number
-  value: number
-  frozen: boolean
-  source: string
-  type: 'spl' | 'SanctumSplMulti' | 'SanctumSpl'
-  apy: number
-  exchangeRate: number
-  poolPublicKey: string
-  tokenMint: string
-  state: string
-  proInsights?: ProInsights
-}
 
 
-export interface StakeAccount {
-  authorities: {
-    staker: string,
-    withdrawer: string,
-  },
-  amount: number
-  role: Array<string>
-  state: string
-  source: string
-  voter: string
-  deactivationEpoch?: number
-  active_stake: number
-  inactive_stake: number
-  delegated_stake_amount: number
-  rentExemptReserve: number
-  balance: number
-  address: string
-  activation_epoch: number
-  stake_type: number
-  symbol: string
-  validator?: Validator
-  exchangeRate: number
-}
-
-export interface StakePositions {
-  native: StakeAccount[];
-  liquid: LiquidStakeToken[];
-}
-export interface ProInsights {
-  valueAccrued?: StakeRewards[]
-  source: string
-}
-interface StakeRewards {
-  epoch: number
-  effective_time: string
-  reward_amount: number
-  projectedValue: number
-}
 @Injectable({
   providedIn: 'root'
 })
@@ -83,6 +25,8 @@ export class StakeService {
     loading: false,
     error: null
   });
+
+
 
   // Selectors
   private readonly state$ = this._state$.asObservable();
@@ -102,10 +46,11 @@ export class StakeService {
             const validator = validators.find(v => v.vote_identity === position.voter);
             return { ...position, validator, shortAddress: addrShort };
           });
-
+          
           return {
-            native: nativePositionExtended,
-            liquid: positions.liquid
+            ...positions,
+            ...(nativePositionExtended?.length > 0 && { native: nativePositionExtended }),
+            ...(positions?.liquid?.length > 0 && { liquid: positions.liquid })
           };
         })
       );
@@ -134,10 +79,20 @@ export class StakeService {
     private _lss: LiquidStakeService,
     private _shs: SolanaHelpersService,
     private _httpFetchService: HttpFetchService,
-    private _util: UtilService
+    private _util: UtilService,
+    private _nss: NativeStakeService
   ) {
    
-
+    this._nss._triggerUpdate.subscribe(() => {
+      this.updateStakePositions(this._shs.getCurrentWallet().publicKey.toString(), 'native')
+    })
+    this._lss._triggerUpdate.subscribe(({type}) => {
+      if(type === 'full'){
+        this.updateStakePositions(this._shs.getCurrentWallet().publicKey.toString())
+      }else{
+        this.updateStakePositions(this._shs.getCurrentWallet().publicKey.toString(), 'liquid')
+      }
+    })
   }
 
   // Helper method to update state
@@ -148,25 +103,33 @@ export class StakeService {
     });
   }
 
-  public async updateStakePositions(walletAddress: string): Promise<void> {
+  public async updateStakePositions(walletAddress: string, source?: string): Promise<StakePositions | null> {
     try {
       this.setState({ loading: true, error: null });
       
       const response = await this._httpFetchService.get<StakePositions>(
-        `/api/portfolio/get-stake?address=${walletAddress}`
+        `/api/portfolio/get-stake?address=${walletAddress}&source=${source}`
       );
       
+      // Merge with existing positions when updating specific source
+      const currentPositions = this._state$.value.positions;
+      const mergedPositions = source ? {
+        native: source === 'native' ? response.native : currentPositions?.native ?? [],
+        liquid: source === 'liquid' ? response.liquid : currentPositions?.liquid ?? []
+      } : response;
+
       this.setState({ 
-        positions: response,
+        positions: mergedPositions,
         loading: false 
       });
-
+      return mergedPositions
     } catch (error) {
       console.error('Error updating stake positions', error);
       this.setState({ 
         error: 'Failed to update stake positions',
         loading: false 
       });
+      return null
     }
   }
 

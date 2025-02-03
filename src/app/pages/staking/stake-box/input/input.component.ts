@@ -42,15 +42,18 @@ export class InputComponent implements OnInit, OnChanges {
   private _popoverCtrl = inject(PopoverController);
   public visibleValue = signal(null)
   ngOnInit(): void {
-    // this.getTokenPrice();
+    this.getTokenPrice();
   }
   ngOnChanges(changes: SimpleChanges) {
 
-    this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
-    if (this.assetControl.value.type == 'liquid') {
+
+    if (this.assetControl.value.source == 'liquid') {
       this.getTokenPrice();
     }
+    this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
 
+    console.log(this.amountControl,  this.visibleValue(), this.outValue);
+    
 
 
   }
@@ -69,16 +72,19 @@ export class InputComponent implements OnInit, OnChanges {
     const { address } = this.assetControl.value
 
     this._jupStore.fetchPriceFeed(address, 1).then(res => {
-      const price = res.data[address]['price'];
+      const price = res.data[address]['price'] || 0;
       if (this.tokenPrice() != price) {
         this.tokenPrice.set(Number(price));
+
       }
     });
   }
 
+  capturedEvent: PointerEvent | null = null;
 
   async openStakeAbleAssetsModal(ev) {
-    if (this.readonly && this.assetControl.value.type != 'native') {
+
+    if (this.readonly && this.assetControl.value.source != 'native') {
       return
     }
     const popover = await this._popoverCtrl.create({
@@ -99,21 +105,21 @@ export class InputComponent implements OnInit, OnChanges {
     popover.present();
 
     const { data, role } = await popover.onWillDismiss();
-    console.log(data, this.amountControl?.value, this.outValue)
+    console.log('Data received from popover:', data);
     if (data) {
       // aggregate position to follow up stakeable assets interface 
-      console.log(data);
-      setTimeout(() => {
 
-        this.assetControl.setValue(data)
-        if (data.type == 'native') {
+    
+      this.assetControl.setValue(data)
+        if (data.source == 'native') {
+          this.amountControl.setValue(data.balance)
           this.visibleValue.set(data.balance)
           this.readonly = true
         } else {
-          this.visibleValue.set(0)
+          // reset out value
           this.readonly = false
         }
-      });
+
     }
 
 

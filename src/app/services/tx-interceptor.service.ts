@@ -73,7 +73,6 @@ export class TxInterceptorService {
         }
       }
       const rawTransaction = signedTx.serialize({ requireAllSignatures: false });
-      console.log('rawTransaction', rawTransaction, signedTx);
 
       const signature = await this._shs.connection.sendRawTransaction(rawTransaction, { skipPreflight: true });
       this.txState.set('sent');
