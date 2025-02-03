@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, computed, effect } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, computed, effect, signal } from '@angular/core';
 import { PortfolioService, UtilService } from 'src/app/services';
 import {  IonButton, IonImg,IonSkeletonText, IonIcon } from '@ionic/angular/standalone';
 import { DecimalPipe } from '@angular/common';
@@ -16,7 +16,7 @@ import { addIcons } from 'ionicons';
 export class InputLabelComponent  implements OnInit, OnChanges  {
   public walletTokens = this._portfolioService.tokens
   @Input() label: string;
-  @Input() showBtns: boolean = true;
+  @Input() showBtns: boolean = true ;
   @Input() asset: Token;
   @Output() onSetSize = new EventEmitter()
   constructor(private _portfolioService: PortfolioService, public utils: UtilService) {
@@ -24,14 +24,18 @@ export class InputLabelComponent  implements OnInit, OnChanges  {
     effect(()=>{
 
       if(this.walletTokens()){
-        this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
-        // console.log('this.asset', this.asset, this.walletTokens(),this.asset.balance)
+        if(this.asset.symbol != 'staked-SOL'){
+          this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
+        }
       }
+      
+      
+      
     })
-   }
-   ngOnChanges(changes: SimpleChanges): void {
-   
-    if(this.asset && this.walletTokens()){
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+ 
+    if(this.asset && this.walletTokens() && this.asset.symbol != 'staked-SOL'){
 
       this.asset.balance = this.walletTokens().find(t => t.address === this.asset.address)?.balance
     }

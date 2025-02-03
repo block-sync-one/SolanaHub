@@ -52,6 +52,7 @@ export class StakePositionsComponent implements OnInit {
 
   public positions$ = this._stakeService.stakePositions$.pipe(
     map(positions => {
+
       if (!positions) return null;
 
       const groups = this.STAKE_STATES.map(state => {
@@ -74,7 +75,8 @@ export class StakePositionsComponent implements OnInit {
       if (activeGroup && positions.liquid) {
         activeGroup.positions.push(...positions.liquid);
       }
-
+      console.log(groups);
+      
       return groups;
     }),
     shareReplay(1)
@@ -108,7 +110,11 @@ export class StakePositionsComponent implements OnInit {
   }
 
   toggleAccordion(): void {
-    this.accordionGroup.value = this.accordionGroup.value === 'first' ? undefined : 'first';
+    try{
+      this.accordionGroup.value = this.accordionGroup.value === 'first' ? undefined : 'first';
+    }catch(e){
+      console.log(e);
+    }
   }
 
   private calculateAverageAPY(state: StakeState, nativePositions: any[], liquidPositions?: any[]): number | null {

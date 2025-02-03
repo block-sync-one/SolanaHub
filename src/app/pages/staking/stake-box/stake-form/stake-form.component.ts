@@ -54,11 +54,10 @@ export class StakeFormComponent  implements OnInit {
     "name": "SOL",
     "symbol": "SOL",
     "logoURI": "assets/images/sol.svg",
-     balance: null,
     type: 'liquid'
   }
   public loading = signal(false);
-
+  public formState = signal('Swap')
   public jupTokens = signal(null as JupToken[])
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
@@ -95,10 +94,15 @@ export class StakeFormComponent  implements OnInit {
     })
 
     this.tokenSwapForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-
+      console.log(values.inputToken.source);
       this.calcBestRoute()
       if (!values.inputAmount) {
         this.bestRoute.set(null)
+      }
+      if(values.inputToken.source == 'native'){
+        this.formState.set('Stake')
+      }else{
+        this.formState.set('Swap')
       }
     })
 
@@ -134,19 +138,38 @@ export class StakeFormComponent  implements OnInit {
   }
 
   public getOutValue() {
-    const { inputToken } = this.tokenSwapForm.value
-
+    const { inputToken, inputAmount } = this.tokenSwapForm.value
+    
     // setTimeout(() => {
-    return inputToken.type === 'native' 
+    const outValue = inputToken.source === 'native' 
     ? inputToken.balance / this.hubSOLExchangeRate() 
     : this.bestRoute()?.outAmount
+
+    // console.log(outValue);
+    return outValue
     // });
   }
-  public swapState = signal('Stake')
+
+
+  public async submitForm(){
+    const { inputToken } = this.tokenSwapForm.value
+    this.formState.set('preparing transaction');
+    if(inputToken.source == 'native'){
+     await this.submitDepositAccount()
+    }else{
+      await this.submitSwap()
+    }
+    this.formState.set('Stake')
+  }
+  public async submitDepositAccount(){
+    const {publicKey} = this._shs.getCurrentWallet()
+
+    await this._lss.depositStakeAccount(publicKey, this.tokenSwapForm.value.inputToken.address)
+  }
   public async submitSwap(): Promise<void> {
     try {
       this.loading.set(true);
-      this.swapState.set('preparing transaction');
+  
 
       const route = { ...this.bestRoute() };
       if (!route) {
@@ -163,15 +186,10 @@ export class StakeFormComponent  implements OnInit {
       const tx = await this._jupStore.swapTx(route);
       await this._txi.sendMultipleTxn([tx]);
       
-      this.swapState.set('Stake');
     } catch (error) {
-      this.swapState.set('Stake');
-      console.error('Swap failed:', error);
-      throw error; // Re-throw to be handled by caller if needed
-    } finally {
-      this.loading.set(false);
-      // Reset state after a delay
-      setTimeout(() => this.swapState.set('Stake'), 2000);
+     console.error(error)
+    } finally{
+      this.loading.set(false)
     }
   }
 }

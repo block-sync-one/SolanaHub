@@ -20,7 +20,7 @@ export class StakeOverflowService {
   private _stakeAccounts = signal<Stake[]>(null)
   private getStakeAccounts = async () => {
     const {publicKey} = this._helpersService.shs.getCurrentWallet()
-    const accounts = await this._nss.getOwnerNativeStake(publicKey.toString());
+    const accounts = [] as any// await this._nss.getOwnerNativeStake(publicKey.toString());
     this._stakeAccounts.set(accounts)
   }
   public findStakeOverflow = computed(() => {

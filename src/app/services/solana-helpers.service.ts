@@ -11,7 +11,7 @@ import {
 } from 'node_modules/@solana/spl-token';
 
 import { BehaviorSubject, Observable, firstValueFrom, map, shareReplay, switchMap } from 'rxjs';
-import { Validator, WalletExtended, StakeWizEpochInfo, StakeAccountShyft, Token } from '../models';
+import { Validator, WalletExtended, StakeWizEpochInfo, Token } from '../models';
 import { ApiService } from './api.service';
 import { UtilService } from './util.service';
 import { WatchModeService } from './watch-mode.service';
@@ -23,7 +23,7 @@ import { VirtualStorageService } from './virtual-storage.service';
 export class SolanaHelpersService {
   public wallet = signal<WalletExtended | null>(null);
   readonly restAPI = this._utils.serverlessAPI
-  readonly SolanaHubVoteKey: string = '7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh';
+
   public connection: Connection;
   // create a single source of trute for wallet adapter
   private _walletExtended$: BehaviorSubject<Partial<WalletExtended> | WalletExtended> = new BehaviorSubject(null);
@@ -121,15 +121,6 @@ export class SolanaHelpersService {
   }
 
 
-  public async getStakeAccountsByOwner2(walletAddress: string): Promise<StakeAccountShyft[]> {
-    try {
-      return await (await fetch(`${this.restAPI}/api/portfolio/nativeStakeAccounts?address=${walletAddress}`)).json()
-    } catch (error) {
-      console.error(error);
-
-      return []
-    }
-  }
 
 
 

@@ -19,7 +19,7 @@ import { Stake } from 'src/app/models';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { TooltipModule } from 'src/app/shared/layouts/tooltip/tooltip.module';
 import { TooltipPosition } from 'src/app/shared/layouts/tooltip/tooltip.enums';
-import { LiquidStakeToken, StakeAccount } from '../../stake.service';
+import { LiquidStakeToken, StakeAccount } from '@app/models';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ProInsightsComponent } from '../pro-insights/pro-insights.component';
 import { IsProDirective } from "@app/shared/directives/is-pro.directive";

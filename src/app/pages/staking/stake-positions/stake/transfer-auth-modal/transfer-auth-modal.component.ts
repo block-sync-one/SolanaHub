@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild, inject, signal } from '@angular/core';
-import { Stake } from 'src/app/models';
+import { StakeAccount } from 'src/app/models';
 
 import {
   IonLabel,
@@ -13,8 +13,7 @@ import { UtilService } from 'src/app/services';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import { AddressInputComponent } from 'src/app/shared/components/address-input/address-input.component';
 import { PositionComponent } from '../position.component';
-import { StakeAccount } from '../../../stake.service';
-import { LiquidStakeToken } from '../../../stake.service';
+
 @Component({
   selector: 'transfer-auth-modal',
   templateUrl: './transfer-auth-modal.component.html',
@@ -33,7 +32,7 @@ import { LiquidStakeToken } from '../../../stake.service';
   ]
 })
 export class TransferAuthModalComponent implements OnInit {
-  @Input() stake:  StakeAccount | any;
+  @Input() stake:  StakeAccount;
   @Output() onAuthSet = new EventEmitter();
   public targetAddress: string = '';
   public authoritiesChecked = signal({ withdraw: false, stake: false })

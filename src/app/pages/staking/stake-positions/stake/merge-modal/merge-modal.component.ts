@@ -21,8 +21,7 @@ import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
 import { PremiumActions } from "@app/enums";
 import { PositionComponent } from '../position.component';
-import { StakeAccount } from '@app/pages/staking/stake.service';
-import { LiquidStakeToken } from '@app/pages/staking/stake.service';
+import { StakeAccount, LiquidStakeToken } from '@app/models';
 
 @Component({
   selector: 'merge-modal',

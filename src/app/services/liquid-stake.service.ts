@@ -13,7 +13,7 @@ import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctu
 import { vSOLdirectStake } from './vSOL/set-validator-directed-stake';
 import { ToasterService } from './toaster.service';
 import { PremiumActions } from "@app/enums";
-
+import { Subject } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -23,14 +23,20 @@ export class LiquidStakeService {
   public stakePools: StakePool[] = []
   public hubSOLpool: WritableSignal<StakePool> = signal(null);
   public marinadeSDK: Marinade;
+  public _triggerUpdate = new Subject<{ type: 'full' | 'partial' }>()
+  private readonly _hubSOLConfig = {
+    "poolName": "SolanaHub staked SOL",
+    "tokenSymbol": "hubSOL",
+    "tokenImageURL": "https://arweave.net/RI0OfNg4Ldn5RRdOp9lE60NqUmweGtJxF5N8JjU_Y0k",
+    "poolPublicKey": "ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB",
+    "tokenMint": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
+    "type": "SanctumSpl"
+  }
   constructor(
-    private _toasterService: ToasterService,
-    private _nss: NativeStakeService,
     private _txi: TxInterceptorService,
     private _shs: SolanaHelpersService,
     private _utils: UtilService,
-    private _apiService: ApiService,
-  ) { 
+  ) {
     this.getStakePoolList()
   }
   private _initMarinade(publicKey: PublicKey) {
@@ -45,7 +51,7 @@ export class LiquidStakeService {
 
   public async getStakePoolList(): Promise<StakePool[]> {
     let stakePools: StakePool[] = [];
-    if(this.stakePools.length > 0){
+    if (this.stakePools.length > 0) {
       return this.stakePools
     }
     try {
@@ -59,255 +65,71 @@ export class LiquidStakeService {
     }
     return stakePools
   }
-  public updateSolBlazePool(): Promise<void> {
-    return new Promise(async (resolve, reject) => {
-      try {
-        let result = await (await fetch(
-          "https://stake.solblaze.org/api/v1/update_pool?network=mainnet-beta"
-        )).json();
-        if (result.success) {
-          resolve();
-        } else {
-          reject();
-        }
-      } catch (err) {
-        reject();
-      }
-    });
-  }
 
-  public async stake(pool: StakePool, lamports: number, walletOwnerPK: PublicKey, validatorVoteAccount?: string) {
-
-    const record = { message: 'liquid stake', data: { pool: pool.poolName, amount: Number(lamports.toString()) / LAMPORTS_PER_SOL, validatorVoteAccount } }
-
-    const lamportsBN = new BN(lamports);
-    const poolName = pool.poolName.toLowerCase()
-    if (poolName === 'marinade') {
-      if (!this.marinadeSDK) {
-        this._initMarinade(walletOwnerPK)
-      }
-      return await this._marinadeStakeSOL(lamportsBN, walletOwnerPK, validatorVoteAccount, record)
-    } else {
-      return await this._stakePoolStakeSOL(new PublicKey(pool.poolPublicKey), walletOwnerPK, lamportsBN, validatorVoteAccount, poolName, record)
-    }
-  }
-  private async _marinadeStakeSOL(lamports: BN, walletOwnerPK: PublicKey, validatorVoteAccount?: string, record?) {
-    try {
-
-      const { transaction } = await this.marinadeSDK.deposit(lamports);
-      let ixs: any = [transaction]
-      const directToValidatorVoteAddress = validatorVoteAccount ? new PublicKey(validatorVoteAccount) : null;
-      if (directToValidatorVoteAddress) {
-        const directStakeIx = await this.marinadeSDK.createDirectedStakeVoteIx(directToValidatorVoteAddress)
-        ixs.push(directStakeIx)
-      }
-
-
-
-      return await this._txi.sendTx([...ixs], walletOwnerPK, null, record)
-    } catch (error) {
-      console.log(error);
-    }
-    return null
-  }
-  private async _stakePoolStakeSOL(
-    poolPublicKey: PublicKey,
-    walletOwnerPK: PublicKey,
-    sol: BN,
-    validatorVoteAddress: string,
-    poolName: string,
-    record
-  ) {
-    let ix = await depositSol(
-      this._shs.connection,
-      poolPublicKey,
-      walletOwnerPK,
-      Number(sol),
-      undefined,
-      // referral
-      // new PublicKey(environment.platformATAbSOLFeeCollector)
-    );
-    let ixs: any = [ix]
-
-    let txId;
-    if (validatorVoteAddress) {
-      if (poolName === 'solblaze') {
-        const ix2 = this.stakeCLS(validatorVoteAddress, walletOwnerPK);
-        ixs.push(ix2)
-        txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
-        await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAddress}&txid=${txId}`);
-      }
-
-      if (poolName === 'the vault') {
-        const wallet = this._shs.getCurrentWallet()
-        const ix2 = await this.setvSOLDirectStake(wallet, validatorVoteAddress)
-
-        ixs.push(...ix2)
-        console.log(ixs);
-        txId = await this._txi.sendTx(ixs, walletOwnerPK, ix.signers, record);
-      }
-    }
-    return txId
-
-
-  }
-
-  public async depositStakeHubSolPool(walletOwnerPK: PublicKey, stakeAccountPK: PublicKey) {
-    const validatorVoteAccount = new PublicKey('7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh');
-    let depositTx = await depositStakeIntoSanctum(
-      this._shs.connection,
-      new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'),
-      walletOwnerPK,
-      validatorVoteAccount,
-      stakeAccountPK
-    );
+// stake SOL into hubSOL LST
+  public async stakeSOL(lamports: number, walletOwnerPK: PublicKey) {
     const record = {
-      message: 'liquid stake', data: { pool: 'SolanaHub staked SOL' }
-    }
-    await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
-  }
-  public async depositSolHubSolPool(walletOwnerPK: PublicKey, lamports: number) {
-
-    const record = {
-      message: 'liquid stake', data: {
+      message: 'liquid stake',
+      data: {
         pool: 'SolanaHub staked SOL',
         amount: lamports / LAMPORTS_PER_SOL
       }
     }
-    let depositTx = await depositSolIntoSanctum(
-      this._shs.connection,
-      new PublicKey('ECRqn7gaNASuvTyC5xfCUjehWZCSowMXstZiM5DNweyB'), // pool address
-      walletOwnerPK,
-      lamports,
-      undefined,
-      undefined,
-      undefined
-    );
-    return await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
-  }
-
-  public async getDirectStake(walletAddress): Promise<DirectStake> {
-    let directStake: DirectStake = { mSOL: null, bSOL: null };
     try {
-      const validators = await this._shs.getValidatorsList();
-
-      const result: DirectStake = await (await fetch(`${this.restAPI}/api/get-direct-stake?walletAddress=${walletAddress}`)).json();
-
-      result.vSOL ? directStake.vSOL.validator = validators.find((v: Validator) => v.vote_identity === result.vSOL.validatorVoteAccount) : null
-      result.bSOL ? directStake.bSOL.map(s => s.validator = validators.find((v: Validator, i) => v.vote_identity === result.bSOL[i].validatorVoteAccount)) : null;
-      directStake = result;
-
-      //  directStake.mSOL.validator = mSOLvalidator
-      //  directStake.bSOL.map(s=> s.validator = bSOLvalidator)// .validator = mSOLvalidator
-    }
-    catch (error) {
-      console.error(error);
-    }
-    return directStake
-  }
-  async setvSOLDirectStake(wallet, validatorVoteAddress: string): Promise<TransactionInstruction[]> {
-
-    // this._toasterService.msg.next({
-    //   message: 'Validator direct stake set',
-    //   segmentClass: 'toastInfo'
-    // })
-    console.log(wallet, validatorVoteAddress);
-
-    return await vSOLdirectStake(wallet, this._shs.connection, validatorVoteAddress)
-  }
-  async stakePoolStakeAccount(stakeAccount: Stake, pool: StakePool) {
-    console.log(stakeAccount, pool);
-
-    const { publicKey } = this._shs.getCurrentWallet()
-    // let { stakeAccount, validatorVoteAccount } = this.stakeForm.value;
-    const record = {
-      message: 'liquid stake', data: {
-        pool: pool.poolName,
-        amount: stakeAccount.balance,
-        validatorVoteAccount: stakeAccount.validator.vote_identity
+      let depositTx = await depositSolIntoSanctum(
+        this._shs.connection,
+        new PublicKey(this._hubSOLConfig.poolPublicKey), // pool address
+        walletOwnerPK,
+        lamports,
+        undefined,
+        undefined,
+        undefined
+      );
+      const res = await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
+      if (res) {
+        this._triggerUpdate.next({ type: 'partial' })
       }
-    }
-    const validatorVoteAccount = new PublicKey(stakeAccount.validator.vote_identity);
-    const stakeAccountPK = new PublicKey(stakeAccount.address);
-
-    try {
-      if (pool.poolName.toLowerCase() == 'marinade') {
-        if (!this.marinadeSDK) {
-          this._initMarinade(publicKey)
-        }
-        const depositAccount: MarinadeResult.DepositStakeAccount = await this.marinadeSDK.depositStakeAccount(stakeAccountPK);
-        const txIns: Transaction = depositAccount.transaction
-        await this._txi.sendTx([txIns], publicKey, null, record);
-      } else if (pool.poolName.toLowerCase() == 'solanahub staked sol') {
-        console.log('depositStakeHubSolPool');
-
-        this.depositStakeHubSolPool(publicKey, stakeAccountPK)
-      }
-
-      else {
-
-        let ix = await depositStake(
-          this._shs.connection,
-          new PublicKey(pool.poolPublicKey),
-          publicKey,
-          validatorVoteAccount,
-          stakeAccountPK
-        );
-        let ixs: any = [ix]
-
-        const ix2 = this.stakeCLS(validatorVoteAccount.toBase58(), publicKey);
-        ixs.push(ix2)
-
-
-        const txId = await this._txi.sendTx(ixs, publicKey, ix.signers, record);
-        if (validatorVoteAccount) {
-          await fetch(`https://stake.solblaze.org/api/v1/cls_stake?validator=${validatorVoteAccount}&txid=${txId}`);
-        }
-        return txId
-
-
-      }
+      return res
     } catch (error) {
       console.error(error);
-
-      // const toasterMessage: toastData = {
-      //   message: error.toString().substring(6),
-      //   segmentClass: "merinadeErr"
-      // }
-      // this._toasterService.msg.next(toasterMessage)
       return null
     }
-    return null
-  }
-
-  public stakeCLS = (validatorVoteAccount: string, publicKey) => {
-    let memo = JSON.stringify({
-      type: "cls/validator_stake/lamports",
-      value: {
-        validator: new PublicKey(validatorVoteAccount)
-      }
-    });
-    let memoInstruction = new TransactionInstruction({
-      keys: [{
-        pubkey: publicKey,
-        isSigner: true,
-        isWritable: true
-      }],
-      programId: new PublicKey("MemoSq4gqABAXKb96qnH8TysNcWxMyWCqXgDLGmfcHr"),
-      data: (new TextEncoder()).encode(memo) as Buffer
-    })
-    return memoInstruction
 
   }
 
+
+  // deposit stake account into hubSOL LST
+  public async depositStakeAccount(walletOwnerPK: PublicKey, stakeAccount: string) {
+    const validatorVoteAccount = new PublicKey('7K8DVxtNJGnMtUY1CQJT5jcs8sFGSZTDiG7kowvFpECh');
+    console.log(this._hubSOLConfig.poolPublicKey, walletOwnerPK, stakeAccount);
+    
+    let depositTx = await depositStakeIntoSanctum(
+      this._shs.connection,
+      new PublicKey(this._hubSOLConfig.poolPublicKey),
+      walletOwnerPK,
+      validatorVoteAccount,
+      new PublicKey(stakeAccount)
+    );
+    const record = {
+      message: 'liquid stake', data: { pool: 'SolanaHub staked SOL' }
+    }
+    const res = await this._txi.sendTx(depositTx.instructions, walletOwnerPK, depositTx.signers, record)
+    if (res) {
+      this._triggerUpdate.next({ type: 'full' })
+    }
+    return res
+  }
+
+
+
+  // unstake SOL from any STAKE POOL
   public unstakeAccount = signal<PublicKey>(null);
-  public async unstake(pool: StakePool, sol: number): Promise<string | null> {
-
+  public async unstake(pool: StakePool, sol: number): Promise<{signature: string, stakeAccount: PublicKey} | null> {
 
     const { publicKey } = this._shs.getCurrentWallet()
     const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
 
-    const record = { message: `liquid unstake`, data: {pool: pool.poolName, amount: sol } };
+    const record = { message: `liquid unstake`, data: { pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)
@@ -316,7 +138,7 @@ export class LiquidStakeService {
       // sign and send the `transaction`
       await this._txi.sendTx([transaction], publicKey, null, record, PremiumActions.UNSTAKE_LST)
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
-      
+
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')
       const MultiValidatorsPool_PROGRAM_ID = new PublicKey('SPMBzsVUuoHA4Jm6KunbsotaahvVikZs1JyTW6iJvbn')
       const STAKE_POOL_PROGRAM_ID = pool.type === 'SanctumSpl' ? singalValidatorsPool_PROGRAM_ID : MultiValidatorsPool_PROGRAM_ID
@@ -328,10 +150,15 @@ export class LiquidStakeService {
         Number(sol),
         false
       );
-
+      
       this.unstakeAccount.set(transaction.signers[1].publicKey)
-      const tx = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
-      return tx
+      const res = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      if(res){
+        this._triggerUpdate.next({type:'full'})
+      }else{
+        this.unstakeAccount.set(null)
+      }
+      return {signature: res, stakeAccount: transaction.signers[1].publicKey}
     } else {
 
       let transaction = await withdrawStake(
@@ -341,9 +168,11 @@ export class LiquidStakeService {
         Number(sol),
         false
       );
-      this.unstakeAccount.set(transaction.signers[1].publicKey)
-      const tx = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
-      return tx
+      const res = await this._txi.sendTx(transaction.instructions, publicKey, transaction.signers, record, PremiumActions.UNSTAKE_LST)
+      if(res){
+        this._triggerUpdate.next({type:'full'})
+      }
+      return {signature: res, stakeAccount: transaction.signers[1].publicKey}
 
     }
     return null

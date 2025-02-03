@@ -13,7 +13,7 @@
           Stake:
         </ion-label>
         <ion-text>
-          {{stake.stakeAuth}}
+          {{stake.authorities.staker}}
         </ion-text>
       </div>
       <div class="auth-values">
@@ -21,7 +21,7 @@
           Withdraw:
         </ion-label>
         <ion-text>
-          {{stake.withdrawAuth}}
+          {{stake.authorities.withdrawer}}
         </ion-text>
       </div>
     </div>
@@ -65,7 +65,7 @@
 
     }
 
-    @if(this.authoritiesChecked().stake && this.stake.validatorName.toLowerCase() === 'marinade native'){
+    @if(this.authoritiesChecked().stake && this.stake.validator.name.toLowerCase() === 'marinade native'){
       <alert text="Please note: If you transfer your stake authority, you'll be giving up marinade automatic delegation strategy control" />
   
       }

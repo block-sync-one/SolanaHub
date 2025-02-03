@@ -13,8 +13,7 @@ import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platfo
 import { FreemiumService } from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
 import { PositionComponent } from '../position.component';
-import { StakeAccount } from '@app/pages/staking/stake.service';
-import { LiquidStakeToken } from '@app/pages/staking/stake.service';
+import { StakeAccount, LiquidStakeToken } from '@app/models';
 @Component({
   selector: 'split-modal',
   templateUrl: './split-modal.component.html',

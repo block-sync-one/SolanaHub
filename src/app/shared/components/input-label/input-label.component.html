@@ -2,25 +2,29 @@
   <div class="light-title">{{label}}</div>
   <!-- @if (this.walletTokens(); as wallet) { -->
 
-    <div id="wallet-info">
-      <div style="display: flex;">
-        <ion-icon name="wallet-outline"></ion-icon>
-        <!-- <ion-img src="assets/images/wallet-icon.svg" /> -->
-      </div>
-      @if(this.walletTokens()){
-        <span>{{utils.fixedNumber(asset?.balance) || 0}} {{asset?.symbol}}</span>
-
-      }@else{
-          <ion-skeleton-text [animated]="true" />
-      }
-      @if(showBtns){
-
-        <div id="size-btns">
-          <ion-button size="small" [disabled]="!walletTokens()" class="space" fill="clear" (click)="setSize('half')">half</ion-button>
-          <ion-button size="small" [disabled]="!walletTokens()" fill="clear" (click)="setSize('max')">max</ion-button>
-        </div>
-      }
+  <div id="wallet-info">
+    <div style="display: flex;">
+      <ion-icon name="wallet-outline"></ion-icon>
+      <!-- <ion-img src="assets/images/wallet-icon.svg" /> -->
     </div>
+
+    @if(this.walletTokens()){
+    <span>{{utils.fixedNumber(asset?.balance) || 0}} {{asset?.symbol}}</span>
+
+    }@else{
+    <ion-skeleton-text [animated]="true" />
+    }
+ 
+    @if(showBtns && asset?.symbol != 'staked-SOL'){
+
+    <div id="size-btns">
+      <ion-button size="small" [disabled]="!walletTokens()" class="space" fill="clear"
+        (click)="setSize('half')">half</ion-button>
+      <ion-button size="small" [disabled]="!walletTokens()" fill="clear" (click)="setSize('max')">max</ion-button>
+    </div>
+    
+    }
+  </div>
   <!-- } -->
 
 </div>

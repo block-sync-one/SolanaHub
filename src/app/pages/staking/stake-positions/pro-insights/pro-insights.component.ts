@@ -1,20 +1,20 @@
 import { AfterViewInit, Component, ElementRef, inject, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { IonLabel, IonSegmentButton, IonSegment, IonSkeletonText, IonText, IonIcon, IonButton } from "@ionic/angular/standalone";
-import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
-import { ProInsights, StakeAccount, StakeService } from '../../stake.service';
-import { LiquidStakeToken } from '../../stake.service';
+import { ChipComponent } from 'src/app/shared/components';
+import {  StakeService } from '@app/pages/staking/stake.service';
+
 import { Chart, ChartConfiguration, ChartItem } from 'chart.js';
-import { NgIf, CurrencyPipe, DatePipe, DecimalPipe } from '@angular/common';
+import { NgIf, CurrencyPipe, DatePipe, DecimalPipe, PercentPipe } from '@angular/common';
 import zoomPlugin from 'chartjs-plugin-zoom';
 import { JupStoreService, SolanaHelpersService, UtilService } from 'src/app/services';
 import { CopyTextDirective } from 'src/app/shared/directives/copy-text.directive';
 import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
 import { addIcons } from 'ionicons';
-import { personCircleOutline, copyOutline, informationCircleOutline } from 'ionicons/icons';
-import { peopleCircleOutline } from 'ionicons/icons';
+import { personCircleOutline, copyOutline, informationCircleOutline, peopleCircleOutline } from 'ionicons/icons';
 import { catchError } from 'rxjs/operators';
 import { take } from 'rxjs';
 import { TooltipModule } from '@app/shared/layouts/tooltip/tooltip.module';
+import { LiquidStakeToken, ProInsights, StakeAccount } from '@app/models';
 
 Chart.register(zoomPlugin);
 
@@ -35,7 +35,8 @@ Chart.register(zoomPlugin);
     DecimalPipe,
     CurrencyPipe,
     TooltipModule,
-    NgIf
+    NgIf,
+    PercentPipe
   ]
 })
 
@@ -60,7 +61,6 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
   async ngOnChanges(changes: SimpleChanges): Promise<void> {
     if (this.isOpen) {
       this.getNextEpoch()
-      console.log(this.stakePosition)
       this.isLoading = true;
       await this.getProInsights();
       this.isLoading = false;
@@ -149,11 +149,32 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
               maxRotation: 0,
               minRotation: 0,
               callback: function(value, index, ticks) {
-                // Show only first and last labels
-                if (index === 0 || index === this.stakeRewardsData.length - 1) {
-                  const label = this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
-                  return label;
+                // Handle loading state
+                if (this.isLoading || !this.stakeRewardsData?.length) {
+                  return '';
                 }
+
+                // Get the visible range of indices
+                const visibleMin = Math.min(...ticks.map(t => t.value));
+                const visibleMax = Math.max(...ticks.map(t => t.value));
+                const visibleRange = visibleMax - visibleMin;
+                
+                // Get labels for first and last visible points
+                const firstLabel = this.utilService.datePipe.transform(this.stakeRewardsData[visibleMin]?.date, 'MMM yy');
+                const lastLabel = this.utilService.datePipe.transform(this.stakeRewardsData[visibleMax]?.date, 'MMM yy');
+                
+                // Show first and last visible labels only if they're different
+                if (index === visibleMin) return firstLabel;
+                if (index === visibleMax && firstLabel !== lastLabel) return lastLabel;
+                
+                // Show labels at ~20% intervals only if first and last labels are different
+                if (firstLabel !== lastLabel) {
+                  const interval = Math.max(1, Math.ceil(visibleRange * 0.2));
+                  if ((index - visibleMin) % interval === 0 && index > visibleMin && index < visibleMax) {
+                    return this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
+                  }
+                }
+                
                 return '';
               }.bind(this)
             },
@@ -285,7 +306,7 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
 
       this.stakeRewardsData = res.valueAccrued.map((stakeReward) => ({
         epoch: stakeReward.epoch,
-        date: stakeReward.effective_time,
+        date: this.stakePosition.source === 'native' ? stakeReward.effective_time : new Date(stakeReward.effective_time).toISOString(),
         reward: this.stakePosition.source === 'native' ? stakeReward.reward_amount : stakeReward.projectedValue
       }))
       this.totalRewards = this.stakeRewardsData.reduce((acc, curr) => acc + curr?.reward, 0) || 0
