@@ -2,7 +2,7 @@ import { CurrencyPipe, DecimalPipe, KeyValuePipe } from '@angular/common';
 import { Component, effect, Input, OnInit, signal, TemplateRef, ViewChild, Output, EventEmitter, OnChanges, SimpleChanges, output, ViewChildren, QueryList, computed } from '@angular/core';
 import { IonRow, IonCol,  IonButton, IonImg, IonIcon, IonToggle, IonLabel, IonChip, IonText, IonCheckbox, IonAccordion, IonItem, IonAccordionGroup, IonSkeletonText } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { arrowUpOutline, funnelOutline } from 'ionicons/icons';
+import { arrowUpOutline, funnelOutline, linkOutline } from 'ionicons/icons';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { MftModule } from 'src/app/shared/layouts/mft/mft.module';
 import { StashAsset, StashGroup } from '../stash.model';
@@ -59,7 +59,7 @@ export class TableComponent  implements OnChanges {
     private _modalCtrl: ModalController,
     private _util: UtilService
   ) { 
-    addIcons({funnelOutline,arrowUpOutline});
+    addIcons({funnelOutline,arrowUpOutline,linkOutline});
   }
   public tableColumn = signal([])
   public tableData = signal([])

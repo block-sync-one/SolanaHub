@@ -15,7 +15,12 @@
         margin-inline-start: 6px;
     }
 }
-
+a{
+    font-size: 22px;
+    color: var(--ion-color-dark);
+    align-items: center;
+    display: flex;
+}
 .table-head {
     width: 100%;
 
@@ -179,7 +184,7 @@ ion-accordion {
 .account-info {
     display: flex;
     align-items: center;
-
+    gap: 4px;
     ion-img {
         margin-inline-start: 4px;
     }

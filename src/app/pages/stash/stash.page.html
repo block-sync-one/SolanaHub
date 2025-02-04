@@ -38,7 +38,7 @@
       @if(assets()){
         @for(stashItem of assets(); track stashItem.label) {
           <stash-table 
-          [showBalance]="portfolioBreakdown.showBalance"
+          [showBalance]="portfolioBreakdown?.showBalance"
           class="ion-margin-bottom" 
           [stash]="stashItem" />
         }

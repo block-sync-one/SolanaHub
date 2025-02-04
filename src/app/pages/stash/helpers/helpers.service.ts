@@ -65,15 +65,14 @@ export class HelpersService {
         category: 'value-deficient' | 'stake' | 'defi' | 'dust',
         extraData: Record<string, any> = {}
     ): StashAsset => {
-
         const baseAsset = {
             id: item.id,
             checked: false,
-            name: category === 'stake' ? item.validatorName : item.name,
+            name: category === 'stake' ? item.validator?.name : item.name,
             symbol: item.symbol,
-            logoURI: item.logoURI,
-            url: this.utils.explorer + '/account/' + item.mint,
-            mint: item.mint ? this.utils.addrUtil(item.mint) : null,
+            logoURI: category === 'stake' ? item.validator?.image : item.logoURI,
+            url: this.utils.explorer + '/account/' + (category === 'stake' ? item?.address : item.mint),
+            mint: item.mint ? this.utils.addrUtil(item.mint) : this.utils.addrUtil(item.address),
             decimals: item?.decimals,
             account: this.utils.addrUtil(item['address'] || 'default'),
             balance: item.balance,
@@ -82,7 +81,6 @@ export class HelpersService {
             source: this.getSourceByCategory(category, item.balance, item.type),
             ...extraData
         };
-
 
         switch (category) {
             case 'dust':
@@ -121,8 +119,8 @@ export class HelpersService {
             case 'stake':
                 return {
                     ...baseAsset,
-                    balance: item.excessLamport / LAMPORTS_PER_SOL,
-                    extractedValue: { SOL: item.excessLamport / LAMPORTS_PER_SOL }
+                    balance: item.inactive_stake ,
+                    extractedValue: { SOL: item.inactive_stake  }
                 };
             default:
                 return {
@@ -166,7 +164,7 @@ export class HelpersService {
             defi: type,
             stake: 'excess balance',
             dust: 'dust value',
-            default: balance === 0 ? 'empty account' : 'no market value'
+            default: balance === 0 ? 'empty account' : 'unknown value'
         };
         return sources[category] || sources.default;
     }

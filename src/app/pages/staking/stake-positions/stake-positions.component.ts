@@ -75,8 +75,6 @@ export class StakePositionsComponent implements OnInit {
       if (activeGroup && positions.liquid) {
         activeGroup.positions.push(...positions.liquid);
       }
-      console.log(groups);
-      
       return groups;
     }),
     shareReplay(1)
