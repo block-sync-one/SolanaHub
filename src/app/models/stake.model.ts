@@ -61,8 +61,9 @@ export interface StakeAccount {
   symbol: string
   validator?: Validator
   exchangeRate: number
+  locked: boolean
+  lockedDue: string
 }
-  
 export interface DirectStake {
 
     mSOL?: {

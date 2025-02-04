@@ -130,8 +130,7 @@
 </ng-template>
 <ng-template #accountTpl let-row let-rowIndex="rowIndex" let-column="column">
   <div class="ion-text-left account-info">
-    {{row?.mint?.addrShort}} <a target="_blank" [href]="row.url"> <ion-img src="assets/icon/link.svg"></ion-img>
-    </a>
+    {{row?.mint?.addrShort}} <a target="_blank" [href]="row.url"> <ion-icon name="link-outline"/></a>
   </div>
 </ng-template>
 <ng-template #actionTpl let-row let-rowIndex="rowIndex" let-column="column">

@@ -80,7 +80,7 @@ export class StakeService {
     private _shs: SolanaHelpersService,
     private _httpFetchService: HttpFetchService,
     private _util: UtilService,
-    private _nss: NativeStakeService
+    private _nss: NativeStakeService,
   ) {
    
     this._nss._triggerUpdate.subscribe(() => {
@@ -91,6 +91,11 @@ export class StakeService {
         this.updateStakePositions(this._shs.getCurrentWallet().publicKey.toString())
       }else{
         this.updateStakePositions(this._shs.getCurrentWallet().publicKey.toString(), 'liquid')
+      }
+    })
+    this._shs.walletExtended$.subscribe(wallet => {
+      if(wallet){
+        this.updateStakePositions(wallet.publicKey.toString())
       }
     })
   }

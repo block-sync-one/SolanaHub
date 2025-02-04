@@ -52,10 +52,6 @@ export class InputComponent implements OnInit, OnChanges {
     }
     this.readonly ? this.visibleValue.set(this.outValue) : this.visibleValue.set(this.amountControl.value);
 
-    console.log(this.amountControl,  this.visibleValue(), this.outValue);
-    
-
-
   }
 
   valueChange(ev) {

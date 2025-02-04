@@ -5,23 +5,30 @@ import { HelpersService } from './helpers.service';
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
 import { StakeProgram } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
-import { Stake } from 'src/app/models';
+import { Stake, StakeAccount } from 'src/app/models';
 import { PremiumActions } from "@app/enums";
 import { FreemiumService } from "@app/shared/layouts/freemium";
-
+import { StakeService } from '@app/pages/staking/stake.service';
 @Injectable({
   providedIn: 'root'
 })
 export class StakeOverflowService {
-  constructor(private _helpersService: HelpersService, private _nss: NativeStakeService, private _freemiumService: FreemiumService) {
+  constructor(
+    private _helpersService: HelpersService,
+     private _nss: NativeStakeService,
+      private _freemiumService: FreemiumService,
+      private _stakeService: StakeService
+    ) {
     this.getStakeAccounts()
   }
 
-  private _stakeAccounts = signal<Stake[]>(null)
+  private _stakeAccounts = signal<StakeAccount[]>(null)
   private getStakeAccounts = async () => {
-    const {publicKey} = this._helpersService.shs.getCurrentWallet()
-    const accounts = [] as any// await this._nss.getOwnerNativeStake(publicKey.toString());
-    this._stakeAccounts.set(accounts)
+    this._stakeService.nativePositions$.subscribe(accounts => {
+      console.log(accounts);
+      
+      this._stakeAccounts.set(accounts)
+    })
   }
   public findStakeOverflow = computed(() => {
     const accounts = this._stakeAccounts();
@@ -29,7 +36,7 @@ export class StakeOverflowService {
     if (!accounts) return null;
     const transactionFee = 300000;
     const filterExceedBalance = accounts
-      .filter(acc => acc.state === 'active' && acc.excessLamport > transactionFee && !acc.locked)
+      .filter(acc => acc.state === 'active' && acc.inactive_stake * LAMPORTS_PER_SOL> transactionFee && !acc.locked)
       .map(acc => this._helpersService.mapToStashAsset(acc, 'stake'));
 
     return this._helpersService.createStashGroup(
