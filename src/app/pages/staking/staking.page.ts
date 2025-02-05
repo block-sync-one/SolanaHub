@@ -73,7 +73,7 @@ export class StakingPage implements OnInit {
       if(this._stakeService.manualUnstakeLST()){
         this.content.scrollToTop(500);
       }
-    }, { allowSignalWrites: true });
+    });
   }
   public solPrice = this._jupStore.solPrice;
   public stakePools = signal([])
