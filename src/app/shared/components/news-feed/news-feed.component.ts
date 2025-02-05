@@ -25,22 +25,22 @@ export class NewsFeedComponent implements OnInit {
    }
 
   mainFeed = {
-    title: "DARK MODE ON",
+    title: "SolanaHub PRO",
     type: "feature",
     color: "secondary",
-    image: "/assets/images/dm-intro.png",
-    description: `DARK MODE ON.<br/> You can now switch to dark mode via settings box`
+    image: "/assets/images/pro-intro.png",
+    description: `Premium features, waved platform fees, and boosted rewards for hubSOL holders. <a href='https://x.com/SolanaHubApp/status/1887074710673916289' target='_blank' >Learn more</a>`
   }
   feed = [
     {
-      title: "Stash page alive",
+      title: "Multi-wallet support",
       type: "promotion",
       color: "active",
-      description: `Extract your SOL in 1 click <a href='/stash'>get it a try</a>`
+      description: `View multiple wallets and get a full breakdown of your holdings across all registered wallets`
     },
     {
-      title: "hubSOL on kamino",
-      description: "hubSOL now available on Kamino multiply and lending product",
+      title: "hubSOL boosted rewards",
+      description: "all solanahub platform fees are now been utilize to improve hubSOL APY",
       type: "DeFi",
       color: "primary",
       image: "assets/images/news-feed/news-1.png"
