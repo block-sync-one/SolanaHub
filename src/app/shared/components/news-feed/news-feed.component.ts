@@ -34,15 +34,15 @@ export class NewsFeedComponent implements OnInit {
   feed = [
     {
       title: "Multi-wallet support",
-      type: "promotion",
-      color: "active",
+      type: "feature",
+      color: "secondary",
       description: `View multiple wallets and get a full breakdown of your holdings across all registered wallets`
     },
     {
       title: "hubSOL boosted rewards",
       description: "all solanahub platform fees are now been utilize to improve hubSOL APY",
-      type: "DeFi",
-      color: "primary",
+      type: "boost",
+      color: "active",
       image: "assets/images/news-feed/news-1.png"
     },
     {
