@@ -1,4 +1,4 @@
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
+import { Component, OnInit, ViewChild, WritableSignal, effect, signal } from '@angular/core';
 import {
   IonGrid,
   IonRow,
@@ -54,6 +54,7 @@ export class StakingPage implements OnInit {
       desc: signal(null),
     }
   ]
+  @ViewChild('content') content: IonContent;
   constructor(
     private _util: UtilService,
     private _jupStore: JupStoreService,
@@ -68,6 +69,11 @@ export class StakingPage implements OnInit {
       hourglassOutline,
       leafOutline
     })
+    effect(() => {
+      if(this._stakeService.manualUnstakeLST()){
+        this.content.scrollToTop(500);
+      }
+    }, { allowSignalWrites: true });
   }
   public solPrice = this._jupStore.solPrice;
   public stakePools = signal([])

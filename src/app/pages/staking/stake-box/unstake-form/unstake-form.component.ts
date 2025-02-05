@@ -1,7 +1,7 @@
-import { Component, OnInit, signal, WritableSignal, computed, effect } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal, computed, effect, Input, SimpleChanges } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { StakeAccount, Token, WalletExtended } from 'src/app/models';
+import { LiquidStakeToken, StakeAccount, Token, WalletExtended } from 'src/app/models';
 import { JupToken } from 'src/app/models';
 import { JupRoute } from 'src/app/models';
 import { Observable, take, takeLast } from 'rxjs';
@@ -40,6 +40,7 @@ interface UnstakeFormData {
   ]
 })
 export class UnstakeFormComponent implements OnInit {
+  @Input() manualUnstakeLST: LiquidStakeToken;
   // Form
   public unstakeForm: FormGroup;
   public platformFeeInSOL = signal(0);
@@ -104,7 +105,21 @@ export class UnstakeFormComponent implements OnInit {
     this.initializeForm();
     this.setupFormSubscriptions();
   }
+ngOnChanges(changes: SimpleChanges): void {
+  //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
+  //Add '${implements OnChanges}' to the class.
 
+  if(changes['manualUnstakeLST'] && this.manualUnstakeLST){
+
+    this.initializeForm();
+    this.setupFormSubscriptions();
+    // aggregate incoming manualUnstakeLST into out token 
+    setTimeout(() => {
+      this.unstakeForm.get('inputToken').setValue(this.manualUnstakeLST);
+    });
+    
+  }
+}
   private initializeForm(): void {
     this.unstakeForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
@@ -274,5 +289,9 @@ export class UnstakeFormComponent implements OnInit {
       this.unstakeState.set('unstake');
     }
   }
-
+ngOnDestroy(): void {
+  //Called once, before the instance is destroyed.
+  //Add 'implements OnDestroy' to the class.
+  this._stakeService.manualUnstakeLST.set(null);
+}
 }
