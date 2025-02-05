@@ -8,19 +8,19 @@
   cursor: pointer;
   padding: 2px 7px;
   border-radius: 9999px;
-  /*
-      border: 1px solid var(--ion-color-border);
-      background: var(--ion-background-color);*/
 
-  border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
-  background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
+      border: 1px solid var(--ion-color-border);
+      background: var(--ion-background-color);
+      color: var(--ion-color-dark);
+
+  // border: 1px solid var(--Component-colors-Utility-Gray-utility-gray-200, #EAECF0);
+  // background: var(--Component-colors-Utility-Gray-utility-gray-50, #F9FAFB);
 
   text-align: center;
   font-size: 11px;
   text-transform: capitalize;
   font-weight: 500;
   width: fit-content;
-  color: var(--ion-color-light-contrast);
   line-height: 16px;
 
   &.pro {

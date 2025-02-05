@@ -57,7 +57,7 @@ export class StakeFormComponent  implements OnInit {
     type: 'liquid'
   }
   public loading = signal(false);
-  public formState = signal('Swap')
+  public formState = signal('Stake')
   public jupTokens = signal(null as JupToken[])
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
@@ -99,11 +99,7 @@ export class StakeFormComponent  implements OnInit {
       if (!values.inputAmount) {
         this.bestRoute.set(null)
       }
-      if(values.inputToken.source == 'native'){
-        this.formState.set('Stake')
-      }else{
-        this.formState.set('Swap')
-      }
+
     })
 
   }
