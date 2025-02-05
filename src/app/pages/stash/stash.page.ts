@@ -85,7 +85,6 @@ export class StashPage implements OnInit {
     if (this.zeroValueAssets()) {
       assets.push(this.zeroValueAssets())
     }
-    console.log(assets);
 
 
     return assets.sort((a, b) => {
