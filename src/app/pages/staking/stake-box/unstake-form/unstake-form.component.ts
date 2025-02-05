@@ -184,14 +184,14 @@ export class UnstakeFormComponent implements OnInit {
     this.unstakeState.set('preparing transaction');
     if (this.unstakePath() === 'instant') {
       await this.submitSwap()
-      setTimeout(() => {
+ 
         this.unstakeState.set('swap');
-      }, 30000);
+    
     } else {
       await this.submitUnstake()
-      setTimeout(() => {
+  
         this.unstakeState.set('unstake');
-      }, 30000);
+    
     }
 
   }
@@ -202,7 +202,7 @@ export class UnstakeFormComponent implements OnInit {
       // Attempt to unstake tokens
       const unstakeSuccess = await this._lss.unstake(tokenPool, inputAmount);
       
-      if (unstakeSuccess) {
+      if (unstakeSuccess.signature) {
         const walletPublicKey = this._shs.getCurrentWallet().publicKey.toString();
         
         // Update stake positions and handle the unstaked account
@@ -250,8 +250,7 @@ export class UnstakeFormComponent implements OnInit {
       console.error('Swap failed:', error);
       throw error;
     } finally {
-      this.unstakeState.set('Unstake');
-      setTimeout(() => this.unstakeState.set('Unstake'), 2000);
+      this.unstakeState.set('swap');
     }
   }
 

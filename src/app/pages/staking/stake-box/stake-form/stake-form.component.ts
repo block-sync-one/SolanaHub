@@ -3,7 +3,8 @@ import {
   IonSkeletonText,
   IonSegment,
   IonSegmentButton,
-  IonLabel, IonImg, IonButton, IonIcon } from '@ionic/angular/standalone';
+  IonLabel, IonImg, IonButton, IonIcon
+} from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
@@ -22,8 +23,8 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [
     CommonModule,
-    IonIcon, 
-    IonButton, 
+    IonIcon,
+    IonButton,
     IonImg,
     IonSegment,
     IonSegmentButton,
@@ -36,7 +37,7 @@ import { CommonModule } from '@angular/common';
     PercentPipe
   ]
 })
-export class StakeFormComponent  implements OnInit {
+export class StakeFormComponent implements OnInit {
 
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public tokenIn: Token = {
@@ -76,7 +77,7 @@ export class StakeFormComponent  implements OnInit {
     private _txi: TxInterceptorService
   ) {
     this._lss.getStakePoolList().then(sp => {
-      const {apy, exchangeRate} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
+      const { apy, exchangeRate } = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
       this.hubSOLApy.set(apy)
       this.hubSOLExchangeRate.set(exchangeRate)
     })
@@ -85,7 +86,7 @@ export class StakeFormComponent  implements OnInit {
 
 
   async ngOnInit() {
-  
+
     this.tokenSwapForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
       outputToken: [this.tokenIn, [Validators.required]],
@@ -135,11 +136,11 @@ export class StakeFormComponent  implements OnInit {
 
   public getOutValue() {
     const { inputToken, inputAmount } = this.tokenSwapForm.value
-    
+
     // setTimeout(() => {
-    const outValue = inputToken.source === 'native' 
-    ? inputToken.balance / this.hubSOLExchangeRate() 
-    : this.bestRoute()?.outAmount
+    const outValue = inputToken.source === 'native'
+      ? inputToken.balance / this.hubSOLExchangeRate()
+      : this.bestRoute()?.outAmount
 
     // console.log(outValue);
     return outValue
@@ -147,25 +148,25 @@ export class StakeFormComponent  implements OnInit {
   }
 
 
-  public async submitForm(){
+  public async submitForm() {
     const { inputToken } = this.tokenSwapForm.value
     this.formState.set('preparing transaction');
-    if(inputToken.source == 'native'){
-     await this.submitDepositAccount()
-    }else{
+    if (inputToken.source == 'native') {
+      await this.submitDepositAccount()
+    } else {
       await this.submitSwap()
     }
     this.formState.set('Stake')
   }
-  public async submitDepositAccount(){
-    const {publicKey} = this._shs.getCurrentWallet()
+  public async submitDepositAccount() {
+    const { publicKey } = this._shs.getCurrentWallet()
 
     await this._lss.depositStakeAccount(publicKey, this.tokenSwapForm.value.inputToken.address)
   }
   public async submitSwap(): Promise<void> {
     try {
       this.loading.set(true);
-  
+
 
       const route = { ...this.bestRoute() };
       if (!route) {
@@ -175,16 +176,19 @@ export class StakeFormComponent  implements OnInit {
       // Calculate amounts using single-line operations
       const { decimals } = this.tokenSwapForm.value.outputToken;
       const multiplier = Math.pow(10, decimals);
-      
+
       route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
       route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
 
-      const tx = await this._jupStore.swapTx(route);
-      await this._txi.sendMultipleTxn([tx]);
-      
+      const ixs = await this._jupStore.swapTx(route);
+      await this._txi.sendMultipleTxn([ixs]);
+
+      this.formState.set('Stake')
+
+
     } catch (error) {
-     console.error(error)
-    } finally{
+      console.error(error)
+    } finally {
       this.loading.set(false)
     }
   }
