@@ -246,7 +246,7 @@ export function calcLamportsWithdrawAmount(stakePool: StakePool, poolTokens: num
 }
 export function solToLamports(amount: number): number {
   if (isNaN(amount)) return Number(0);
-  return Number(amount * LAMPORTS_PER_SOL);
+  return Number(Number(amount * LAMPORTS_PER_SOL).toString().split(".")[0]);
 }
 export interface ValidatorAccount {
   type: 'preferred' | 'active' | 'transient' | 'reserve';

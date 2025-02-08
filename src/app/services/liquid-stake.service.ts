@@ -127,8 +127,8 @@ export class LiquidStakeService {
   public async unstake(pool: StakePool, sol: number): Promise<{signature: string, stakeAccount: PublicKey} | null> {
 
     const { publicKey } = this._shs.getCurrentWallet()
-    const lamports = (sol * LAMPORTS_PER_SOL).toString().split(".")[0]
-
+    const lamports = (sol * LAMPORTS_PER_SOL)
+    console.log(lamports, Number(sol))
     const record = { message: `liquid unstake`, data: { pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
