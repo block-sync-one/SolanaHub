@@ -10,24 +10,19 @@
     </div>
   </div>
 
-  <div class="freemium-access-popup modal-content">
+  <div class="convert-to-hubSOL-modal">
     <div class="modal-body">
       <div class="modal-body__header">
-        <ion-checkbox checked></ion-checkbox>
-        <div>Deselect all 7 assets</div>
+        <ion-checkbox [checked]="totalChecked()" (ionChange)="toggleAll()"></ion-checkbox>
+        <div>Deselect all {{ selectItems() }} assets</div>
       </div>
-      <cdk-virtual-scroll-viewport itemSize="74" minBufferPx="400" maxBufferPx="1000">
-        <div class="modal-body__card" *cdkVirtualFor="let stake of [1,2,3,4,5]; let i = index;">
+      <div class="modal-body__content">
+        @for (stake of data(); track stake.address) {
           <div class="modal-body__item">
-            <ion-checkbox checked></ion-checkbox>
-            <ion-img src="assets/images/close-icon.svg"/>
-            <div class="modal-body__details">
-              <div class="modal-body__details-title">Staker Space {{ i }}</div>
-              <div class="modal-body__details-description"><span>0.011 SOL -></span> 0.012 hubSOL</div>
-            </div>
+            <convert-to-hub-sol-item [stake]="stake" (toggleItemEmitter)="toggleItem($event)"></convert-to-hub-sol-item>
           </div>
-        </div>
-      </cdk-virtual-scroll-viewport>
+        }
+      </div>
     </div>
 
     <div class="modal-footer">

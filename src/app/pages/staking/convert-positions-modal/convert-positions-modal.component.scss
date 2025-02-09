@@ -7,6 +7,7 @@
 
 .close-ad {
   position: absolute;
+  cursor: pointer;
   right: 12px;
   top: 12px;
   width: 44px;
@@ -45,13 +46,8 @@
   }
 }
 
-.modal-content {
+.convert-to-hubSOL-modal {
   padding: 0 24px 24px 24px;
-
-  cdk-virtual-scroll-viewport {
-    height: 266px;
-    width: 100%;
-  }
 }
 
 .modal-body {
@@ -61,8 +57,7 @@
   background: var(--ion-color-light);
 
   ion-checkbox {
-    width: 16px;
-    height: 16px;
+    --size: 16px;
     --border-radius: var(--radius-xs, 4px);
   }
 
@@ -74,7 +69,7 @@
     border-bottom: 1px solid var(--ion-color-border);
   }
 
-  &__header, &__details-title {
+  &__header {
     color: var(--ion-color-dark);
     font-size: 13px;
     font-style: normal;
@@ -82,39 +77,14 @@
     line-height: 18px;
   }
 
-  &__card:not(:last-child) {
+  &__content {
+    max-height: 266px;
+    height: 100%;
+    overflow-y: auto;
+  }
+
+  &__item:not(:last-child) {
     border-bottom: 1px solid var(--ion-color-border);
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 16px 12px 16px;
-  }
-
-  ion-img {
-    display: flex;
-    width: 32px;
-    height: 32px;
-    justify-content: center;
-    align-items: center;
-    flex-shrink: 0;
-    margin-left: 2px;
-    border-radius: var(--radius-full, 1000px);
-  }
-
-  &__details-description {
-    color:  var(--ion-color-dark);
-    font-size: 11px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: 16px;
-
-    span {
-      color: var(--ion-light-gray);
-      font-weight: 400;
-    }
   }
 }
 

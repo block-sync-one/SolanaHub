@@ -1,0 +1,9 @@
+<div class="position">
+  <ion-checkbox [checked]="stake.checked" (ionChange)="toggleItem(stake.address)"></ion-checkbox>
+  <ion-img [src]="stake.logoURI" [alt]="stake.name"/>
+  <div class="position__details">
+    <div class="position__details-title"> {{ stake.name }}</div>
+    <div class="position__details-description"><span>{{ stake.balance }} {{ stake.symbol }} -></span> 0.012 ?? hubSOL
+    </div>
+  </div>
+</div>
