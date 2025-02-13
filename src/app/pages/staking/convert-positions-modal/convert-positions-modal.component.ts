@@ -6,9 +6,10 @@ import {CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport} fr
 import {addIcons} from "ionicons";
 import {closeOutline} from "ionicons/icons";
 import {ConvertPositionsService} from "@app/services/convert-positions.service";
-import {NgForOf} from "@angular/common";
-import {LiquidStakeToken} from "@app/models";
+import {DecimalPipe, NgForOf} from "@angular/common";
+import {ConvertToHubSolToken} from "@app/models";
 import {ConvertToHubSolItemComponent} from "./convert-to-hub-sol-item/convert-to-hub-sol-item.component";
+import {UtilService} from "@app/services";
 
 
 @Component({
@@ -27,15 +28,18 @@ import {ConvertToHubSolItemComponent} from "./convert-to-hub-sol-item/convert-to
     IonIcon,
     IonContent,
     NgForOf,
-    ConvertToHubSolItemComponent
+    ConvertToHubSolItemComponent,
+    DecimalPipe
   ],
   standalone: true
 })
 export class ConvertPositionsModalComponent {
-  private readonly _modalCtrl= inject(ModalController);
-  private readonly _convertPositionsService= inject(ConvertPositionsService);
+  private readonly _modalCtrl = inject(ModalController);
+  private readonly _convertPositionsService = inject(ConvertPositionsService);
+  public readonly utils = inject(UtilService);
 
-  public data = signal<(LiquidStakeToken & { checked: boolean })[]>(this._convertPositionsService.lst());
+  public data = signal<ConvertToHubSolToken[]>(this._convertPositionsService.lst());
+  public total = this._convertPositionsService.totalHubSolValue;
   public selectItems = computed(() => this.data().filter(item => item.checked).length);
   public totalChecked = computed(() => this.selectItems() !== 0);
 
@@ -43,8 +47,10 @@ export class ConvertPositionsModalComponent {
     addIcons({closeOutline})
   }
 
-  convertToHubSOL() {
-
+  async convertToHubSOL() {
+    const success = await this._convertPositionsService.convertToHubSOL(this.data())
+    if (success.length > 0)
+      this.closeModal()
   }
 
   closeModal() {
@@ -69,7 +75,7 @@ export class ConvertPositionsModalComponent {
    */
   toggleItem(address: string) {
     this.data.update(itemsValue => itemsValue.map((item: any) =>
-      item.address === address ? ({ ...item, checked: !item.checked }) : item
+      item.address === address ? ({...item, checked: !item.checked}) : item
     ))
   }
 

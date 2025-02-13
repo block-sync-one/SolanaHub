@@ -1,10 +1,11 @@
 import { Injectable, signal } from '@angular/core';
 import { JupStoreService, UtilService, SolanaHelpersService, TxInterceptorService } from 'src/app/services';
-import { StashAsset, StashGroup, TokenInfo } from '../stash.model';
+import { StashAsset, StashGroup } from '../stash.model';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionInstruction, TransactionMessage, VersionedTransaction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { EarningsService } from './earnings.service';
 import { FreemiumService } from "@app/shared/layouts/freemium";
+import {JupToken, SwapToken, TokenInfo} from "@app/models";
 
 @Injectable({
     providedIn: 'root'
@@ -135,7 +136,15 @@ export class HelpersService {
             address: token.address,
             decimals: token.decimals,
             symbol: token.symbol,
-            logoURI: token.logoURI
+            logoURI:  Array.isArray(token.logoURI) ? token.logoURI[0] : token.logoURI
+        };
+    }
+
+    public mapToSwapInfo = (token: any): SwapToken => {
+        return {
+            ...this.mapToTokenInfo(token),
+            name: token.name,
+            balance: token.balance
         };
     }
 
@@ -212,8 +221,6 @@ export class HelpersService {
         }
     }
 
-
-
     public async splitIntoSubTransactions(
         instructions: TransactionInstruction[],
         maxSize: number = 900
@@ -271,6 +278,55 @@ export class HelpersService {
 
         return transactions;
     }
+
+   public async getVersionedTransactions(tokens: SwapToken[], swapToHubsol: boolean = false): Promise<VersionedTransaction[]> {
+     const swapencodedIx = await Promise.all(tokens.map(async token => {
+        const { address, decimals, symbol, name, balance } = token;
+        const logoURI = Array.isArray(token.logoURI) ? token.logoURI[0] : token.logoURI;
+        const chainId = 101;
+
+        const jupToken =
+          {
+            chainId,
+            address,
+            logoURI,
+            decimals,
+            symbol,
+            name
+          };
+
+        let outputToken: JupToken = {
+          chainId,
+          address: 'So11111111111111111111111111111111111111112',
+          logoURI,
+          decimals,
+          symbol: 'SOL',
+          name: 'Solana'
+        }
+
+        if (swapToHubsol) {
+          outputToken = {
+            ...outputToken,
+            address: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
+            name: 'SolanaHub Staked SOL',
+            symbol: 'hubSOL'
+          }
+        }
+        const bestRoute = await this.jupStoreService.computeBestRoute(
+          balance,
+          jupToken,
+          outputToken,
+          50
+        );
+        return await this.jupStoreService.swapTx(bestRoute)
+      }));
+
+     // Deserialize each transaction in the array
+     console.log('swapencodedIx', swapencodedIx.flat());
+
+     // filter null and flat
+     return swapencodedIx.flat().filter(ix => ix !== null)
+   }
 
     private async _addPlatformFeeTx(as: 'instructions' | 'versionedTx', platformFee: number): Promise<TransactionInstruction[] | VersionedTransaction> {
         const { publicKey } = this.shs.getCurrentWallet();

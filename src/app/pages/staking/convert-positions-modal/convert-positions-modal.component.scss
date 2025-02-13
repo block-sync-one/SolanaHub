@@ -3,6 +3,18 @@
   background: linear-gradient(180deg, #FF51C7 0%, #7201FF 28.51%, #FFF 42.77%), var(--ion-color-light);
   border-radius: var(--radius-xl, 12px);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+
+  @media (min-width: 576px) {
+    &__bg-image {
+      background-image: url('/assets/images/solanahub-convert.svg');
+      background-size: cover;
+      background-position: center;
+      width: 340px;
+      height: 320px;
+      position: absolute;
+      right: 0;
+    }
+  }
 }
 
 .close-ad {
@@ -24,7 +36,7 @@
 .modal-header {
   padding-top: 44px;
   padding-bottom: 36px;
-  padding-left: 31px;
+  padding-inline: 31px;
   width: 100%;
   color: var(--ion-color-light);
 
@@ -53,6 +65,7 @@
 .modal-body {
   border-radius: 8px;
   margin-bottom: 24px;
+  height: 266px;
   border: 1px solid var(--ion-color-border);
   background: var(--ion-color-light);
 
@@ -80,7 +93,7 @@
   &__content {
     max-height: 266px;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: scroll;
   }
 
   &__item:not(:last-child) {

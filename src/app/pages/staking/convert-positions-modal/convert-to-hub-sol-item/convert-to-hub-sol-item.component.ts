@@ -1,5 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, Output} from '@angular/core';
 import {IonicModule} from "@ionic/angular";
+import {ConvertToHubSolToken} from "@app/models";
+import {UtilService} from "@app/services";
 
 @Component({
   selector: 'convert-to-hub-sol-item',
@@ -11,7 +13,9 @@ import {IonicModule} from "@ionic/angular";
   standalone: true
 })
 export class ConvertToHubSolItemComponent {
-  @Input() stake;
+  public readonly utils= inject(UtilService);
+
+  @Input() position: ConvertToHubSolToken;
   @Output() toggleItemEmitter = new EventEmitter<string>(undefined)
 
   toggleItem(address: string) {

@@ -1,4 +1,5 @@
 <div class="convert-positions-modal">
+  <div class="convert-positions-modal__bg-image"></div>
   <div class="modal-header-wrapper">
     <div class="close-ad" (click)="closeModal()">
       <ion-icon name="close-outline"></ion-icon>
@@ -17,17 +18,17 @@
         <div>Deselect all {{ selectItems() }} assets</div>
       </div>
       <div class="modal-body__content">
-        @for (stake of data(); track stake.address) {
+        @for (position of data(); track position.address) {
           <div class="modal-body__item">
-            <convert-to-hub-sol-item [stake]="stake" (toggleItemEmitter)="toggleItem($event)"></convert-to-hub-sol-item>
+            <convert-to-hub-sol-item [position]="position" (toggleItemEmitter)="toggleItem($event)"></convert-to-hub-sol-item>
           </div>
         }
       </div>
     </div>
 
     <div class="modal-footer">
-      <ion-button expand="block" (click)="convertToHubSOL()">
-        Convert to 0.1 hubSOL
+      <ion-button expand="block" [disabled]="!totalChecked()" (click)="convertToHubSOL()">
+        Convert to {{ utils.formatBigNumbers(total()) }} hubSOL
       </ion-button>
       <div class="modal-footer__message" (click)="hide()">Don't show me again</div>
     </div>
