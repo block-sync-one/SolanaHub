@@ -58,57 +58,13 @@ export class DustValueTokensService {
   }
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
-
     try {
-
-      const swapencodedIx = await Promise.all(tokens.map(async token => {
-        const jupToken = {
-          chainId: 101,
-          address: token.account.addr,
-          logoURI: Array.isArray(token.logoURI) ? token.logoURI[0] : token.logoURI,
-          decimals: token.decimals,
-          symbol: token.symbol,
-          name: token.name,
-        };
-
-        let outputToken: JupToken = {
-          chainId: 101,
-          address: 'So11111111111111111111111111111111111111112',
-          logoURI: Array.isArray(token.logoURI) ? token.logoURI[0] : token.logoURI,
-          decimals: token.decimals,
-          symbol: 'SOL',
-          name: 'Solana',
-        }
-        if (swapToHubsol) {
-          outputToken = {
-            ...outputToken,
-            address: 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX',
-            name: 'SolanaHub Staked SOL',
-            symbol: 'hubSOL'
-          }
-        }
-        const bestRoute = await this._helpersService.jupStoreService.computeBestRoute(
-          token.balance,
-          jupToken,
-          outputToken,
-          50
-        );
-        const swapIx = await this._helpersService.jupStoreService.swapTx(bestRoute)
-        return swapIx
-      }));
-      // Deserialize each transaction in the array
-
-      console.log('swapencodedIx', swapencodedIx.flat());
-
-      // filter null and flat
-      const ixs = swapencodedIx.flat().filter(ix => ix !== null)
-      // const instructions = swapencodedIx.map(tx => extractInstructions(tx));
+      const swapTokens = tokens.map((t) => ({ ...t, address: t.account.addr})).map(this._helpersService.mapToSwapInfo);
+      const ixs = await this._helpersService.getVersionedTransactions(swapTokens, swapToHubsol);
       return await this._helpersService._simulateBulkSendTx(ixs, this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH))
-
     } catch (error) {
       console.log(error);
       return null
     }
   }
-
 }

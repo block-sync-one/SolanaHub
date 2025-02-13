@@ -8,6 +8,6 @@ export * from "./liquidity-pools/liquidity-pools.page";
 export * from "./loyalty-league/loyalty-league.page";
 export * from "./notifications/notifications.page";
 export * from "./overview/overview.page";
-export * from "./staking/staking.page";
+export * from "./staking/index";
 export * from "./stash/stash.page";
 export * from "./swap/swap.page";

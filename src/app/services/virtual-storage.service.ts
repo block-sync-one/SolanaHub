@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { StorageKey } from "@app/enums";
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,10 +53,10 @@ export class VirtualStorageService {
     async openDB(dbName: string, version: number = 1) {
       return new Promise<IDBDatabase>((resolve, reject) => {
         const request = indexedDB.open(dbName, version);
-        
+
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
-        
+
         request.onupgradeneeded = (event: IDBVersionChangeEvent) => {
           const db = (event.target as IDBOpenDBRequest).result;
           if (!db.objectStoreNames.contains(dbName)) {
@@ -71,10 +73,10 @@ export class VirtualStorageService {
           const transaction = db.transaction(dbName, 'readwrite');
           const store = transaction.objectStore(dbName);
           const request = store.put(value, key);
-          
+
           request.onerror = () => reject(request.error);
           request.onsuccess = () => resolve();
-          
+
           transaction.oncomplete = () => db.close();
         });
       } catch (error) {
@@ -90,10 +92,10 @@ export class VirtualStorageService {
           const transaction = db.transaction(dbName, 'readonly');
           const store = transaction.objectStore(dbName);
           const request = store.get(key);
-          
+
           request.onerror = () => reject(request.error);
           request.onsuccess = () => resolve(request.result);
-          
+
           transaction.oncomplete = () => db.close();
         });
       } catch (error) {
@@ -109,10 +111,10 @@ export class VirtualStorageService {
           const transaction = db.transaction(dbName, 'readwrite');
           const store = transaction.objectStore(dbName);
           const request = store.delete(key);
-          
+
           request.onerror = () => reject(request.error);
           request.onsuccess = () => resolve();
-          
+
           transaction.oncomplete = () => db.close();
         });
       } catch (error) {
@@ -128,10 +130,10 @@ export class VirtualStorageService {
           const transaction = db.transaction(dbName, 'readwrite');
           const store = transaction.objectStore(dbName);
           const request = store.clear();
-          
+
           request.onerror = () => reject(request.error);
           request.onsuccess = () => resolve();
-          
+
           transaction.oncomplete = () => db.close();
         });
       } catch (error) {
@@ -139,5 +141,37 @@ export class VirtualStorageService {
         throw error;
       }
     }
+  }
+
+  /**
+   * Sets a cooldown period of one month for a given storage key.
+   * Stores the expiration date in localStorage to prevent future access until the cooldown period ends.
+   *
+   * @param {StorageKey} key - The storage key to apply the cooldown period to
+   */
+  public hideWithOneMonthCooldown(key: StorageKey) {
+    const expirationDate = new Date();
+    expirationDate.setMonth(expirationDate.getMonth() + 1);
+    this.localStorage.saveData(key, expirationDate.toISOString());
+  };
+
+  /**
+   * Checks if a countdown period has expired for a given storage key.
+   * Removes the stored data if the countdown has expired.
+   *
+   * @param {StorageKey} key - The storage key associated with the countdown period
+   * @returns {boolean} True if the countdown period has expired, false otherwise
+   */
+  public isCountdownExpired(key: StorageKey): boolean {
+    const savedDate = this.localStorage.getData(key);
+    if (!savedDate) return true;
+
+    const expirationDate = new Date(savedDate);
+    if (expirationDate < new Date()) {
+      this.localStorage.removeData(key);
+      return true;
+    }
+
+    return false;
   }
 }

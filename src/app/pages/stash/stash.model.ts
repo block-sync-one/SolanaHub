@@ -1,3 +1,5 @@
+import {TokenInfo} from "@app/models";
+
 export interface AssetBase {
   name: string;
   symbol: string;
@@ -6,12 +8,6 @@ export interface AssetBase {
   value?: number;
 }
 
-export interface TokenInfo {
-  address: string;
-  decimals: number;
-  symbol: string;
-  logoURI: string;
-}
 export interface StashGroup {
     // networkId: string
     // platformId: string
@@ -30,7 +26,7 @@ export interface StashGroup {
     symbol: string,
     logoURI: string | string[],
     platformLogoURI?: string,
-    tokens?: { address: string, decimals: number, symbol: string, logoURI: string }[],
+    tokens?: TokenInfo[],
     balance?: number,
     mint?: { addr: string, addrShort: string },
     decimals?: number,

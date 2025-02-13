@@ -106,16 +106,20 @@ ion-checkbox {
     padding: 20px 24px;
 }
 
+.modal {
+  --border-radius: 12px;
+  --background: var(--ion-color-light);
+}
+
 #asset-modal {
     --width: 100vw;
     --height: 90vh;
     align-items: flex-end;
 }
 .slow-unstake-tooltip {
+  @extend .modal;
     --width: 355px;
-    --background: var(--ion-color-light);
     --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    --border-radius: 12px;
   }
 .pro-insights-modal {
     --width:224px;
@@ -270,6 +274,13 @@ ion-spinner {
   --border-radius: 1rem;
 }
 
+.convert-to-hubSOL-modal {
+  @extend .modal;
+  --width: 540px;
+  --height: fit-content;
+}
+
+
 .nft-modal {
     --width: 884px;
     --border-radius: 12px;
@@ -289,18 +300,16 @@ ion-spinner {
     --border-radius: 12px;
 }
 .stash-earn-modal{
+  @extend .modal;
     --width: 550px;
     --height: auto;
     --max-width: 95%;
-    --border-radius: 12px;
-    --background: var(--ion-color-light);;
 }
 .refer-a-friend-modal{
+  @extend .modal;
     --width: 550px;
     --height: auto;
     --max-width: 95%;
-    --border-radius: 12px;
-    --background: var(--ion-color-light);;
 }
 .wallet-connect-dropdown {
     --width: 238px;

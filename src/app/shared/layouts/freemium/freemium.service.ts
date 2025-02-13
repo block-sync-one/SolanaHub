@@ -4,7 +4,7 @@ import va from '@vercel/analytics';
 import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, TransactionInstruction } from '@solana/web3.js';
 import { environment } from 'src/environments/environment';
 import { Premium } from "@app/models";
-import { PremiumActions } from "@app/enums";
+import { PremiumActions, StorageKey } from "@app/enums";
 
 interface Account {
   isPremium: boolean;
@@ -21,7 +21,7 @@ export class FreemiumService {
   private _account = signal<Account | null>(null);
   private _premiumServices = new Map<PremiumActions, Premium>();
   static DEFAULT_PLATFORM_FEE = 3000000; // Default to 0.003 SOL if platform fee is not set
-  private _showAd = signal(this.getAdStatus());
+  private _showAd = signal(!this._vrs.isCountdownExpired(StorageKey.PRO_AD));
   private _isPremiumCache = new Map<string, Account>();
 
 
@@ -120,6 +120,7 @@ export class FreemiumService {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
       const data: Account = await response.json();
+      data.isPremium = true;
       this._isPremiumCache.set(walletAddress, data);
       this._account.set(data);
       return data;
@@ -141,24 +142,9 @@ export class FreemiumService {
   }
 
   public hideAd(): void {
-    const expirationDate = new Date();
-    expirationDate.setMonth(expirationDate.getMonth() + 1);
-    this._vrs.localStorage.saveData('hideFreemiumAd', expirationDate.toISOString());
+    this._vrs.hideWithOneMonthCooldown(StorageKey.PRO_AD);
     this._showAdEvent();
     this._showAd.set(false);
-  }
-
-  public getAdStatus(): boolean {
-    const savedDate = this._vrs.localStorage.getData('hideFreemiumAd');
-    if (savedDate) {
-      const expirationDate = new Date(savedDate);
-      if (expirationDate > new Date()) {
-        return false;
-      } else {
-        this._vrs.localStorage.removeData('hideFreemiumAd');
-      }
-    }
-    return true;
   }
 
   private _showAdEvent(): void {
