@@ -5,10 +5,11 @@ import {
   IonImg,
   IonLabel,
   IonSegment,
-  IonSegmentButton } from '@ionic/angular/standalone';
+  IonSegmentButton,
+} from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { JupRoute, Token, WalletExtended } from 'src/app/models';
+import {JupRoute, JupToken, Token, WalletExtended} from 'src/app/models';
 import {
   ConvertPositionsService,
   SolanaHelpersService,
@@ -60,7 +61,8 @@ export class StakeFormComponent implements OnInit {
     type: 'liquid'
   }
   public loading = signal(false);
-  public formState = signal('Swap')
+  public formState = signal('Stake')
+  public jupTokens = signal(null as JupToken[])
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
   public getOutTokenPrice = signal(null);

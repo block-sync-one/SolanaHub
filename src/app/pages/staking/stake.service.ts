@@ -15,6 +15,7 @@ import { ProInsights, LiquidStakeToken, StakeAccount, StakePositions } from '@ap
   providedIn: 'root'
 })
 export class StakeService {
+  public manualUnstakeLST = signal<LiquidStakeToken | null>(null);
   // State management
   private readonly _state$ = new BehaviorSubject<{
     positions: StakePositions | null;

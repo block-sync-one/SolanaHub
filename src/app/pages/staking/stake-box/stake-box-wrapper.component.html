@@ -1,8 +1,8 @@
-<div id="stake-container">
+<div id="stake-container" #stakeContainer>
   <div id="form-wrapper">
     <div id="stake-form">
-      <div id="segment-stake-wrapper">
-        <ion-segment value="stake" mode="ios" #segmentedView>
+      <div id="segment-stake-wrapper" >
+        <ion-segment [value]="segmentedStakeView()" (ionChange)="onSegmentChange($event)" mode="ios" #segmentedView>
           <ion-segment-button value="stake">
             <ion-label>Stake
               @if(hubSOLpool()) {
@@ -17,15 +17,15 @@
           </ion-segment-button>
         </ion-segment>
       </div>
-      @if(segmentedView.value === 'stake') {
+      @if(segmentedStakeView() === 'stake') {
       <stake-form />
 
       }
-      @if(segmentedView.value === 'unstake') {
-      <unstake-form />
+      @if(segmentedStakeView() === 'unstake') {
+      <unstake-form [manualUnstakeLST]="manualUnstakeLST()" />
       }
     </div>
-    @if(segmentedView.value === 'unstake') {
+    @if(segmentedStakeView() === 'unstake') {
     <pro-upgrade-message *appIsPremiumAction="'unstake-lst'" />
     }
   </div>

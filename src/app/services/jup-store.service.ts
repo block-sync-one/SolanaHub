@@ -59,7 +59,7 @@ export class JupStoreService {
       const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
 
       const { swapTransaction } = await (
-        await fetch('https://quote-api.jup.ag/v6/swap', {
+        await fetch('https://api.jup.ag/swap/v1/swap', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'

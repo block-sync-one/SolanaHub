@@ -36,6 +36,7 @@
   right: 0;
   margin: 0 auto;
   top: -45px;
+  z-index: -1;
 }
 
   .description {
@@ -115,4 +116,11 @@
   font-size: 16px;
   font-weight: 600;
   height: 44px;
+}
+small{
+  margin-block-start: 8px;
+  color: var(--ion-light-gray);
+  text-align: center;
+  font-size: 13px;
+  display: block;
 }

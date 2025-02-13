@@ -8,7 +8,7 @@ import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-
 import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
 import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
 import { IsProDirective } from "@app/shared/directives/is-pro.directive";
-
+import va from '@vercel/analytics'; 
 @Component({
   selector: 'portfolio-menu',
   templateUrl: './portfolio-menu.component.html',
@@ -70,9 +70,10 @@ export class PortfolioMenuComponent {
       if (walletAddress) {
         this.delete(walletAddress)
       }
-      console.log('data', data);
+      
       this._portfolioService.syncPortfolios(data.address, null, data?.nickname);
       this._portfolioService.updateLinkedWallets({address: data.address, nickname: data?.nickname})
+      va.track('portfolio', { event: 'add new wallet' })
     }
   }
 

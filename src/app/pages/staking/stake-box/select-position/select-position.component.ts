@@ -20,11 +20,6 @@ import { NativeStakeService, PortfolioService } from 'src/app/services';
   styleUrls: ['./select-position.component.scss'],
   standalone: true,
   imports: [
-    IonSkeletonText,
-    IonSegment,
-    IonSegmentButton,
-    IonLabel,
-    IonImg,
     AsyncPipe,
     PositionComponent
   ]

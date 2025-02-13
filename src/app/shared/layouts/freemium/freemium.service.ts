@@ -120,7 +120,6 @@ export class FreemiumService {
     try {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-is-premium?walletAddress=${walletAddress}`);
       const data: Account = await response.json();
-      data.isPremium = true;
       this._isPremiumCache.set(walletAddress, data);
       this._account.set(data);
       return data;
