@@ -14,7 +14,7 @@ export class IsPremiumServiceDirective implements OnInit {
   ngOnInit() {
     this.action = this.action.split("-modal")[0];
 
-    console.log("Action", this.action)
+
     if (!this.freemiumService.isPremium() && this.freemiumService.isPremiumAction(this.action)) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {

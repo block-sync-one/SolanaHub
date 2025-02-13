@@ -1,13 +1,11 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, computed, effect, ElementRef, HostListener, OnInit, signal, ViewChild, viewChild, WritableSignal } from '@angular/core';
 import {
   IonSkeletonText,
   IonSegment,
   IonSegmentButton,
-  IonLabel, IonImg, IonButton, IonIcon } from '@ionic/angular/standalone';
+  IonLabel, IonImg, IonButton, IonIcon, IonContent } from '@ionic/angular/standalone';
 import { ChipComponent } from "../../../shared/components/chip/chip.component";
 
-
-import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { PercentPipe } from '@angular/common';
 import { StakeFormComponent } from './stake-form/stake-form.component';
 import { UnstakeFormComponent } from './unstake-form/unstake-form.component';
@@ -40,14 +38,28 @@ import { IsPremiumServiceDirective } from '@app/shared/directives';
 export class StakeBoxWrapperComponent implements OnInit {
   public loading = signal(false);
   public hubSOLpool = this._stakeService.hubSOLpool;
+  public segmentedStakeView: WritableSignal<'stake' | 'unstake'> = signal('stake');
+  public manualUnstakeLST = this._stakeService.manualUnstakeLST;
 
   constructor(
-    private _stakeService: StakeService,
+    private _stakeService: StakeService
   ) {
-
+    effect(() => {
+      if(this._stakeService.manualUnstakeLST()){
+          this.segmentedStakeView.set('unstake');
+      }
+    }, { allowSignalWrites: true });
   }
 
   async ngOnInit() {
     // Component initialization if needed
   }
+
+  onSegmentChange(event: any){
+      this.segmentedStakeView.set(event.detail.value)
+    
+  }
+
+  // Update the computed logic
+
 }

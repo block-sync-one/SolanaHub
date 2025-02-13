@@ -92,7 +92,9 @@ export class StashModalComponent implements OnInit {
     }, {})
     // loop through summary and add toFixedNoRounding 2
     Object.keys(this.summary).forEach(key => {
-      this.summary[key] = Number(this.summary[key]).toFixedNoRounding(5)
+      if(this.summary[key]){
+        this.summary[key] = Number(this?.summary[key]).toFixedNoRounding(5)
+      }
     })
     // filter zero values
     this.summary = Object.fromEntries(Object.entries(this.summary).filter(([key, value]) => value > 0))

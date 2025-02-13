@@ -69,15 +69,15 @@ export class SolanaHelpersService {
 
   public async getValidatorsList(): Promise<Validator[]> {
     // Try to get cached data from localStorage
-    const cachedData = this._vrs.localStorage.getData('validatorsList');
-    const cachedTimestamp = this._vrs.localStorage.getData('validatorsListTimestamp');
+    const cachedData = await this._vrs.indexDB.getData('validatorsList', 'validatorsList');
+    const cachedTimestamp = await this._vrs.indexDB.getData('validatorsListTimestamp', 'validatorsListTimestamp');
     const fetchAndUpdateValidators = async (): Promise<Validator[]> => {
       try {
         const result = await (await fetch('https://api.stakewiz.com/validators')).json();
 
         // Update localStorage with new data and timestamp
-        this._vrs.localStorage.saveData('validatorsList', JSON.stringify(result));
-        this._vrs.localStorage.saveData('validatorsListTimestamp', Date.now().toString());
+        this._vrs.indexDB.saveData('validatorsList', 'validatorsList', JSON.stringify(result));
+        this._vrs.indexDB.saveData('validatorsListTimestamp', 'validatorsListTimestamp', Date.now().toString());
 
         this._validatorsList = result;
         return result;
@@ -87,8 +87,8 @@ export class SolanaHelpersService {
       }
     }
     if (cachedData) {
-      this._validatorsList = JSON.parse(cachedData);
-
+      this._validatorsList = JSON.parse(cachedData as string);
+      console.log(this._validatorsList)
       // Check if cache is older than 2 days
       const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
       const isStale = !cachedTimestamp || (Date.now() - Number(cachedTimestamp)) > TWO_DAYS_MS;

@@ -77,21 +77,21 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
     gradient.addColorStop(0, 'rgba(203,98,175,0.1)');
 
     const lineSettings = {
-      labels: this.stakeRewardsData.map(data => `Epoch ${data.epoch}`), // X-axis labels
+      labels: this.isLoading ? Array(5).fill('Loading...') : this.stakeRewardsData.map(data => `Epoch ${data.epoch}`),
       datasets: [{
         label: 'Valued',
-        data: this.stakeRewardsData.map(data => data.reward), // Y-axis data points
-        backgroundColor: gradient,
-        borderColor: '#B84794',
+        data: this.isLoading ? Array(5).fill(0.5) : this.stakeRewardsData.map(data => data.reward),
+        backgroundColor: this.isLoading ? 'rgba(200,200,200,0.3)' : gradient,
+        borderColor: this.isLoading ? 'rgba(200,200,200,0.5)' : '#B84794',
         borderWidth: 2,
-        tension: 0.4, // This will make the line chart smoother
+        tension: 0.4, 
         fill: true,
-      }],
-      animation: this.isLoading ? {
-        duration: 1000,
-        loop: true,
-        delay: (context) => context.dataIndex * 100
-      } : undefined
+        animation: this.isLoading ? {
+          duration: 1000,
+          loop: true,
+          delay: (context) => context.dataIndex * 100
+        } : undefined
+      }]
     }
 
     const barSettings = {
@@ -149,32 +149,11 @@ export class ProInsightsComponent implements OnChanges, AfterViewInit, OnDestroy
               maxRotation: 0,
               minRotation: 0,
               callback: function(value, index, ticks) {
-                // Handle loading state
-                if (this.isLoading || !this.stakeRewardsData?.length) {
-                  return '';
+                // Show only first and last labels
+                if (index === 0 || index === this.stakeRewardsData.length - 1) {
+                  const label = this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
+                  return label;
                 }
-
-                // Get the visible range of indices
-                const visibleMin = Math.min(...ticks.map(t => t.value));
-                const visibleMax = Math.max(...ticks.map(t => t.value));
-                const visibleRange = visibleMax - visibleMin;
-                
-                // Get labels for first and last visible points
-                const firstLabel = this.utilService.datePipe.transform(this.stakeRewardsData[visibleMin]?.date, 'MMM yy');
-                const lastLabel = this.utilService.datePipe.transform(this.stakeRewardsData[visibleMax]?.date, 'MMM yy');
-                
-                // Show first and last visible labels only if they're different
-                if (index === visibleMin) return firstLabel;
-                if (index === visibleMax && firstLabel !== lastLabel) return lastLabel;
-                
-                // Show labels at ~20% intervals only if first and last labels are different
-                if (firstLabel !== lastLabel) {
-                  const interval = Math.max(1, Math.ceil(visibleRange * 0.2));
-                  if ((index - visibleMin) % interval === 0 && index > visibleMin && index < visibleMax) {
-                    return this.utilService.datePipe.transform(this.stakeRewardsData[index]?.date, 'MMM yy');
-                  }
-                }
-                
                 return '';
               }.bind(this)
             },

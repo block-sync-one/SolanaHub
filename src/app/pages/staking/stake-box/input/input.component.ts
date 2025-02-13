@@ -123,10 +123,10 @@ export class InputComponent implements OnInit, OnChanges {
 
 
   getLogoURI(stake: any): string {
-    return stake.validator?.image || stake.logoURI || 'assets/images/unknown.svg';
+    return stake?.validator?.image || stake?.logoURI || 'assets/images/unknown.svg';
   }
   getStakeName(stake: any): string {
-    return stake.validator?.name || stake?.symbol;
+    return stake?.validator?.name || stake?.symbol;
   }
 
   getAccountShortAddress(stake: any): string {

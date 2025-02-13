@@ -49,8 +49,7 @@ import va from '@vercel/analytics'
 })
 export class PromoComponent implements AfterViewInit {
   @Input() set estimateStashValue(value: number) {
-    console.log('value', value);
-    
+
     this._estimateStashValue = value;
     // You can add any additional logic here when the value changes
     this.handleEstimateValueChange();
@@ -62,7 +61,7 @@ export class PromoComponent implements AfterViewInit {
 
   private handleEstimateValueChange() {
     // Add any specific logic you need when the value changes
-    console.log('Estimate value changed:', this._estimateStashValue);
+    // console.log('Estimate value changed:', this._estimateStashValue);
   }
 
   @ViewChild('animationEl', { static: false }) animationEl: ElementRef;

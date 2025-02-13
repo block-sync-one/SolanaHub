@@ -143,6 +143,9 @@ export class OptionsPopoverComponent implements OnInit {
     // const { data, role } = await modal.onWillDismiss();
 
   }
+  public setUnstakeLST(){
+    this._stakeService.manualUnstakeLST.set(this.stake as any)
+  }
 
 
 }

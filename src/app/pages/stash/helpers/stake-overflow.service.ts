@@ -25,8 +25,6 @@ export class StakeOverflowService {
   private _stakeAccounts = signal<StakeAccount[]>(null)
   private getStakeAccounts = async () => {
     this._stakeService.nativePositions$.subscribe(accounts => {
-      console.log(accounts);
-      
       this._stakeAccounts.set(accounts)
     })
   }
