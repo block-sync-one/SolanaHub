@@ -121,13 +121,7 @@ ion-checkbox {
     --width: 355px;
     --box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
   }
-.pro-insights-modal {
-    --width:224px;
-    --max-width: 97%;
-    --height: fit-content;
-    --background: var(--ion-color-light);
-    margin-inline-start: 51px;
-}
+
 
 #multipliers-modal {
     --width: 40vw;
@@ -243,7 +237,7 @@ ion-spinner {
     --height: fit-content;
     --max-width: 95%;
     // --max-height: 90%;
-    // --overflow: auto;
+    overflow: auto;
     --background: var(--ion-color-light);;
     // >.ion-page {
     //     position: static;

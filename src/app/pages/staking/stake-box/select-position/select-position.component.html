@@ -10,14 +10,21 @@
     </ion-segment>
   </div> -->
   <div id="stake-positions-content">
-    @if ((positions$ | async)?.length) {
-      @for (position of positions$ | async; track position) {
-        <position [stake]="position" (click)="onSelectAsset(position)" />
+    @if (positions$ | async; as positions) {
+      @if (positions.length) {
+        @for (position of positions; track position) {
+          <position [stake]="position" (click)="onSelectAsset(position)" />
+        }
+      } @else {
+        <p style="text-align: center;">No positions available</p>
       }
     } @else {
-
-        <p style="text-align: center;">No positions available</p>
-    
+      <!-- Skeleton loader while positions are loading -->
+      @for (item of [1,2,3]; track item) {
+       
+          <ion-skeleton-text [animated]="true" style="width: 100%; height: 60px;"></ion-skeleton-text>
+        
+      }
     }
   </div>
 </div>

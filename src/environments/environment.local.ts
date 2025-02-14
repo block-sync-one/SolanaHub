@@ -7,7 +7,7 @@ export const environment: EnvironmentConfig = {
   production: false,
   solanaEnv: 'mainnet-beta',
   solanaCluster: 'https://carole-l8ne8x-fast-mainnet.helius-rpc.com',
-  apiUrl: "http://localhost:3000",
+  apiUrl: "https://dev-api.SolanaHub.app",
   turnStile: '1x00000000000000000000AA',
   ...getBaseConfig()
 };

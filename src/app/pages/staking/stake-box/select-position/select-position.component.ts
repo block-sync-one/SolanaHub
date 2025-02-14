@@ -1,10 +1,7 @@
 import { Component, inject, Input, OnInit, signal } from '@angular/core';
 import {
+  IonContent,
   IonSkeletonText,
-  IonSegment,
-  IonSegmentButton,
-  IonLabel,
-  IonImg
 } from '@ionic/angular/standalone';
 import { LiquidStakeToken, StakeAccount } from '@app/models';
 import { StakeService } from '@app/pages/staking/stake.service';
@@ -21,7 +18,8 @@ import { NativeStakeService, PortfolioService } from 'src/app/services';
   standalone: true,
   imports: [
     AsyncPipe,
-    PositionComponent
+    PositionComponent,
+    IonSkeletonText
   ]
 })
 export class SelectPositionComponent  implements OnInit {
