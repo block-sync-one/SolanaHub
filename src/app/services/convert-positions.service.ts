@@ -26,6 +26,7 @@ export class ConvertPositionsService {
   public readonly lst = computed(() => this.data())
   private readonly hubSOLExchangeRate = signal(null);
   public readonly getHubSOLExchangeRate = this.hubSOLExchangeRate.asReadonly()
+  private static MIN_LST_VALUE = 1;
   private tokenOut: Token = {
     "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
     "chainId": 101,
@@ -100,7 +101,7 @@ export class ConvertPositionsService {
   getValidLstList(tokens: LiquidStakeToken[]): LiquidStakeToken[] {
     const filtered = tokens.filter(item => item.symbol !== Utils.HUB_SOL);
     const totalSum = filtered.reduce((sum, item) => sum + item.balance, 0);
-    return totalSum > -1 ? filtered : [];
+    return totalSum > ConvertPositionsService.MIN_LST_VALUE ? filtered : [];
   }
 
   /**
