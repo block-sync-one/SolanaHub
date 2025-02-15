@@ -4,14 +4,21 @@
   border-radius: var(--radius-xl, 12px);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 
+  &__bg-image {
+    background-image: url('/assets/images/solanahub-convert.svg');
+    background-size: cover;
+    background-position: center;
+    width: 340px;
+    height: 50%;
+    position: absolute;
+    right: -3rem;
+    opacity: 0.4;
+  }
+
   @media (min-width: 576px) {
     &__bg-image {
-      background-image: url('/assets/images/solanahub-convert.svg');
-      background-size: cover;
-      background-position: center;
-      width: 340px;
+      opacity: 1;
       height: 320px;
-      position: absolute;
       right: 0;
     }
   }
@@ -34,8 +41,8 @@
 }
 
 .modal-header {
-  padding-top: 44px;
-  padding-bottom: 36px;
+  padding-top: 28px;
+  padding-bottom: 21px;
   padding-inline: 31px;
   width: 100%;
   color: var(--ion-color-light);
@@ -48,13 +55,28 @@
     max-width: 318px;
   }
 
+  &__description, &__chips {
+    max-width: 336px;
+    margin-left: 4px;
+  }
+
   &__description {
     font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: 24px;
-    max-width: 336px;
-    margin-left: 4px;
+  }
+
+  &__chips {
+    display: flex;
+    gap: .5rem;
+    margin-top: 11px;
+
+    ::ng-deep .badge.primary {
+      font-size: 13px;
+      font-style: normal;
+      font-weight: 500;
+    }
   }
 }
 
@@ -80,9 +102,6 @@
     gap: 8px;
     padding: 16px 16px 13px 16px;
     border-bottom: 1px solid var(--ion-color-border);
-  }
-
-  &__header {
     color: var(--ion-color-dark);
     font-size: 13px;
     font-style: normal;

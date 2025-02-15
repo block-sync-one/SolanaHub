@@ -59,7 +59,7 @@ export class ConvertPositionsService {
    *
    * This observable:
    * 1. Takes the first emission of stake positions
-   * 2. Filters out HubSOL tokens and tokens with balances < 1
+   * 2. Filters out not matching requirements
    * 3. Calculates the best conversion route to HubSOL for each token
    * 4. Returns an array of tokens with their conversion values
    *
@@ -70,7 +70,7 @@ export class ConvertPositionsService {
     this._stakeService.stakePositions$
       .pipe(
         take(1),
-        map(({liquid}) => liquid.filter(lst => lst.symbol !== Utils.HUB_SOL && lst.balance > 1)),
+        map(({liquid}) => this.getValidLstList(liquid)),
         mergeMap(p =>
           combineLatest([
             ...p.map(liquidStakeToken => {
@@ -78,7 +78,7 @@ export class ConvertPositionsService {
               const inputToken = {address, chainId, decimals, name, symbol, logoURI, balance};
 
               return from(this.calcBestRouteToHubSOL(balance, inputToken)).pipe(
-                map(({route, value}) => ({
+                map(({ value}) => ({
                   ...liquidStakeToken,
                   checked: true,
                   hubSolValue: value
@@ -89,6 +89,19 @@ export class ConvertPositionsService {
         ),
         tap(result => this.data.set(result))
       );
+
+  /**
+   * Filters a list of LiquidStakeToken objects to exclude HUB_SOL tokens and returns
+   * the filtered list only if the total balance exceeds 1.
+   *
+   * @param {LiquidStakeToken[]} tokens - Array of LiquidStakeToken objects to filter
+   * @returns {LiquidStakeToken[]} Filtered array of tokens if total balance > 1, empty array otherwise
+   */
+  getValidLstList(tokens: LiquidStakeToken[]): LiquidStakeToken[] {
+    const filtered = tokens.filter(item => item.symbol !== Utils.HUB_SOL);
+    const totalSum = filtered.reduce((sum, item) => sum + item.balance, 0);
+    return totalSum > 1 ? filtered : [];
+  }
 
   /**
    * Converts checked liquid stake tokens to hubSOL transactions
