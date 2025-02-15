@@ -100,7 +100,7 @@ export class ConvertPositionsService {
   getValidLstList(tokens: LiquidStakeToken[]): LiquidStakeToken[] {
     const filtered = tokens.filter(item => item.symbol !== Utils.HUB_SOL);
     const totalSum = filtered.reduce((sum, item) => sum + item.balance, 0);
-    return totalSum > 1 ? filtered : [];
+    return totalSum > -1 ? filtered : [];
   }
 
   /**
