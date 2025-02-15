@@ -16,3 +16,4 @@ export * from './turnstile-captcha/turnstile-captcha.component'
 export * from './float-jup/float-jup.component'
 export * from './news-feed/news-feed.component'
 export * from './chip/chip.component'
+export * from './convert-positions-modal/convert-positions-modal.component';

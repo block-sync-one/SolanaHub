@@ -3,9 +3,12 @@ import { IonicModule, ModalController } from '@ionic/angular';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { AssetsTableComponent } from './assets-table/assets-table.component';
 import { PortfolioMenuComponent } from './portfolio-menu/portfolio-menu.component';
-import { PortfolioBreakdownComponent, TransactionsHistoryTableComponent } from "@app/shared/components";
+import {
+  ConvertPositionsModalComponent,
+  PortfolioBreakdownComponent,
+  TransactionsHistoryTableComponent
+} from "@app/shared/components";
 import { ConvertPositionsService, PortfolioBreakdownService, PortfolioService, WatchModeService } from "@app/services";
-import { ConvertPositionsModalComponent } from "@app/pages";
 import va from "@vercel/analytics";
 
 @Component({
