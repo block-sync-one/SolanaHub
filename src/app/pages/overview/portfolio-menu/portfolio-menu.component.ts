@@ -4,7 +4,6 @@ import { ModalController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { addCircleOutline } from 'ionicons/icons';
 import { PortfolioService, SolanaHelpersService, UtilService, WalletBoxSpinnerService } from '@app/services';
-import { FreemiumService } from "@app/shared/layouts/freemium";
 import { AddPortfolioPopupComponent } from "./add-portfolio-popup/add-portfolio-popup.component";
 import { PortfolioBoxComponent } from './portfolio-box/portfolio-box.component';
 import { FreemiumModule } from "@app/shared/layouts/freemium/freemium.module";
@@ -31,7 +30,7 @@ export class PortfolioMenuComponent {
     private _shs: SolanaHelpersService,
     private _modalCtrl: ModalController
   ) {
-    addIcons({ addCircleOutline });
+    addIcons({addCircleOutline});
   }
 
   protected readonly walletBoxSpinnerService = inject(WalletBoxSpinnerService)
@@ -39,7 +38,7 @@ export class PortfolioMenuComponent {
   public connectedWalletAddress = this._shs?.getCurrentWallet()?.publicKey?.toBase58()
   public walletsPortfolio = computed(() =>
     this._portfolioService.portfolio().map(
-      ({ walletAddress, portfolio }) => ({
+      ({walletAddress, portfolio}) => ({
         walletAddress,
         walletAddressShort: this._utils.addrUtil(walletAddress).addrShort,
         value: portfolio.netWorth,

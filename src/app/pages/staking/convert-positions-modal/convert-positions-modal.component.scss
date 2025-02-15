@@ -1,0 +1,129 @@
+.convert-positions-modal {
+  position: relative;
+  background: linear-gradient(180deg, #FF51C7 0%, #7201FF 28.51%, #FFF 42.77%), var(--ion-color-light);
+  border-radius: var(--radius-xl, 12px);
+  box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
+
+  @media (min-width: 576px) {
+    &__bg-image {
+      background-image: url('/assets/images/solanahub-convert.svg');
+      background-size: cover;
+      background-position: center;
+      width: 340px;
+      height: 320px;
+      position: absolute;
+      right: 0;
+    }
+  }
+}
+
+.close-ad {
+  position: absolute;
+  cursor: pointer;
+  right: 12px;
+  top: 12px;
+  width: 44px;
+  height: 44px;
+  padding: var(--spacing-md, 8px);
+
+  ion-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--ion-color-light);
+  }
+}
+
+.modal-header {
+  padding-top: 44px;
+  padding-bottom: 36px;
+  padding-inline: 31px;
+  width: 100%;
+  color: var(--ion-color-light);
+
+  &__title {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 38px;
+    margin-bottom: 5px;
+    max-width: 318px;
+  }
+
+  &__description {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    max-width: 336px;
+    margin-left: 4px;
+  }
+}
+
+.convert-to-hubSOL-modal {
+  padding: 0 24px 24px 24px;
+}
+
+.modal-body {
+  border-radius: 8px;
+  margin-bottom: 24px;
+  height: 266px;
+  border: 1px solid var(--ion-color-border);
+  background: var(--ion-color-light);
+
+  ion-checkbox {
+    --size: 16px;
+    --border-radius: var(--radius-xs, 4px);
+  }
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 16px 13px 16px;
+    border-bottom: 1px solid var(--ion-color-border);
+  }
+
+  &__header {
+    color: var(--ion-color-dark);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 18px;
+  }
+
+  &__content {
+    max-height: 266px;
+    height: 100%;
+    overflow-y: scroll;
+  }
+
+  &__item:not(:last-child) {
+    border-bottom: 1px solid var(--ion-color-border);
+  }
+}
+
+.modal-footer {
+  text-align: center;
+
+  ion-button {
+    text-transform: initial;
+    font-size: 16px;
+    font-weight: 600;
+    height: 44px;
+  }
+
+  &__message {
+    cursor: pointer;
+    color: var(--ion-color-dark);
+    padding-top: 16px;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 18px;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: auto;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+  }
+}

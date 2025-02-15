@@ -1,21 +1,26 @@
-import { Component, effect, OnInit, signal, WritableSignal } from '@angular/core';
+import {Component, OnInit, signal, WritableSignal} from '@angular/core';
 import {
-  IonSkeletonText,
+  IonButton,
+  IonIcon,
+  IonImg,
+  IonLabel,
   IonSegment,
   IonSegmentButton,
-  IonLabel, IonImg, IonButton, IonIcon
 } from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
-import { JupStoreService, SolanaHelpersService, TxInterceptorService, UtilService } from 'src/app/services';
-import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
+import {JupRoute, JupToken, Token, WalletExtended} from 'src/app/models';
+import {
+  ConvertPositionsService,
+  SolanaHelpersService,
+} from 'src/app/services';
 import { PercentPipe } from '@angular/common';
-import { StakeService } from '../../stake.service';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
 import { ConvertToHubSOLBoxComponent } from './convert-to-hub-sol-box/convert-to-hub-sol-box.component';
 import { InputComponent } from '../input/input.component';
 import { CommonModule } from '@angular/common';
+import { TokenType } from "@app/enums";
+
 @Component({
   selector: 'stake-form',
   templateUrl: './stake-form.component.html',
@@ -30,7 +35,6 @@ import { CommonModule } from '@angular/common';
     IonSegmentButton,
     IonLabel,
     ChipComponent,
-    IonSkeletonText,
     ConvertToHubSOLBoxComponent,
     ReactiveFormsModule,
     InputComponent,
@@ -38,7 +42,6 @@ import { CommonModule } from '@angular/common';
   ]
 })
 export class StakeFormComponent implements OnInit {
-
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public tokenIn: Token = {
     "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
@@ -63,30 +66,21 @@ export class StakeFormComponent implements OnInit {
   public slippage = signal(0.5);
   public getInTokenPrice = signal(null);
   public getOutTokenPrice = signal(null);
-  public hubSOLApy = signal(null);
-  public hubSOLExchangeRate = signal(null);
+  public hubSOLExchangeRate = this._convertPositionService.getHubSOLExchangeRate;
   public bestRoute: WritableSignal<JupRoute> = signal(null);
+  public getOutValue = signal(null);
+
   public tokenSwapForm: FormGroup;
+
   constructor(
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
-    private _jupStore: JupStoreService,
-    private _util: UtilService,
-    private _lss: LiquidStakeService,
-    private _stakeService: StakeService,
-    private _txi: TxInterceptorService
+    private _convertPositionService: ConvertPositionsService
   ) {
-    this._lss.getStakePoolList().then(sp => {
-      const { apy, exchangeRate } = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
-      this.hubSOLApy.set(apy)
-      this.hubSOLExchangeRate.set(exchangeRate)
-    })
+    this._convertPositionService.fetchHubSolExchangeRage();
   }
 
-
-
   async ngOnInit() {
-
     this.tokenSwapForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
       outputToken: [this.tokenIn, [Validators.required]],
@@ -95,101 +89,48 @@ export class StakeFormComponent implements OnInit {
     })
 
     this.tokenSwapForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-      console.log(values.inputToken.source);
       this.calcBestRoute()
       if (!values.inputAmount) {
         this.bestRoute.set(null)
       }
-
+      if (values.inputToken.source == TokenType.NATIVE) {
+        this.formState.set('Stake')
+      } else {
+        this.formState.set('Swap')
+      }
     })
-
   }
 
   async calcBestRoute() {
-    const { inputToken, outputToken, inputAmount, slippage } = this.tokenSwapForm.value
+    const {inputToken, outputToken, inputAmount, slippage} = this.tokenSwapForm.value
     this.getInTokenPrice.set(null)
     this.getOutTokenPrice.set(null)
     this.bestRoute.set(null)
-    // const inputAmount = values.inputAmount
+
     if (this.tokenSwapForm.valid) {
       this.loading.set(true)
-      const route = await this._jupStore.computeBestRoute(inputAmount, inputToken, outputToken, slippage)
-      const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals).toString()
-      const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals).toString()
-
-
-      route.outAmount = outAmount
-      route.otherAmountThreshold = minOutAmount
-
-      // this._getSelectedTokenPrice(values, route.outAmount)
-
-
-      //  this.formControl.patchValue(definitelyValidValue);
+      const {
+        route,
+        value
+      } = await this._convertPositionService.calcBestRoute(inputAmount, inputToken, outputToken, inputToken.source, slippage)
       this.bestRoute.set(route)
-      //  const minimumReceived = Number(route.outAmount) / 10 **  values.outputToken.decimals
-      //  this.toReceive.set(minimumReceived)
+      this.getOutValue.set(value);
       this.loading.set(false)
-      // console.log(this.bestRoute());
-
     }
   }
-
-  public getOutValue() {
-    const { inputToken, inputAmount } = this.tokenSwapForm.value
-
-    // setTimeout(() => {
-    const outValue = inputToken.source === 'native'
-      ? inputToken.balance / this.hubSOLExchangeRate()
-      : this.bestRoute()?.outAmount
-
-    // console.log(outValue);
-    return outValue
-    // });
-  }
-
 
   public async submitForm() {
-    const { inputToken } = this.tokenSwapForm.value
+    const { inputToken, outputToken } = this.tokenSwapForm.value
     this.formState.set('preparing transaction');
-    if (inputToken.source == 'native') {
-      await this.submitDepositAccount()
+
+    if (inputToken.source == TokenType.NATIVE) {
+      const {address} = this.tokenSwapForm.value.inputToken
+      await this._convertPositionService.submitDepositAccount(address)
     } else {
-      await this.submitSwap()
-    }
-    this.formState.set('Stake')
-  }
-  public async submitDepositAccount() {
-    const { publicKey } = this._shs.getCurrentWallet()
-
-    await this._lss.depositStakeAccount(publicKey, this.tokenSwapForm.value.inputToken.address)
-  }
-  public async submitSwap(): Promise<void> {
-    try {
       this.loading.set(true);
-
-
-      const route = { ...this.bestRoute() };
-      if (!route) {
-        throw new Error('No valid swap route found');
-      }
-
-      // Calculate amounts using single-line operations
-      const { decimals } = this.tokenSwapForm.value.outputToken;
-      const multiplier = Math.pow(10, decimals);
-
-      route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
-      route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
-
-      const ixs = await this._jupStore.swapTx(route);
-      await this._txi.sendMultipleTxn([ixs]);
-
-      this.formState.set('Stake')
-
-
-    } catch (error) {
-      console.error(error)
-    } finally {
+      await this._convertPositionService.submitSwap({...this.bestRoute()}, outputToken)
       this.loading.set(false)
     }
+    this.formState.set('Stake')
   }
 }

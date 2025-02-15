@@ -1,0 +1,9 @@
+<div class="position">
+  <ion-checkbox [checked]="position.checked" (ionChange)="toggleItem(position.address)"></ion-checkbox>
+  <ion-img [src]="position.logoURI" [alt]="position.name"/>
+  <div class="position__details">
+    <div class="position__details-title"> {{ position.name }}</div>
+    <div class="position__details-description"><span>{{ utils.formatBigNumbers(position.balance) }} {{ position.symbol }} -></span> {{ utils.formatBigNumbers(position.hubSolValue) }} hubSOL
+    </div>
+  </div>
+</div>
