@@ -25,7 +25,10 @@
     align-items: center;
     flex-shrink: 0;
     margin-left: 2px;
-    --border-radius: var(--radius-full, 1000px);
+
+    &::part(image) {
+      border-radius: 50%;
+    }
   }
 
   &__details-description {

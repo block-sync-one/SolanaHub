@@ -10,6 +10,7 @@ import {DecimalPipe, NgForOf} from "@angular/common";
 import {ConvertToHubSolToken} from "@app/models";
 import {ConvertToHubSolItemComponent} from "./convert-to-hub-sol-item/convert-to-hub-sol-item.component";
 import {UtilService} from "@app/services";
+import {FreemiumModule} from "@app/shared/layouts/freemium/freemium.module";
 
 
 @Component({
@@ -29,7 +30,8 @@ import {UtilService} from "@app/services";
     IonContent,
     NgForOf,
     ConvertToHubSolItemComponent,
-    DecimalPipe
+    DecimalPipe,
+    FreemiumModule
   ],
   standalone: true
 })

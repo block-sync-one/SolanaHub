@@ -5,7 +5,8 @@ import { LAMPORTS_PER_SOL, PublicKey, SystemProgram, Transaction, TransactionIns
 import { environment } from 'src/environments/environment';
 import { EarningsService } from './earnings.service';
 import { FreemiumService } from "@app/shared/layouts/freemium";
-import {JupToken, SwapToken, TokenInfo} from "@app/models";
+import {JupToken, SwapToken } from "@app/models";
+import {ModelsAdapterService, TxHelperService} from "@app/shared/services";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,9 @@ export class HelpersService {
         public utils: UtilService,
         public jupStoreService: JupStoreService,
         public earningsService: EarningsService,
-        public freemiumService: FreemiumService
+        public freemiumService: FreemiumService,
+        public modelsAdapterService: ModelsAdapterService,
+        public transactionHelperService: TxHelperService
     ) {
         // this.getDASAssets()
     }
@@ -96,7 +99,7 @@ export class HelpersService {
                     name: item.poolPair,
                     symbol: item.poolPair,
                     logoURI: [item.poolTokenA.logoURI, item.poolTokenB.logoURI],
-                    tokens: [item.poolTokenA, item.poolTokenB].map(this.mapToTokenInfo),
+                    tokens: [item.poolTokenA, item.poolTokenB].map(this.modelsAdapterService.mapToTokenInfo),
                     platform: item.platform,
                     platformLogoURI: item.platformLogoURI,
                     value: item.pooledAmountAWithRewardsUSDValue + item.pooledAmountBWithRewardsUSDValue,
@@ -129,23 +132,6 @@ export class HelpersService {
                     extractedValue: { SOL: this.rentFee }
                 };
         }
-    }
-
-    public mapToTokenInfo = (token: any): TokenInfo => {
-        return {
-            address: token.address,
-            decimals: token.decimals,
-            symbol: token.symbol,
-            logoURI:  Array.isArray(token.logoURI) ? token.logoURI[0] : token.logoURI
-        };
-    }
-
-    public mapToSwapInfo = (token: any): SwapToken => {
-        return {
-            ...this.mapToTokenInfo(token),
-            name: token.name,
-            balance: token.balance
-        };
     }
 
     public getActionByCategory = (category: string): string => {
@@ -182,16 +168,7 @@ export class HelpersService {
         ixs: TransactionInstruction[] | VersionedTransaction[] | Transaction[],
         platformFeeInSOL: number
     ): Promise<string[]> {
-        let transactions: (Transaction | VersionedTransaction)[] = [];
-
-        // First, prepare all transactions
-        if (ixs[0] instanceof VersionedTransaction) {
-            transactions = ixs as VersionedTransaction[];
-        } else if (ixs[0] instanceof Transaction) {
-            transactions = ixs as Transaction[];
-        } else {
-            transactions = await this.splitIntoSubTransactions(ixs as TransactionInstruction[]);
-        }
+      let transactions: (Transaction | VersionedTransaction)[] =  await this.transactionHelperService.toTransactions(ixs);
 
       if (!this.freemiumService.isPremium()) {
         // Add platform fee to each transaction
@@ -219,64 +196,6 @@ export class HelpersService {
             console.error('Error sending transactions:', error);
             return [];
         }
-    }
-
-    public async splitIntoSubTransactions(
-        instructions: TransactionInstruction[],
-        maxSize: number = 900
-    ): Promise<Transaction[]> {
-        const { publicKey } = this.shs.getCurrentWallet();
-        const { blockhash } = await this.shs.connection.getLatestBlockhash();
-        const transactions: Transaction[] = [];
-        let currentInstructions: TransactionInstruction[] = [];
-
-        for (const instruction of instructions) {
-            // ... existing instruction size check ...
-
-            currentInstructions.push(instruction);
-
-            if (currentInstructions.length > 1) {
-                try {
-                    // Create legacy transaction for size testing
-                    const testTx = new Transaction().add(...currentInstructions);
-                    testTx.recentBlockhash = blockhash;
-                    testTx.feePayer = publicKey;
-                    const serializedSize = testTx.serialize({ requireAllSignatures: false }).length;
-
-                    if (serializedSize > maxSize) {
-                        currentInstructions.pop();
-                        // Create legacy transaction for batch
-                        const batchTx = new Transaction().add(...currentInstructions);
-                        batchTx.recentBlockhash = blockhash;
-                        batchTx.feePayer = publicKey;
-                        transactions.push(batchTx);
-                        currentInstructions = [instruction];
-                    }
-                } catch (error) {
-                    console.error('Error while checking transaction size:', error);
-                    if (currentInstructions.length > 1) {
-                        currentInstructions.pop();
-                        const batchTx = new Transaction().add(...currentInstructions);
-                        batchTx.recentBlockhash = blockhash;
-                        batchTx.feePayer = publicKey;
-                        transactions.push(batchTx);
-                        currentInstructions = [instruction];
-                    }
-                }
-            }
-        }
-
-        // Process remaining instructions
-        if (currentInstructions.length > 0) {
-            const finalTx = new Transaction().add(...currentInstructions);
-            finalTx.recentBlockhash = blockhash;
-            finalTx.feePayer = publicKey;
-            transactions.push(finalTx);
-        }
-
-        console.log('transactions', transactions.length);
-
-        return transactions;
     }
 
    public async getVersionedTransactions(tokens: SwapToken[], swapToHubsol: boolean = false): Promise<VersionedTransaction[]> {
