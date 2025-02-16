@@ -88,7 +88,7 @@ export class OverviewPage implements OnInit {
       .pipe(takeUntilDestroyed(this._destroyRef))
       .subscribe(async (lst) => {
         if (lst.length > 0) {
-          va.track('lst to hubSOL', { event: 'convert to hubSOL open' })
+          va.track('convert-to-hubSOL', { event: 'open modal' })
           const modal = await this._modalCtrl.create({
             component: ConvertPositionsModalComponent,
             cssClass: 'convert-to-hubSOL-modal',

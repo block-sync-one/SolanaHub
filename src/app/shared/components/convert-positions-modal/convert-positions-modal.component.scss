@@ -13,6 +13,7 @@
     position: absolute;
     right: -3rem;
     opacity: 0.4;
+    z-index: 1;
   }
 
   @media (min-width: 576px) {
@@ -23,7 +24,10 @@
     }
   }
 }
-
+.modal-header-wrapper{
+  z-index: 2;
+  position: relative;
+}
 .close-ad {
   position: absolute;
   cursor: pointer;
@@ -55,7 +59,7 @@
     max-width: 318px;
   }
 
-  &__description, &__chips {
+  &__description {
     max-width: 336px;
     margin-left: 4px;
   }
@@ -72,16 +76,16 @@
     gap: .5rem;
     margin-top: 11px;
 
-    ::ng-deep .badge.pro {
-      font-size: 13px;
-      font-style: normal;
-      font-weight: 500;
-    }
+    // ::ng-deep .badge.pro {
+    //   font-size: 13px;
+    //   font-style: normal;
+    //   font-weight: 500;
+    // }
 
-    ::ng-deep .chip-container {
-      background-color: var(--ion-color-light);
-      border-radius: 20px;
-    }
+    // ::ng-deep .chip-container {
+    //   background-color: var(--ion-color-light);
+    //   border-radius: 20px;
+    // }
   }
 }
 

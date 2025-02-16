@@ -35,6 +35,7 @@ export class ConvertPositionsService {
   private static readonly DEFAULT_SLIPPAGE = 50;
   private static readonly MIN_LST_VALUE = 0.1;
   private static readonly HUB_SOL_ADDRESS = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX';
+  public hubSOLAPY = signal(0);
   private static readonly HUB_SOL: Token = {
     "address": `${ConvertPositionsService.HUB_SOL_ADDRESS}`,
     "chainId": 101,
@@ -52,6 +53,8 @@ export class ConvertPositionsService {
     this._lss.getStakePoolList().then(sp => {
       const {apy, exchangeRate} = sp.find(s => s.tokenMint === `${ConvertPositionsService.HUB_SOL_ADDRESS}`)
       this.hubSOLExchangeRate.set(exchangeRate)
+      this.hubSOLAPY.set(apy)
+      console.log('hubSOLAPY', this.hubSOLAPY())
     })
   }
 

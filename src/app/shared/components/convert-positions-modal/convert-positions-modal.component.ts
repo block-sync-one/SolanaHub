@@ -1,17 +1,16 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {ChipComponent} from "@app/shared/components";
-import {IonButton, IonCheckbox, IonContent, IonIcon, IonImg, IonLabel} from "@ionic/angular/standalone";
+import {IonButton, IonCheckbox, IonIcon} from "@ionic/angular/standalone";
 import {ModalController} from "@ionic/angular";
-import {CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport} from "@angular/cdk/scrolling";
 import {addIcons} from "ionicons";
 import {closeOutline} from "ionicons/icons";
 import {ConvertPositionsService} from "@app/services/convert-positions.service";
-import {DecimalPipe, NgForOf} from "@angular/common";
-import {ConvertToHubSolToken} from "@app/models";
 import {ConvertToHubSolItemComponent} from "./convert-to-hub-sol-item/convert-to-hub-sol-item.component";
+import {ConvertToHubSolToken} from "@app/models";
 import {UtilService} from "@app/services";
 import {FreemiumModule} from "@app/shared/layouts/freemium/freemium.module";
-
+import { PercentPipe } from '@angular/common';
+import va from "@vercel/analytics";
 
 @Component({
   selector: 'app-convert-positions-modal',
@@ -20,17 +19,10 @@ import {FreemiumModule} from "@app/shared/layouts/freemium/freemium.module";
   imports: [
     ChipComponent,
     IonButton,
-    IonImg,
-    IonLabel,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualScrollViewport,
-    CdkVirtualForOf,
     IonCheckbox,
     IonIcon,
-    IonContent,
-    NgForOf,
+    PercentPipe,
     ConvertToHubSolItemComponent,
-    DecimalPipe,
     FreemiumModule
   ],
   standalone: true
@@ -44,9 +36,9 @@ export class ConvertPositionsModalComponent {
   public total = this._convertPositionsService.totalHubSolValue;
   public selectItems = computed(() => this.data().filter(item => item.checked).length);
   public totalChecked = computed(() => this.selectItems() !== 0);
-
+  public hubSOLAPY = this._convertPositionsService.hubSOLAPY;
   constructor() {
-    addIcons({closeOutline})
+    addIcons({closeOutline});
   }
 
   async convertToHubSOL() {
@@ -60,6 +52,7 @@ export class ConvertPositionsModalComponent {
   }
 
   hide() {
+    va.track('convert-to-hubSOL', { event: 'close modal' })
     this._convertPositionsService.hide();
     this.closeModal()
   }
