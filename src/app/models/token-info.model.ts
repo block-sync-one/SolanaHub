@@ -16,6 +16,7 @@ export interface SwapToken extends TokenInfo {
 export interface ConvertToHubSolToken extends LiquidStakeToken {
   checked?: boolean,
   hubSolValue?: number
+  route: JupRoute
 }
 
 export interface BestRoute {

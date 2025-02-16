@@ -1,34 +1,42 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {combineLatest, from, map, mergeMap, Observable, take, tap} from "rxjs";
-import {StorageKey, Utils} from "@app/enums";
+import {VersionedTransaction} from "@solana/web3.js";
+import {StorageKey, TokenType, Utils} from "@app/enums";
+import {BestRoute, ConvertToHubSolToken, JupRoute, LiquidStakeToken, SwapToken, Token} from "@app/models";
+import {
+  JupStoreService,
+  LiquidStakeService,
+  SolanaHelpersService,
+  TxInterceptorService,
+  VirtualStorageService
+} from "@app/services";
+import {ModelsAdapterService} from "@app/shared/services";
+import {JupSwapTxData} from "@app/shared/models";
 import {StakeService} from "@app/pages/staking/stake.service";
-import {BestRoute, ConvertToHubSolToken, JupRoute, LiquidStakeToken, Token} from "@app/models";
-import {HelpersService} from "@app/pages/stash/helpers";
-import {LiquidStakeService} from "@app/services/liquid-stake.service";
-import {TokenType} from "@app/enums/token.enum";
-import {JupStoreService, SolanaHelpersService, TxInterceptorService, VirtualStorageService} from "@app/services";
-
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConvertPositionsService {
   private readonly _vrs = inject(VirtualStorageService);
-  private readonly _stakeService = inject(StakeService);
-  private readonly _helpersService = inject(HelpersService);
   private readonly _jupStoreService = inject(JupStoreService);
   private readonly _lss = inject(LiquidStakeService);
   private readonly _txi = inject(TxInterceptorService);
+  private readonly _stakeService = inject(StakeService);
   private readonly _shs = inject(SolanaHelpersService);
+  private readonly _modelsAdapterService = inject(ModelsAdapterService);
 
   private readonly data = signal<ConvertToHubSolToken[]>([])
   public readonly totalHubSolValue = computed(() => this.data().reduce((acc, cht) => acc + cht.hubSolValue, 0))
   public readonly lst = computed(() => this.data())
   private readonly hubSOLExchangeRate = signal(null);
   public readonly getHubSOLExchangeRate = this.hubSOLExchangeRate.asReadonly()
-  private static MIN_LST_VALUE = 1;
-  private tokenOut: Token = {
-    "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
+  private static readonly MIN_TOTAL_LST_VALUE = 1;
+  private static readonly DEFAULT_SLIPPAGE = 50;
+  private static readonly MIN_LST_VALUE = 0.1;
+  private static readonly HUB_SOL_ADDRESS = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX';
+  private static readonly HUB_SOL: Token = {
+    "address": `${ConvertPositionsService.HUB_SOL_ADDRESS}`,
     "chainId": 101,
     "decimals": 9,
     "name": "SolanaHub Staked SOL",
@@ -42,7 +50,7 @@ export class ConvertPositionsService {
 
   fetchHubSolExchangeRage() {
     this._lss.getStakePoolList().then(sp => {
-      const {apy, exchangeRate} = sp.find(s => s.tokenMint === "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX")
+      const {apy, exchangeRate} = sp.find(s => s.tokenMint === `${ConvertPositionsService.HUB_SOL_ADDRESS}`)
       this.hubSOLExchangeRate.set(exchangeRate)
     })
   }
@@ -79,10 +87,11 @@ export class ConvertPositionsService {
               const inputToken = {address, chainId, decimals, name, symbol, logoURI, balance};
 
               return from(this.calcBestRouteToHubSOL(balance, inputToken)).pipe(
-                map(({ value}) => ({
+                map(({route, value}) => ({
                   ...liquidStakeToken,
                   checked: true,
-                  hubSolValue: value
+                  hubSolValue: value,
+                  route
                 }))
               );
             })
@@ -101,7 +110,7 @@ export class ConvertPositionsService {
   getValidLstList(tokens: LiquidStakeToken[]): LiquidStakeToken[] {
     const filtered = tokens.filter(item => item.symbol !== Utils.HUB_SOL);
     const totalSum = filtered.reduce((sum, item) => sum + item.balance, 0);
-    return totalSum > ConvertPositionsService.MIN_LST_VALUE ? filtered : [];
+    return totalSum > ConvertPositionsService.MIN_TOTAL_LST_VALUE ? filtered.filter(item => item.balance > ConvertPositionsService.MIN_LST_VALUE) : [];
   }
 
   /**
@@ -112,14 +121,13 @@ export class ConvertPositionsService {
    * @returns {Promise<string[]>} Array of transaction IDs
    */
   async convertToHubSOL(data: ConvertToHubSolToken[]): Promise<string[]> {
-    const tokens = data.filter((t) => t.checked)
-      .map(this._helpersService.mapToSwapInfo);
-    const ixs = await this._helpersService.getVersionedTransactions(tokens, true);
-    return await this._helpersService._simulateBulkSendTx(ixs, 0);
+    const txData: JupSwapTxData[] = data.filter((item) => item.checked)
+      .map((item) => ({route: item.route, outputToken: this._modelsAdapterService.mapToSwapInfo(item)}));
+    return await this.submitSwap(txData)
   }
 
-  calcBestRouteToHubSOL(amount: number, inputToken: Token, type: TokenType = TokenType.LIQUID, slippage: number = 50): Promise<BestRoute> {
-    return this.calcBestRoute(amount, inputToken, this.tokenOut, type, slippage);
+  calcBestRouteToHubSOL(amount: number, inputToken: Token, type: TokenType = TokenType.LIQUID, slippage: number = ConvertPositionsService.DEFAULT_SLIPPAGE): Promise<BestRoute> {
+    return this.calcBestRoute(amount, inputToken, ConvertPositionsService.HUB_SOL, type, slippage);
   }
 
   /**
@@ -134,7 +142,7 @@ export class ConvertPositionsService {
    * @returns {Promise<{route: JupRoute, value: number}>}
    *          Returns an object containing the computed route and calculated value
    */
-  async calcBestRoute(amount: number, inputToken: Token, outputToken: Token = this.tokenOut, type: TokenType = TokenType.LIQUID, slippage: number = 50): Promise<BestRoute> {
+  async calcBestRoute(amount: number, inputToken: Token, outputToken: Token = ConvertPositionsService.HUB_SOL, type: TokenType = TokenType.LIQUID, slippage: number = ConvertPositionsService.DEFAULT_SLIPPAGE): Promise<BestRoute> {
     const route = await this._jupStoreService.computeBestRoute(amount, inputToken, outputToken, slippage)
     const outAmount = (Number(route.outAmount) / 10 ** outputToken.decimals)
     const minOutAmount = (Number(route.otherAmountThreshold) / 10 ** outputToken.decimals)
@@ -161,30 +169,57 @@ export class ConvertPositionsService {
   }
 
   /**
-   * Executes a token swap transaction using the provided route
+   * Submits one or more swap transactions
    *
    * @async
-   * @param {JupRoute} route - The swap route containing the transaction details
-   * @param {Token} outputToken - Token object containing decimal information for amount normalization
-   * @returns {Promise<void>} Resolves when the swap transaction is complete
+   * @param {JupSwapTxData | JupSwapTxData[]} jupSwapTxData
+   *   Single or array of swap transaction data objects
+   * @returns {Promise<string[]>} Promise resolving to an array of transaction signatures
    * @throws {Error} If no valid swap route is found
    */
-  public async submitSwap(route: JupRoute, outputToken: Token): Promise<void> {
+  public async submitSwap(jupSwapTxData: JupSwapTxData | JupSwapTxData[]): Promise<string[]> {
     try {
-      if (!route) {
-        throw new Error('No valid swap route found');
+      const data = Array.isArray(jupSwapTxData) ? jupSwapTxData : [jupSwapTxData];
+      const txs: VersionedTransaction[] = [];
+
+      for (const tx of data) {
+        const {route, outputToken} = tx
+
+        if (!route) {
+          throw new Error('No valid swap route found');
+        }
+
+        const result = await this.getJupSwapTx(route, outputToken);
+        txs.push(result);
       }
-      // Calculate amounts using single-line operations
-      const {decimals} = outputToken;
-      const multiplier = Math.pow(10, decimals);
-      route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
-      route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
-      const tx = await this._jupStoreService.swapTx(route);
-      await this._txi.sendMultipleTxn([tx]);
+
+      const record = {message: 'Swap Positions', data: `Bulk convert to ${data[0].outputToken.symbol}`}
+      return await this._txi.sendMultipleTxn(txs, null, record);
 
     } catch (error) {
       console.error(error)
     }
+
+    return [];
+  }
+
+  /**
+   * Creates a VersionedTransaction for the provided route
+   *
+   * @private
+   * @async
+   * @param {JupRoute} route - The swap route configuration
+   * @param {SwapToken} outputToken - Token details including decimals
+   * @returns {Promise<VersionedTransaction>} Promise resolving to the prepared transaction
+   */
+  private async getJupSwapTx(route: JupRoute, outputToken: SwapToken): Promise<VersionedTransaction> {
+    const {decimals} = outputToken;
+    const multiplier = Math.pow(10, decimals);
+    route.outAmount = (Number(route.outAmount) * multiplier).toFixed(0);
+    route.otherAmountThreshold = (Number(route.otherAmountThreshold) * multiplier).toFixed(0);
+
+    return await this._jupStoreService.swapTx(route);
   }
 }
+
 

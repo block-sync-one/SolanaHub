@@ -4,6 +4,7 @@ import { HelpersService } from './helpers.service';
 import { JupToken } from 'src/app/models/jup-token.model';
 import { FreemiumService } from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
+import {ModelsAdapterService} from "@app/shared/services";
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ import { PremiumActions } from "@app/enums";
 export class DustValueTokensService {
   private readonly dustValueStashGroupSignal = signal<StashGroup | null>(null);
 
-  constructor(private readonly _helpersService: HelpersService, private _freemiumService: FreemiumService) {
+  constructor(private readonly _helpersService: HelpersService, private readonly _freemiumService: FreemiumService, private readonly _modelsAdapterService: ModelsAdapterService) {
     effect(() => {
       const assets = this._helpersService.dasAssets();
       if (assets) {
@@ -59,7 +60,7 @@ export class DustValueTokensService {
 
   async bulkSwapDustValueTokens(tokens: StashAsset[], swapToHubsol: boolean = false) {
     try {
-      const swapTokens = tokens.map((t) => ({ ...t, address: t.account.addr})).map(this._helpersService.mapToSwapInfo);
+      const swapTokens = tokens.map((t) => ({ ...t, address: t.account.addr})).map(this._modelsAdapterService.mapToSwapInfo);
       const ixs = await this._helpersService.getVersionedTransactions(swapTokens, swapToHubsol);
       return await this._helpersService._simulateBulkSendTx(ixs, this._freemiumService.getDynamicPlatformFeeInSOL(PremiumActions.STASH))
     } catch (error) {

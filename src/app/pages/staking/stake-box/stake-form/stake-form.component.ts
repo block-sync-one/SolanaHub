@@ -128,7 +128,7 @@ export class StakeFormComponent implements OnInit {
       await this._convertPositionService.submitDepositAccount(address)
     } else {
       this.loading.set(true);
-      await this._convertPositionService.submitSwap({...this.bestRoute()}, outputToken)
+      await this._convertPositionService.submitSwap({route: {...this.bestRoute()}, outputToken})
       this.loading.set(false)
     }
     this.formState.set('Stake')
