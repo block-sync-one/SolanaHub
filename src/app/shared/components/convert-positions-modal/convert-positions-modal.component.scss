@@ -1,6 +1,6 @@
 .convert-positions-modal {
   position: relative;
-  background: linear-gradient(180deg, #FF51C7 0%, #7201FF 28.51%, #FFF 42.77%), var(--ion-color-light);
+  background: linear-gradient(180deg, #FF51C7 0%, #7201FF 28.51%,var(--ion-color-card-bg) 42.77%), var(--ion-color-card-bg);
   border-radius: var(--radius-xl, 12px);
   box-shadow: 0px 20px 24px -4px rgba(16, 24, 40, 0.08), 0px 8px 8px -4px rgba(16, 24, 40, 0.03);
 
@@ -49,7 +49,7 @@
   padding-bottom: 21px;
   padding-inline: 31px;
   width: 100%;
-  color: var(--ion-color-light);
+  color: #fff;
 
   &__title {
     font-size: 30px;

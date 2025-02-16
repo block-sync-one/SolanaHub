@@ -31,9 +31,9 @@ export class ConvertPositionsService {
   public readonly lst = computed(() => this.data())
   private readonly hubSOLExchangeRate = signal(null);
   public readonly getHubSOLExchangeRate = this.hubSOLExchangeRate.asReadonly()
-  private static readonly MIN_TOTAL_LST_VALUE = 1;
+  private static readonly MIN_TOTAL_LST_VALUE = 0.5;
   private static readonly DEFAULT_SLIPPAGE = 50;
-  private static readonly MIN_LST_VALUE = 0.1;
+  private static readonly MIN_LST_VALUE = 0.0001;
   private static readonly HUB_SOL_ADDRESS = 'HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX';
   public hubSOLAPY = signal(0);
   private static readonly HUB_SOL: Token = {
