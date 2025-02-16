@@ -216,13 +216,15 @@ ngOnChanges(changes: SimpleChanges): void {
 
       // Attempt to unstake tokens
       const unstakeSuccess = await this._lss.unstake(tokenPool, inputAmount);
+      console.log('unstakeSuccess', unstakeSuccess);
       
       if (unstakeSuccess.signature) {
         const walletPublicKey = this._shs.getCurrentWallet().publicKey.toString();
         
         // Update stake positions and handle the unstaked account
         await this._stakeService.updateStakePositions(walletPublicKey, 'native');
-        
+        // sleep 1 second
+        await new Promise(resolve => setTimeout(resolve, 1000));
         // Find and process the newly created unstake position
         this._stakeService.nativePositions$.pipe(take(1)).subscribe(positions => {
           const unstakeAccountAddress = this._lss.unstakeAccount().toBase58();

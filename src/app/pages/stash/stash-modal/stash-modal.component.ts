@@ -5,12 +5,10 @@ import { KeyValuePipe } from '@angular/common';
 import { StashService } from '../stash.service';
 import { ModalController } from '@ionic/angular';
 import { UtilService } from 'src/app/services/util.service';
-import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { EarningsService, HelpersService } from '../helpers';
 import { AlertComponent } from 'src/app/shared/components/alert/alert.component';
 import va from '@vercel/analytics'
 import { LAMPORTS_PER_SOL } from '@solana/web3.js';
-import { LoyaltyLeagueService } from 'src/app/services/loyalty-league.service';
 import { PlatformFeeComponent } from "@app/shared/components/platform-fee/platform-fee.component";
 import {FreemiumService, ProUpgradeMessageComponent} from "@app/shared/layouts/freemium";
 import { PremiumActions } from "@app/enums";
@@ -49,9 +47,7 @@ export class StashModalComponent implements OnInit {
     private _helpersService: HelpersService,
     public utils: UtilService,
     public modalCtrl: ModalController,
-    private _lss: LiquidStakeService,
     private _earningsService: EarningsService,
-    private _loyaltyLeagueService: LoyaltyLeagueService,
     private _freemiumService: FreemiumService
   ) {
   }
@@ -170,8 +166,6 @@ export class StashModalComponent implements OnInit {
       this.dataToReload(dataToReload)
       this.closeModal()
       this.storeEarningPlatformRecord(signatures)
-
-      this._loyaltyLeagueService.completeQuest(publicKey.toBase58(), 'stashInteract')
 
     }
     this.stashState.set(this.actionTitle)

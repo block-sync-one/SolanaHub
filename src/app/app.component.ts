@@ -40,7 +40,6 @@ import { VirtualStorageService } from './services/virtual-storage.service';
 
 import { PortfolioService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
-import { LoyaltyLeagueMemberComponent } from './shared/components/loyalty-league-member/loyalty-league-member.component';
 
 import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
@@ -80,7 +79,6 @@ import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
     IonLabel,
     IonRouterOutlet,
     IonImg,
-    LoyaltyLeagueMemberComponent,
     FloatJupComponent,
     IonIcon,
     NotConnectedComponent,

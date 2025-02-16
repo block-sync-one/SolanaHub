@@ -10,8 +10,6 @@ import { LiquidStakeService } from 'src/app/services/liquid-stake.service';
 import { SendNftModalComponent } from 'src/app/pages/collectibles/send-nft-modal/send-nft-modal.component';
 import { ListNftModalComponent } from 'src/app/pages/collectibles/list-nft-modal/list-nft-modal.component';
 import { NftsService } from 'src/app/services/nfts.service';
-import { FaqModalComponent } from 'src/app/pages/loyalty-league/faq-modal/faq-modal.component';
-import { ChipComponent } from "../chip/chip.component";
 import {  ProUpgradeMessageComponent } from "../../layouts/freemium";
 import { FreemiumService } from "../../layouts/freemium/freemium.service";
 import { IsPremiumServiceDirective } from "../../directives/is-premium-service.directive";
@@ -34,9 +32,6 @@ import { TransferAuthModalComponent } from '@app/pages/staking/stake-positions/s
     TokenListComponent,
     SendNftModalComponent,
     ListNftModalComponent,
-    FaqModalComponent,
-    ChipComponent,
-    IonText,
     ProUpgradeMessageComponent,
     IsPremiumServiceDirective
   ]
