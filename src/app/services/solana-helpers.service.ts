@@ -88,7 +88,6 @@ export class SolanaHelpersService {
     }
     if (cachedData) {
       this._validatorsList = JSON.parse(cachedData as string);
-      console.log(this._validatorsList)
       // Check if cache is older than 2 days
       const TWO_DAYS_MS = 2 * 24 * 60 * 60 * 1000;
       const isStale = !cachedTimestamp || (Date.now() - Number(cachedTimestamp)) > TWO_DAYS_MS;

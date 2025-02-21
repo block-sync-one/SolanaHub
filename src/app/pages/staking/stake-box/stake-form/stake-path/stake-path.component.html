@@ -1,0 +1,128 @@
+<div id="stake-path">
+  <ion-radio-group mode="ios" id="stake-options" [value]="stakePath" (ionChange)="selectPath($event)">
+    <ion-row class="ion-justify-content-between" style="width: 100%; display: flex; gap: 10px 0;">
+      <ion-col size="12" sizeXl="5.9">
+        <ion-radio class="stake-type wrapping-list" value="liquid">
+          <div class="option-content">
+
+            <chip color="primary">
+              <div>
+                <ion-icon name="flash" />
+                <span style="display: flex; align-items: center; gap: 0 4px;">Liquid • APY:
+                  @if(liquidAPY() > 0){
+                  {{liquidAPY() | percent: '1.2'}}
+                  }@else{
+                  <ion-skeleton-text animated style="width: 40px;" />
+                  }
+
+
+                </span>
+              </div>
+            </chip>
+
+            <div class="details">
+              <!-- <div class="miss-price">
+                <span class="label">APY:</span>
+                <chip >
+                  <div>
+                    <span>10%</span>
+                  
+                  </div>
+       
+                </chip>
+              </div> -->
+              <div class="receive">
+                <span class="label">Receive</span>
+                <span class="amount">
+                  @if(!loading){
+                  {{ swapReceive || 0 | number: '1.4' }} hubSOL
+                  }
+                  @else{
+                  <ion-skeleton-text animated />
+                  }
+                </span>
+              </div>
+            </div>
+          </div>
+        </ion-radio>
+      </ion-col>
+
+      <ion-col size="12" sizeXl="5.9">
+        <ion-radio class="stake-type wrapping-list" value="native" [disabled]="nativeStakePathDisabled">
+          <div class="option-content">
+            <div class="header-content">
+              <chip color="primary">
+                <div>
+                  <ion-icon name="time" />
+                  <div>Native • APY:
+                    @if(nativeAPY() > 0){
+                    {{nativeAPY() / 100 | percent: '1.2'}}
+                    }@else{
+                    <ion-skeleton-text animated />
+                    }
+                  </div>
+                </div>
+
+              </chip>
+              <ion-icon name="information-circle-outline" id="tooltip-icon" />
+            </div>
+            <div class="details">
+              <!-- <div class="miss-price">
+                <span class="label">APY:</span>
+                <chip >
+                  <div>
+                    <span>9%</span>
+                   
+                  </div>
+      
+                </chip>
+              </div> -->
+              <div class="receive">
+                <span class="label">Receive</span>
+                <span class="amount">
+                  @if(!loading){
+                  {{ slowStakeReceive || 0 | number: '1.4' }} SOL
+                 
+                  }
+                  @else{
+                  <ion-skeleton-text animated />
+                  }
+
+                </span>
+              </div>
+            </div>
+          </div>
+        </ion-radio>
+      </ion-col>
+    </ion-row>
+  </ion-radio-group>
+
+</div>
+<ion-popover trigger="tooltip-icon" position="bottom" side="start" cssClass="slow-unstake-tooltip" triggerAction="click"
+  showBackdrop="false">
+  <ng-template>
+
+    <div id="slow-unstake-tooltip">
+      <ion-label>How Native Stake works</ion-label>
+      <div class="steps">
+        <div class="step">
+          <span class="step-number">1</span>
+          <span class="step-text">Initiate the process and confirm the transaction</span>
+        </div>
+        <div class="step">
+          <span class="step-number">2</span>
+          <span class="step-text">Allow funds to transfer into a staking account</span>
+        </div>
+        <div class="step">
+          <span class="step-number">3</span>
+          <span class="step-text">Wait for the next epoch before account becomes active</span>
+        </div>
+        <div class="step">
+          <span class="step-number">4</span>
+          <span class="step-text">Start getting stake rewards every epoch</span>
+        </div>
+      </div>
+    </div>
+
+  </ng-template>
+</ion-popover>

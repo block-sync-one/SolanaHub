@@ -10,6 +10,7 @@ import { CommonModule } from '@angular/common';
 import { ChipComponent } from '../../components/chip/chip.component';
 import {RouterLink} from "@angular/router";
 import {IsProDirective} from "@app/shared/directives/is-pro.directive";
+import { TooltipModule } from '../tooltip/tooltip.module';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import {IsProDirective} from "@app/shared/directives/is-pro.directive";
     AdComponent
   ],
   imports: [
+    TooltipModule,
     ChipComponent,
     CommonModule,
     IonIcon,

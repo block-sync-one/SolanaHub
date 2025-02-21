@@ -14,37 +14,29 @@
       />
     </div>
     <div class="ion-margin-bottom">
-    <stake-input 
+      <stake-path 
+      [swapReceive]="getOutValue()" 
+      [nativeStakePathDisabled]="tokenSwapForm.controls['inputToken'].value.symbol != 'SOL'"
+      [slowStakeReceive]="tokenSwapForm.controls['inputAmount'].value" 
+     
+     [stakePath]="tokenSwapForm.controls['stakePath'].value"
+      (onSelectPath)="setStakePath($event)" />
+  
+    <!-- <stake-input 
     [label]="'Receive'"
     [assetControl]="tokenSwapForm.controls['outputToken']" 
     [outValue]="getOutValue()" 
     [readonly]="true"
     [waitForBestRoute]="loading"
-    />
+    /> -->
     </div>
-    <!-- @if(bestRoute()){
 
-      <div id="route-path">
-        <ion-button size="small">
-          <div>
-            {{bestRoute()?.routePlan?.length}} 
-          </div>
-          <ion-img src="assets/images/route-icon.svg"/>
-        </ion-button>
-        <div>
-
-          <span style="margin-inline-end: 3px;color: rgba(0, 0, 0, 0.25)">using </span>
-          @for (lp of bestRoute().routePlan; track $index) {
-            <span> {{lp.swapInfo.label}}  @if ($index +1 < bestRoute().routePlan.length) {,}</span>
-            
-          }
-        </div>
-      </div>
-    } -->
+    @if(tokenSwapForm.controls['stakePath'].value == 'liquid'){
     <div id="exchange-rate-wrapper">
       <div id="exchange-rate-label">Exchange Rate</div>
       <div id="exchange-rate-value">1 hubSOL ≈ {{hubSOLExchangeRate()}} SOL</div>
     </div>
+    }
     <div id="stake-button-wrapper">
       <ion-button expand="block" [disabled]="tokenSwapForm.invalid || formState() === 'preparing transaction'" color="primary" (click)="submitForm()">
         <ion-label>{{formState()}}</ion-label>

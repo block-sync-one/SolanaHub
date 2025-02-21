@@ -1,4 +1,4 @@
-import {Component, OnInit, signal, WritableSignal} from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import {
   IonButton,
   IonIcon,
@@ -9,9 +9,10 @@ import {
 } from '@ionic/angular/standalone';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
-import {JupRoute, JupToken, Token, WalletExtended} from 'src/app/models';
+import { JupRoute, JupToken, Token, WalletExtended } from 'src/app/models';
 import {
   ConvertPositionsService,
+  NativeStakeService,
   SolanaHelpersService,
 } from 'src/app/services';
 import { PercentPipe } from '@angular/common';
@@ -20,7 +21,8 @@ import { ConvertToHubSOLBoxComponent } from './convert-to-hub-sol-box/convert-to
 import { InputComponent } from '../input/input.component';
 import { CommonModule } from '@angular/common';
 import { TokenType } from "@app/enums";
-
+import { StakePathComponent } from './stake-path/stake-path.component';
+import { LAMPORTS_PER_SOL, PublicKey } from '@solana/web3.js';
 @Component({
   selector: 'stake-form',
   templateUrl: './stake-form.component.html',
@@ -28,20 +30,15 @@ import { TokenType } from "@app/enums";
   standalone: true,
   imports: [
     CommonModule,
-    IonIcon,
     IonButton,
-    IonImg,
-    IonSegment,
-    IonSegmentButton,
     IonLabel,
-    ChipComponent,
-    ConvertToHubSOLBoxComponent,
     ReactiveFormsModule,
     InputComponent,
-    PercentPipe
+    StakePathComponent
   ]
 })
 export class StakeFormComponent implements OnInit {
+  public slowStakeReceive = signal(0)
   public wallet$: Observable<WalletExtended> = this._shs.walletExtended$
   public tokenIn: Token = {
     "address": "HUBsveNpjo5pWqNkH57QzxjQASdTVXcSK7bVKTSZtcSX",
@@ -73,6 +70,7 @@ export class StakeFormComponent implements OnInit {
   public tokenSwapForm: FormGroup;
 
   constructor(
+    private _nss: NativeStakeService,
     private _shs: SolanaHelpersService,
     private _fb: FormBuilder,
     private _convertPositionService: ConvertPositionsService
@@ -81,31 +79,51 @@ export class StakeFormComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.initializeForm();
+    this.subscribeToFormChanges();
+  }
+
+  private initializeForm() {
     this.tokenSwapForm = this._fb.group({
       inputToken: [this.tokenOut, [Validators.required]],
       outputToken: [this.tokenIn, [Validators.required]],
       inputAmount: ['', [Validators.required]],
+      stakePath: ['liquid', [Validators.required]],
       slippage: [50, [Validators.required]]
-    })
-
-    this.tokenSwapForm.valueChanges.subscribe(async (values: { inputToken, outputToken, inputAmount, slippage }) => {
-      this.calcBestRoute()
-      if (!values.inputAmount) {
-        this.bestRoute.set(null)
-      }
-      if (values.inputToken.source == TokenType.NATIVE) {
-        this.formState.set('Stake')
-      } else {
-        this.formState.set('Swap')
-      }
     })
   }
 
+  private subscribeToFormChanges() {
+    this.tokenSwapForm.valueChanges.subscribe(async (values) => {
+      this.calcBestRoute();
+
+      // this.updateFormState(values);
+    });
+  }
+
+  private updateFormState(values: { inputToken, inputAmount }) {
+    if (!values.inputAmount) {
+      this.bestRoute.set(null)
+    }
+
+    this.formState.set(values.inputToken.source === TokenType.NATIVE ? 'Stake' : 'Swap')
+  }
+
+  setStakePath(path: string) {
+    this.tokenSwapForm.patchValue({ stakePath: path })
+  }
+
+  async nativeStake() {
+    const { publicKey } = this._shs.getCurrentWallet()
+    const lamports = this.tokenSwapForm.value.inputAmount * LAMPORTS_PER_SOL;
+    const validator = this._nss.SolanaHubVoteKey
+    const tx = await this._nss.stake(lamports, publicKey, validator)
+    console.log('tx', tx);
+  }
+
   async calcBestRoute() {
-    const {inputToken, outputToken, inputAmount, slippage} = this.tokenSwapForm.value
-    this.getInTokenPrice.set(null)
-    this.getOutTokenPrice.set(null)
-    this.bestRoute.set(null)
+    const { inputToken, outputToken, inputAmount, slippage } = this.tokenSwapForm.value
+    this.resetRouteData()
 
     if (this.tokenSwapForm.valid) {
       this.loading.set(true)
@@ -119,18 +137,32 @@ export class StakeFormComponent implements OnInit {
     }
   }
 
-  public async submitForm() {
-    const { inputToken, outputToken } = this.tokenSwapForm.value
-    this.formState.set('preparing transaction');
+  private resetRouteData() {
+    this.getInTokenPrice.set(null)
+    this.getOutTokenPrice.set(null)
+    this.bestRoute.set(null)
+  }
 
+  public async submitForm() {
+    const { inputToken, outputToken, stakePath } = this.tokenSwapForm.value
+    this.formState.set('preparing transaction');
+    if (stakePath == 'liquid') {
+      await this.handleNonLiquidStake(inputToken, outputToken)
+    } else {
+      await this.nativeStake()
+    }
+    this.formState.set('Stake')
+  }
+
+  private async handleNonLiquidStake(inputToken, outputToken) {
     if (inputToken.source == TokenType.NATIVE) {
-      const {address} = this.tokenSwapForm.value.inputToken
+      console.log('submitDepositAccount', inputToken)
+      const { address } = this.tokenSwapForm.value.inputToken
       await this._convertPositionService.submitDepositAccount(address)
     } else {
       this.loading.set(true);
-      await this._convertPositionService.submitSwap({route: {...this.bestRoute()}, outputToken})
+      await this._convertPositionService.submitSwap({ route: { ...this.bestRoute() }, outputToken })
       this.loading.set(false)
     }
-    this.formState.set('Stake')
   }
 }

@@ -9,6 +9,7 @@ import { PremiumActions, StorageKey } from "@app/enums";
 interface Account {
   isPremium: boolean;
   stake: number;
+  premium_min_stake: number;
 }
 
 @Injectable({
@@ -18,6 +19,7 @@ export class FreemiumService {
   public readonly isPremium = computed(() => this._account()?.isPremium ?? false);
   public readonly stake = computed(() => this._account()?.stake ?? 0);
   public readonly isAdEnabled = computed(() => this._account() && !this._account().isPremium && this._showAd());
+  public readonly premiumMinStake = computed(() => Number(this._account()?.premium_min_stake) ?? 0);
   private _account = signal<Account | null>(null);
   private _premiumServices = new Map<PremiumActions, Premium>();
   static DEFAULT_PLATFORM_FEE = 3000000; // Default to 0.003 SOL if platform fee is not set

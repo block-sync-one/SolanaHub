@@ -4,13 +4,7 @@
       <div id="segment-stake-wrapper" >
         <ion-segment [value]="segmentedStakeView()" (ionChange)="onSegmentChange($event)" mode="ios" #segmentedView>
           <ion-segment-button value="stake">
-            <ion-label>Stake
-              @if(hubSOLpool()) {
-              <chip color="primary" [name]="(hubSOLpool().apy | percent:'1.0-2') + ' APY'" />
-              }@else {
-              <ion-skeleton-text style="width: 50px;" animated />
-              }
-            </ion-label>
+            <ion-label>Stake</ion-label>
           </ion-segment-button>
           <ion-segment-button value="unstake">
             <ion-label>Unstake</ion-label>
