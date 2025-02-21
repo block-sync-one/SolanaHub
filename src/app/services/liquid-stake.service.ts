@@ -128,7 +128,7 @@ export class LiquidStakeService {
 
     const { publicKey } = this._shs.getCurrentWallet()
     const lamports = (sol * LAMPORTS_PER_SOL)
-    console.log(lamports, Number(sol))
+
     const record = { message: `liquid unstake`, data: { pool: pool.poolName, amount: sol } };
     if (pool.poolName.toLowerCase() == 'marinade') {
       if (!this.marinadeSDK) {
