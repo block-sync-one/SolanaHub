@@ -212,6 +212,12 @@ export class AppComponent implements OnInit {
           icon: 'https://cdn.lordicon.com/xoaqvsym.json',
           active: true
         },
+        {
+          title: 'Stake MAX',
+          url: `/${RoutingPath.HUBSOL_MAX}`,
+          icon: 'https://cdn.lordicon.com/xoaqvsym.json',
+          active: true
+        },
         // {
         //   title: 'Lending',
         //   url: `/${RoutingPath.LENDING}`,

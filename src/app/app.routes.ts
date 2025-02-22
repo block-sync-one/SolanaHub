@@ -66,6 +66,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/hubsol/hubsol.page').then( m => m.HubsolPage)
   },
   {
+    path: RoutingPath.HUBSOL_MAX,
+    loadComponent: () => import('./pages/hubsol-max/hubsol-max.page').then( m => m.HubsolMaxPage)
+  },
+  {
     path:"**",
     redirectTo: RoutingPath.OVERVIEW
   },
