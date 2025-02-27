@@ -19,7 +19,7 @@ export class FreemiumService {
   public readonly isPremium = computed(() => this._account()?.isPremium ?? false);
   public readonly stake = computed(() => this._account()?.stake ?? 0);
   public readonly isAdEnabled = computed(() => this._account() && !this._account().isPremium && this._showAd());
-  public readonly premiumMinStake = computed(() => Number(this._account()?.premium_min_stake) ?? 0);
+  public readonly premiumMinStake = signal(null);
   private _account = signal<Account | null>(null);
   private _premiumServices = new Map<PremiumActions, Premium>();
   static DEFAULT_PLATFORM_FEE = 3000000; // Default to 0.003 SOL if platform fee is not set
@@ -97,6 +97,7 @@ export class FreemiumService {
       const response = await fetch(`${environment.apiUrl}/api/freemium/get-premium-services`);
       const data = await response.json();
       data?.premiumServices.forEach((s) => this._premiumServices.set(s.name, s));
+      this.premiumMinStake.set(data?.premium_min_stake);
     } catch (error) {
       console.error('Error fetching premium services:', error);
     }

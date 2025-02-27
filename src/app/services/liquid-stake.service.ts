@@ -10,7 +10,7 @@ import { TxInterceptorService } from './tx-interceptor.service';
 import { NativeStakeService } from './native-stake.service';
 import { MarinadeResult } from '@marinade.finance/marinade-ts-sdk/dist/src/marinade.types';
 import { depositSolIntoSanctum, depositStakeIntoSanctum, withdrawStakeFromSanctum } from './sanctum';
-import { vSOLdirectStake } from './vSOL/set-validator-directed-stake';
+// import { vSOLdirectStake } from './vSOL/set-validator-directed-stake';
 import { ToasterService } from './toaster.service';
 import { PremiumActions } from "@app/enums";
 import { Subject } from 'rxjs';
