@@ -61,7 +61,6 @@ import { SeoService } from './services/seo.service';
     MenuComponent,
     IonHeader,
     IonImg,
-    AnimatedIconComponent,
     IonChip,
     WalletModule,
     RouterLink,
