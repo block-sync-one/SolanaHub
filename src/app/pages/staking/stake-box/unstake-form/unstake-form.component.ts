@@ -264,7 +264,7 @@ ngOnChanges(changes: SimpleChanges): void {
 
       const serviceFeeInst = this._freemiumService.addServiceFee(this._shs.getCurrentWallet().publicKey, PremiumActions.UNSTAKE_LST)
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
-      const record = { message: `instant unstake`, data: { pool: this.unstakeForm.value.tokenPool.poolName, amount: this.unstakeForm.value.inputAmount } };
+      const record = { message: `liquid unstake`, data: { pool: this.unstakeForm.value.tokenPool.poolName, amount: this.unstakeForm.value.inputAmount } };
       const txWithFee = new Transaction({feePayer: this._shs.getCurrentWallet().publicKey, blockhash, lastValidBlockHeight}).add(serviceFeeInst)
       const success = await this._txi.sendMultipleTxn([txWithFee, tx],null, record);
       
