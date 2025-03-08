@@ -1,5 +1,5 @@
 import { enableProdMode } from '@angular/core';
-import { bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication, provideClientHydration } from '@angular/platform-browser';
 import { RouteReuseStrategy, provideRouter } from '@angular/router';
 import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalone';
 
@@ -32,6 +32,6 @@ bootstrapApplication(AppComponent, {
     provideAnimations(),
     provideIonicAngular(),
     provideHttpClient(),
-    provideRouter(routes),
+    provideRouter(routes), provideClientHydration(),
   ],
 });
