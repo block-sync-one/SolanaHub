@@ -40,13 +40,9 @@
                    detail="false"
                    routerLinkActive="selected"
                    >
-                  @if(p.title === 'hubSOL'){
-                  <ion-img src="/assets/images/hubSOL.svg" />
-                  }@else {
-                  <animated-icon
-
-                  aria-hidden="true" slot="start" [icon]="p.icon" />
-                  }
+                
+                  <ion-img [src]="'/assets/images/' + p.icon" />
+        
 
                   <!-- <ion-icon aria-hidden="true" slot="start" [name]="p.icon" ></ion-icon> -->
                   <ion-label>{{ p.title }}</ion-label>

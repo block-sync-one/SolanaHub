@@ -195,19 +195,19 @@ export class AppComponent implements OnInit {
         {
           title: 'Overview',
           url: `/${RoutingPath.OVERVIEW}`,
-          icon: 'https://cdn.lordicon.com/mixcgtqu.json',
+          icon: 'overview-icon.svg',
           active: true
         },
         {
           title: 'Collectibles',
           url: `/${RoutingPath.COLLECTIBLES}`,
-          icon: 'https://cdn.lordicon.com/yvvkyhue.json',
+          icon: 'collectibles-icon.svg',
           active: true
         },
         {
           title: 'Notifications',
           url: `/${RoutingPath.NOTIFICATIONS}`,
-          icon: 'https://cdn.lordicon.com/vspbqszr.json',
+          icon: 'notification-icon.svg',
           active: true
         }
       ],
@@ -219,7 +219,7 @@ export class AppComponent implements OnInit {
         {
           title: 'Staking',
           url: `/${RoutingPath.STAKING}`,
-          icon: 'https://cdn.lordicon.com/xoaqvsym.json',
+          icon: 'staking-icon.svg',
           active: true
         },
         // {
@@ -231,22 +231,22 @@ export class AppComponent implements OnInit {
         {
           title: 'Stash',
           url: `/${RoutingPath.STASH}`,
-          icon: 'https://cdn.lordicon.com/hpveozzh.json',
+          icon: 'stash-icon.svg',
           active: true
         },
-        { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'https://cdn.lordicon.com/ivugxnop.json', active: true },
+        { title: 'DAO', url: `/${RoutingPath.DAO}`, icon: 'dao-icon.svg', active: true },
       ],
     },
     {
       group: 'Explore',
       pages: [
-        {title: 'hubSOL', url: `/${RoutingPath.HUBSOL}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true},
+        {title: 'hubSOL', url: `/${RoutingPath.HUBSOL}`, icon: 'hubSOL.svg', active: true},
 
-        { title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'https://cdn.lordicon.com/uvscndge.json', active: true },
+        { title: 'Bridge', url: `/${RoutingPath.BRIDGE}`, icon: 'bridge-icon.svg', active: true },
         {
           title: 'Airdrops finder',
           url: `/${RoutingPath.AIRDROP_FINDER}`,
-          icon: 'https://cdn.lordicon.com/unukghxb.json',
+          icon: 'airdrop-icon.svg',
           active: true
         },
         // { title: 'Events', url: `/${RoutingPath.EVENTS}`, icon: 'https://cdn.lordicon.com/hffrpcip.json', active: false },

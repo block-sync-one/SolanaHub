@@ -15,7 +15,16 @@ module.exports = (config) => {
 		zlib: false,
 		url: false,
 		http:false,
-		https:false
+		https:false,
+		"vm": require.resolve("vm-browserify"),
+		"events": require.resolve("events/"),
+		"buffer": require.resolve("buffer/"),
+		"crypto": require.resolve("crypto-browserify"),
+		"http": require.resolve("stream-http"),
+		"https": require.resolve("https-browserify"),
+		"os": require.resolve("os-browserify/browser"),
+		"path": require.resolve("path-browserify"),
+		"zlib": require.resolve("browserify-zlib")
 	};
 
 	if (config.mode === 'production') {
