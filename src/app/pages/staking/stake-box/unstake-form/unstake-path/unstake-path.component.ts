@@ -12,7 +12,7 @@ import {
   IonContent,
   IonCol, IonIcon, IonSkeletonText} from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { lockClosedOutline, waterOutline, flash, time, informationCircleOutline, funnelOutline, colorWandOutline } from 'ionicons/icons';
+import { lockClosedOutline, waterOutline, flash, time, informationCircleOutline, funnelOutline, colorWandOutline, checkmarkDoneOutline, checkmarkDoneCircleOutline } from 'ionicons/icons';
 import { catchError } from 'rxjs/operators';
 import { take } from 'rxjs';
 import { ChipComponent } from 'src/app/shared/components/chip/chip.component';
@@ -51,7 +51,7 @@ export class UnstakePathComponent implements OnInit, OnChanges {
   @Output() onSelectPath = new EventEmitter()
   public ETA: string = ''
   constructor(private _shs: SolanaHelpersService) {
-    addIcons({flash,colorWandOutline,time,informationCircleOutline,funnelOutline,lockClosedOutline,waterOutline});
+    addIcons({flash,colorWandOutline,time,informationCircleOutline,checkmarkDoneCircleOutline,checkmarkDoneOutline,funnelOutline,lockClosedOutline,waterOutline});
   }
 
   ngOnInit(): void {

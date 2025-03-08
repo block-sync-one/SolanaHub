@@ -12,7 +12,9 @@ import {ModelsAdapterService} from "@app/shared/services";
 export class DustValueTokensService {
   private readonly dustValueStashGroupSignal = signal<StashGroup | null>(null);
 
-  constructor(private readonly _helpersService: HelpersService, private readonly _freemiumService: FreemiumService, private readonly _modelsAdapterService: ModelsAdapterService) {
+  constructor(private readonly _helpersService: HelpersService, 
+    private readonly _freemiumService: FreemiumService, 
+    private readonly _modelsAdapterService: ModelsAdapterService) {
     effect(() => {
       const assets = this._helpersService.dasAssets();
       if (assets) {

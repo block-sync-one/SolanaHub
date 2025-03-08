@@ -1,15 +1,21 @@
 <form [formGroup]="unstakeForm" class=" ion-margin-bottom">
   <!-- <swap-setting (reloadRoute)="calcBestRoute()" [slippageControl]="tokenSwapForm.controls['slippage']"></swap-setting> -->
 
-  <stake-input [formType]="'unstake'" [label]="'unstake'" [assetControl]="unstakeForm.controls['inputToken']"
+  <stake-input class="ion-margin-bottom" [formType]="'unstake'" [label]="'unstake'" [assetControl]="unstakeForm.controls['inputToken']"
     [amountControl]="unstakeForm.controls['inputAmount']" />
-  <unstake-path [swapReceive]="swapReceive()" [slowUnstakeReceive]="slowUnstakeReceive()" [loading]="loading()"
+  <unstake-path class="ion-margin-bottom" [swapReceive]="swapReceive()" [slowUnstakeReceive]="slowUnstakeReceive()" [loading]="loading()"
     [unstakePath]="unstakePath()" [platformFeeInSOL]="platformFeeInSOL()" (onSelectPath)="selectUnstakePath($event)" />
 
 
   <slow-unstake-wizard [stakePosition]="stakePositionToUnstake" [wizard]="unstakeWizard" />
  
-
+ 
+    <div id="platform-fee-wrapper">
+      <div id="platform-fee-label">Platform fee</div>
+      <div id="platform-fee-value">{{platformFeeInSOL() | number:'1.5'}} SOL</div>
+    </div>
+  
+ 
   <div id="stake-button-wrapper">
  
     <ion-button expand="block" [disabled]="unstakeForm.invalid || unstakeState() === 'preparing transaction' || unstakeState() === 'Deactivate account'" color="primary"

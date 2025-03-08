@@ -58,9 +58,18 @@
             </div>
             <div class="details">
               <div class="miss-price">
-                <span class="label">platform fee:</span>
+                <span class="label">Slippage:</span>
                 <span class="label">
-                  <app-platform-fee [feeInSOL]="platformFeeInSOL | number: '1.4' " ></app-platform-fee>
+                  <chip color="active" >
+                    <div>
+                      <span>ZERO</span>
+                      
+                      <ion-icon style="font-size: 16px;" name="checkmark-done-outline" [tooltip]="zeroSlippageTooltip"></ion-icon>
+                    </div>
+                    <ng-template #zeroSlippageTooltip>
+                      <ion-label>Get direct access to your funds from the stake pool reserves</ion-label>
+                    </ng-template>
+                  </chip>
                 </span>
               </div>
               <div class="receive">

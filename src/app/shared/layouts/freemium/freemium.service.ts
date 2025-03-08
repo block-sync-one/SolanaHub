@@ -104,7 +104,11 @@ export class FreemiumService {
   }
 
   public addServiceFee(walletPk: PublicKey, type: PremiumActions): TransactionInstruction | null {
-    if (this.isPremium() || !type || !this.isPremiumAction(type)) {
+    // if (this.isPremium() || !type || !this.isPremiumAction(type)) {
+    //   return null;
+    // }
+
+    if (!type || !this.isPremiumAction(type)) {
       return null;
     }
 

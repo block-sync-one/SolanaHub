@@ -18,6 +18,8 @@ import { PremiumActions } from '@app/enums';
 import { addIcons } from 'ionicons';
 import { arrowForwardOutline } from 'ionicons/icons';
 import { SlowUnstakeWizardComponent } from './slow-unstake-wizard/slow-unstake-wizard.component';
+import { DecimalPipe } from '@angular/common';
+import { Transaction } from '@solana/web3.js';
 interface UnstakeFormData {
   inputToken: Token;
   outputToken: Token;
@@ -36,7 +38,8 @@ interface UnstakeFormData {
     ReactiveFormsModule,
     UnstakePathComponent,
     IonButton,
-    SlowUnstakeWizardComponent
+    SlowUnstakeWizardComponent,
+    DecimalPipe
   ]
 })
 export class UnstakeFormComponent implements OnInit {
@@ -258,7 +261,11 @@ ngOnChanges(changes: SimpleChanges): void {
 
       // Execute swap transaction
       const tx = await this._jupStore.swapTx(route);
-      const success = await this._txi.sendMultipleTxn([tx]);
+
+      const serviceFeeInst = this._freemiumService.addServiceFee(this._shs.getCurrentWallet().publicKey, PremiumActions.UNSTAKE_LST)
+      const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
+      const txWithFee = new Transaction({feePayer: this._shs.getCurrentWallet().publicKey, blockhash, lastValidBlockHeight}).add(serviceFeeInst)
+      const success = await this._txi.sendMultipleTxn([txWithFee, tx]);
       
       if (success) {
         this._lss._triggerUpdate.next({ type: 'full' });

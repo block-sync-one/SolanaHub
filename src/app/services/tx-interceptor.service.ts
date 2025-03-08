@@ -49,7 +49,6 @@ export class TxInterceptorService {
     type?: PremiumActions
   ): Promise<string | null> {
     try {
-      console.log('sendTx', txParam, walletOwner, extraSigners, record, type);
       this.txState.set('preparing');
       const { lastValidBlockHeight, blockhash } = await this._shs.connection.getLatestBlockhash();
       const txArgs: TransactionBlockhashCtor = { feePayer: walletOwner, blockhash, lastValidBlockHeight: lastValidBlockHeight }

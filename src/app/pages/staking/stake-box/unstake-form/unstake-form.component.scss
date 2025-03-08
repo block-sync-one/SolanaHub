@@ -1,9 +1,20 @@
 form{
     display: flex;
     flex-direction: column;
-    gap: 16px;
 }
 ion-label{
     text-transform: capitalize;
 }
 
+#platform-fee-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    div{
+        color: var(--ion-light-gray);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: normal;
+    }
+}
