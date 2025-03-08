@@ -21,7 +21,7 @@
             "customWebpackConfig": {
               "path": "./webpack.config.js"
             },
-            "outputPath": "dist/app/browser",
+            "outputPath": "www",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -155,92 +155,6 @@
           "options": {
             "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
-        },
-        "server": {
-          "builder": "@angular-devkit/build-angular:server",
-          "options": {
-            "outputPath": "dist/app/server",
-            "main": "server.ts",
-            "tsConfig": "tsconfig.server.json",
-            "inlineStyleLanguage": "scss"
-          },
-          "configurations": {
-            "production": {
-              "buildOptimizer": true,
-              "outputHashing": "media",
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": false,
-              "sourceMap": false,
-              "extractLicenses": false,
-              "vendorChunk": true
-            },
-            "development": {
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.dev.ts"
-                }
-              ],
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            },
-            "local": {
-              "buildOptimizer": true,
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.local.ts"
-                }
-              ],
-              "optimization": false,
-              "sourceMap": true,
-              "extractLicenses": false,
-              "vendorChunk": true
-            },
-            "ci": {}
-          },
-          "defaultConfiguration": "production"
-        },
-        "serve-ssr": {
-          "builder": "@angular-devkit/build-angular:ssr-dev-server",
-          "configurations": {
-            "development": {
-              "browserTarget": "app:build:development",
-              "serverTarget": "app:server:development"
-            },
-            "production": {
-              "browserTarget": "app:build:production",
-              "serverTarget": "app:server:production"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
-        "prerender": {
-          "builder": "@angular-devkit/build-angular:prerender",
-          "options": {
-            "routes": [
-              "/"
-            ]
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "app:build:production",
-              "serverTarget": "app:server:production"
-            },
-            "development": {
-              "browserTarget": "app:build:development",
-              "serverTarget": "app:server:development"
-            }
-          },
-          "defaultConfiguration": "production"
         }
       }
     }

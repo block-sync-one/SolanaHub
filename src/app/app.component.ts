@@ -11,7 +11,6 @@ import {
   inject, computed
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
-
 import {
   IonApp,
   IonImg,
@@ -35,21 +34,23 @@ import { ModalController } from '@ionic/angular';
 
 import { WalletStore } from '@heavy-duty/wallet-adapter';
 import { WalletModule } from './shared/layouts/wallet/wallet.module';
-import { TurnstileCaptchaComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent, NewsFeedComponent } from './shared/components';
+import { TurnstileCaptchaComponent, MenuComponent, AnimatedIconComponent, SettingsButtonComponent } from './shared/components';
 import { NotConnectedComponent } from './shared/layouts/not-connected/not-connected.component';
+import { VirtualStorageService } from './services/virtual-storage.service';
 
-import { PortfolioService, UtilService, WatchModeService, VirtualStorageService, NotificationsService, CaptchaService } from './services';
+import { PortfolioService, UtilService, WatchModeService } from './services';
 import { RoutingPath } from "./shared/constants";
 
 import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
+import { NotificationsService } from './services/notifications.service';
 
+import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
+import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 
-
-
+import { CaptchaService } from './services/captcha.service';
 import {FreemiumService} from "@app/shared/layouts/freemium";
 import { StakeService } from './pages/staking/stake.service';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-import { SeoService } from './services/seo.service';
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -78,7 +79,7 @@ import { SeoService } from './services/seo.service';
     IonLabel,
     IonRouterOutlet,
     IonImg,
- 
+    FloatJupComponent,
     IonIcon,
     NotConnectedComponent,
     FreemiumModule
@@ -126,7 +127,6 @@ export class AppComponent implements OnInit {
     private _renderer: Renderer2,
     private _stakingService: StakeService,
     private _portfolioService: PortfolioService,
-    private _seoService: SeoService,
     @Inject(DOCUMENT) private document: Document,
   ) {
     const showNewsFeed = JSON.parse(this._vrs.localStorage.getData('newsFeedClosed'))
@@ -156,16 +156,6 @@ export class AppComponent implements OnInit {
 
   async ngOnInit() {
 
-    // subscribe to route changes
-    this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
-      tap((event: NavigationEnd) => {
-        // Extract the route path without query parameters
-        const currentPath = event.urlAfterRedirects.split('?')[0].split('/').filter(segment => segment)[0] || 'default';
-        console.log(currentPath);
-        this._seoService.setSEO(currentPath);
-      })
-    ).subscribe();
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
 
