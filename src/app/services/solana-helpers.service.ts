@@ -52,9 +52,9 @@ export class SolanaHelpersService {
 
     const rpc = this._utils.RPC
     this._connectionStore.setEndpoint(rpc)
-    this._connectionStore.connection$.subscribe(conection => this.connection = conection);
-    this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
-    this._watchModeService.watchedWallet$.subscribe(wallet => this._walletExtended$.next(wallet));
+    this._connectionStore.connection$.subscribe(conection => this.connection = conection as any);
+    this._walletStore.anchorWallet$.subscribe(wallet => this._walletExtended$.next(wallet as any));
+    this._watchModeService.watchedWallet$.subscribe(wallet => this._walletExtended$.next(wallet as any));
   }
   public updateRPC(rpcURL) {
     this._connectionStore.setEndpoint(rpcURL)
