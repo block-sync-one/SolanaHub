@@ -38,6 +38,7 @@
     "@lordicon/element": "^1.4.2",
     "@marinade.finance/marinade-ts-sdk": "^5.0.10",
     "@ngrx/component-store": "^17.0.1",
+    "@phantom/wallet-sdk": "^0.0.23",
     "@solana/spl-stake-pool": "^0.7.0",
     "@solana/spl-token": "0.3.7",
     "@solana/wallet-adapter-base": "^0.9.23",

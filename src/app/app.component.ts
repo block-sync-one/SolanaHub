@@ -44,13 +44,13 @@ import { RoutingPath } from "./shared/constants";
 import { combineLatestWith, filter, switchMap, map, of, tap, take } from 'rxjs';
 import { NotificationsService } from './services/notifications.service';
 
-import { FloatJupComponent } from './shared/components/float-jup/float-jup.component';
 import { NewsFeedComponent } from './shared/components/news-feed/news-feed.component';
 
 import { CaptchaService } from './services/captcha.service';
 import {FreemiumService} from "@app/shared/layouts/freemium";
 import { StakeService } from './pages/staking/stake.service';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
+import { createPhantom } from "@phantom/wallet-sdk"
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -79,7 +79,6 @@ import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
     IonLabel,
     IonRouterOutlet,
     IonImg,
-    FloatJupComponent,
     IonIcon,
     NotConnectedComponent,
     FreemiumModule
@@ -155,7 +154,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-
+    createPhantom();
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
 

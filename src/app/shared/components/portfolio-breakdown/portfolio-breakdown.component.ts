@@ -51,8 +51,10 @@ export class PortfolioBreakdownComponent {
   public readonly portfolioTotalValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
   public readonly assetClassValue = computed(() => {
     const assets = this.assets();
+    console.log(assets);
 
-    if (!assets) return null;
+    if (assets === null) return null;
+
     return assets
       .map(assetClass => ({
         group: assetClass?.label ? (assetClass?.label === 'NFTs' ? 'NFTs' : assetClass?.label.replace(/([A-Z])/g, ' $1').trim()) : assetClass?.label,
@@ -124,7 +126,7 @@ export class PortfolioBreakdownComponent {
   }
 
   @Output() totalAssetsChange = new EventEmitter<number>();
-  @Input() assets: Signal<any[]> = signal([]);
+  @Input() assets: Signal<any[]> = signal(null);
   chartData: Chart<'doughnut' | 'pie', number[], unknown>;
 
 
@@ -145,6 +147,27 @@ export class PortfolioBreakdownComponent {
     this.chartData ? this.chartData.destroy() : null
     const chartEl = this.breakdownChart?.nativeElement
     const filterPortfolioLowValue = this.assetClassValue().filter((assets: any) => !assets.excluded);
+
+    if (filterPortfolioLowValue.length === 0) {
+      console.log('No assets');
+      
+      this.chartData = new Chart(chartEl, {
+        type: 'doughnut',
+        data: {
+          labels: ['No assets'],
+          datasets: [{
+            data: [1],
+            backgroundColor: ['#B84794'],
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false
+        }
+      });
+      return;
+    }
+
     const groupNames = filterPortfolioLowValue.map((assets: any) => assets.group.charAt(0).toUpperCase() + assets.group.slice(1))
     const groupColors = filterPortfolioLowValue.map((assets: any) => assets.color)
     const groupValue = filterPortfolioLowValue.map((assets: any) => assets.value)

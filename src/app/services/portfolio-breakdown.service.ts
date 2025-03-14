@@ -249,7 +249,7 @@ export class PortfolioBreakdownService {
     assets.forEach(wallet => {
       const { walletAddress, portfolio } = wallet
       const { tokens } = portfolio
-
+      if (!tokens) return;
       tokens.forEach(token => {
         const { address, value, balance } = token;
         let newBalance = balance;

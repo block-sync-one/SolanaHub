@@ -306,7 +306,7 @@ export class PortfolioService {
     const excludeNFTv2 = portfolioData.elements.filter(e => e.platformId !== WalletDataKeys.NFT_V2);
     const staking = portfolioData.elements.find(e => e.platformId === WalletDataKeys.NATIVE_STAKE);
     const mergeDuplications = mergePortfolioElementMultiples(excludeNFTv2);
-    const tokenJupData = Object.values(portfolioData.tokenInfo.solana);
+    const tokenJupData = Object.values(portfolioData?.tokenInfo?.solana || {});
     const extendTokenData = mergeDuplications.find(group => group.platformId === WalletDataKeys.TOKENS);
 
       await this._portfolioStaking(walletAddress,staking );
