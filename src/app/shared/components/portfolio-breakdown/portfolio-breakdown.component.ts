@@ -51,7 +51,6 @@ export class PortfolioBreakdownComponent {
   public readonly portfolioTotalValue = computed(() => this.assets()?.filter(data => data.value).reduce((accumulator, currentValue) => accumulator + currentValue.value, 0))
   public readonly assetClassValue = computed(() => {
     const assets = this.assets();
-    console.log(assets);
 
     if (assets === null) return null;
 
