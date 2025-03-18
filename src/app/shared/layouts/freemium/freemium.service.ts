@@ -107,6 +107,7 @@ export class FreemiumService {
     // if (this.isPremium() || !type || !this.isPremiumAction(type)) {
     //   return null;
     // }
+console.log('add fees tx');
 
     if (!type || !this.isPremiumAction(type)) {
       return null;

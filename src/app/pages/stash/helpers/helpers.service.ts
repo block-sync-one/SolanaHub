@@ -170,7 +170,7 @@ export class HelpersService {
     ): Promise<string[]> {
       let transactions: (Transaction | VersionedTransaction)[] =  await this.transactionHelperService.toTransactions(ixs);
 
-      if (!this.freemiumService.isPremium()) {
+   
         // Add platform fee to each transaction
         if (ixs[0] instanceof VersionedTransaction) {
             // Add a single fee transaction for versioned transactions
@@ -186,7 +186,7 @@ export class HelpersService {
                 (tx as Transaction).add(...platformFeeTxsIn as TransactionInstruction[]);
             }
         }
-      }
+      
 
         // Send transactions
         try {
