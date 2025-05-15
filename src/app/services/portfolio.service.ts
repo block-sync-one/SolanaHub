@@ -383,11 +383,11 @@ export class PortfolioService {
     if (this._platforms.length) {
       return this._platforms
     }
-    const vrs = this._vrs.localStorage.getData('platforms')
-    if(vrs){
-      this._platforms = JSON.parse(vrs)
-      return this._platforms
-    }
+    // const vrs = this._vrs.localStorage.getData('platforms')
+    // if(vrs){
+    //   this._platforms = JSON.parse(vrs)
+    //   return this._platforms
+    // }
     try {
       this._platforms = await (await fetch(`${this.restAPI}/api/portfolio/platforms`)).json();
     } catch (error) {
