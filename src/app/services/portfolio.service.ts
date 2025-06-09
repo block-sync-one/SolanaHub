@@ -314,7 +314,7 @@ export class PortfolioService {
 
        if (fetchType !== 'partial') {
          await this._portfolioDeFi(excludeNFTv2, tokenJupData);
-         // mergeDuplications.push(tempNft);
+         mergeDuplications.push(tempNft);
          this.walletAssets.set(mergeDuplications);
          this.netWorth.set(portfolioData.value);
        }
@@ -324,7 +324,7 @@ export class PortfolioService {
 
 
     // Load NFT afterward, since call is expensive
-    this._portfolioNFT(walletAddress)
+    this._portfolioNFT(walletAddress, tempNft);
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {
@@ -353,12 +353,14 @@ export class PortfolioService {
     }
   }
 
-  public async _portfolioNFT(walletAddress: string) {
+  public async _portfolioNFT(walletAddress: string, stepNfts: any) {
     try {
       const getNfts = await fetch(`${this.restAPI}/api/portfolio/nft?address=${walletAddress}`)
       const nfts = await getNfts.json()
-      // loop through nfts and add logoURI from image_uri
-      const nftExtended = nfts.data.assets?.map(nft => {
+
+      const updatedNftMetadata = this.updateFloorPriceAndValue(nfts.data.assets, stepNfts.data.assets)
+
+      const nftExtended = updatedNftMetadata?.map(nft => {
         return {
           ...nft,
           logoURI: nft.image_uri,
@@ -375,6 +377,30 @@ export class PortfolioService {
     } catch (error) {
       console.error(error);
     }
+  }
+
+  private updateFloorPriceAndValue(portfolioNfts: any[], stepNfts: any[]): any[] {
+    const stepNftsMap = {}
+
+    stepNfts = stepNfts.filter((nft) => !!nft.floorPrice);
+    stepNfts.forEach(nft => {
+      const floorPrice = nft.floorPrice ?? 0;
+      const value = nft.value;
+      stepNftsMap[nft.address] = {floorPrice, value};
+    })
+
+    return portfolioNfts.map(nft => {
+      const stepNft = stepNftsMap[nft.mint];
+
+      if (stepNft?.floorPrice) {
+        const result = {...nft, ...stepNft};
+        result.collection.name = nft.name;
+        result.collection.name = nft.symbol;
+        return result;
+      }
+
+      return nft
+    });
   }
 
   private _platforms = []
