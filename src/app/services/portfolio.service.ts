@@ -435,8 +435,8 @@ export class PortfolioService {
 
         let records: defiHolding[] = [];
         // add if id =juptier jupiter-governance
-        group.platformId = group.platformId === WalletDataKeys.JUPITER_GOVERNANCE ? WalletDataKeys.JUPITER_EXCHANGE : group.platformId
-        const platformData = getPlatformsData.find(platform => platform.id === group.platformId);
+        group.platformId = group.platformId.toLowerCase().indexOf('jup') > -1 ? 'jupiter-exchange' : group.platformId
+        const platformData = getPlatformsData.find(platform => platform.id.toLowerCase() === group.platformId.toLowerCase());
         Object.assign(group, platformData);
 
         if (group.type === WalletDataKeys.LIQUIDITY) {
