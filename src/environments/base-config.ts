@@ -7,7 +7,7 @@ export const getBaseConfig = (): BaseConfig => {
       {
         name: 'Helius',
         imageURL: '../assets/images/helius-icon.png',
-        value: 'https://carole-l8ne8x-fast-mainnet.helius-rpc.com'
+        value: 'https://jori-qte1i2-fast-mainnet.helius-rpc.com'
       },
       
       {

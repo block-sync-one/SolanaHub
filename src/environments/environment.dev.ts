@@ -6,7 +6,7 @@ export const environment: EnvironmentConfig = {
   name: EnvironmentName.Development,
   production: false,
   solanaEnv: 'mainnet-beta',
-  solanaCluster: 'https://carole-l8ne8x-fast-mainnet.helius-rpc.com',
+  solanaCluster: 'https://jori-qte1i2-fast-mainnet.helius-rpc.com',
   apiUrl: "https://dev-api.SolanaHub.app",
   turnStile: '1x00000000000000000000AA',
   ...getBaseConfig()
