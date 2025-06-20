@@ -24,12 +24,12 @@ export class NewsFeedComponent implements OnInit {
 
    }
 
-  mainFeed = {
-    title: "SolanaHub PRO",
+   mainFeed = {
+    title: "Introducing Hubra",
     type: "feature",
     color: "secondary",
-    image: "/assets/images/pro-intro.png",
-    description: `Premium features, waved platform fees, and boosted rewards for hubSOL holders. <a href='https://x.com/SolanaHubApp/status/1887074710673916289' target='_blank' >Learn more</a>`
+    image: "/assets/hubra.png",
+    description: `The power of a CEX, with the freedom of DeFi.<br/> Subscribe to the new app release, become an early beta access user, and earn Matter. <a href='https://hubra-welcome.solanahub.app/' target='_blank' >Learn more</a>`
   }
   feed = [
     {

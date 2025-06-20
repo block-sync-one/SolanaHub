@@ -67,3 +67,10 @@
         border-bottom: none;
     }
 }
+
+
+@media (max-width: 768px) {
+    #main-feed div{
+        font-size: 12px !important;
+    }
+}
