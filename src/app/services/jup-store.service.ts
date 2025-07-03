@@ -12,13 +12,16 @@ export class JupStoreService {
   // private _txIntercept = inject(TxInterceptorService)
   public solPrice = signal(0);
   constructor(private _shs: SolanaHelpersService, private _txIntercept: TxInterceptorService) {
-    this.fetchPriceFeed('So11111111111111111111111111111111111111112').then(p => this.solPrice.set(p.data['So11111111111111111111111111111111111111112'].price))
+    this.fetchPriceFeed('So11111111111111111111111111111111111111112').then(p => {
+      console.log(p);
+      this.solPrice.set(p['So11111111111111111111111111111111111111112'].usdPrice)
+    })
 
    }
   public async fetchPriceFeed(mintAddress: string, vsAmount: number = 1): Promise<JupiterPriceFeed> {
     let data: JupiterPriceFeed = null
     try {
-      const res = await fetch(`https://api.jup.ag/price/v2?ids=${mintAddress}&vsAmount=${vsAmount}`);
+      const res = await fetch(`https://lite-api.jup.ag/price/v3?ids=${mintAddress}&vsAmount=${vsAmount}`);
       data = await res.json();
     } catch (error) {
       console.warn(error);
@@ -28,7 +31,7 @@ export class JupStoreService {
   public async fetchPriceFeed2(mintAddress: string){
     let data = null
     try {
-      data = await fetch(`https://api.jup.ag/price/v2?ids=${mintAddress}`);
+      data = await fetch(`https://lite-api.jup.ag/price/v3?ids=${mintAddress}`);
       data = await data.json()
     } catch (error) {
       console.warn(error)

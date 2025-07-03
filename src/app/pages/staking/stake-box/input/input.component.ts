@@ -68,7 +68,7 @@ export class InputComponent implements OnInit, OnChanges {
     const { address } = this.assetControl.value
 
     this._jupStore.fetchPriceFeed(address, 1).then(res => {
-      const price = res.data[address]['price'] || 0;
+      const price = res[address]['usdPrice'] || 0;
       if (this.tokenPrice() != price) {
         this.tokenPrice.set(Number(price));
 

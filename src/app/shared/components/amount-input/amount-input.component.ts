@@ -41,7 +41,7 @@ ngOnChanges(changes: SimpleChanges): void {
   getTokenPrice() {
     const { address } = this.token
     this._jupStore.fetchPriceFeed(address, 1).then(res => {
-      const price = res.data[address]['price'];
+      const price = res[address]['usdPrice'];
       if (this.tokenPrice() != price) {
         this.tokenPrice.set(Number(price));
       }

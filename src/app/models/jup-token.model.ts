@@ -19,7 +19,7 @@ export interface JupToken {
             mintSymbol: string,
             vsToken: string,
             vsTokenSymbol: string,
-            price: number
+            usdPrice: number
         }
     },
     timeTaken: number,
