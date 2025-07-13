@@ -46,7 +46,7 @@ export class JupStoreService {
     try {
 
       bestRoute = await (
-        await fetch(`https://quote-api.jup.ag/v6/quote?inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
+        await fetch(`https://lite-api.jup.ag/v6/quote?inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
       ).json();
 
     } catch (error) {
@@ -62,7 +62,7 @@ export class JupStoreService {
       const walletOwner = this._shs.getCurrentWallet().publicKey.toBase58()
 
       const { swapTransaction } = await (
-        await fetch('https://api.jup.ag/swap/v1/swap', {
+        await fetch('https://lite-api.jup.ag/swap/v1/swap', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
