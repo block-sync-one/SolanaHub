@@ -46,7 +46,7 @@ export class JupStoreService {
     try {
 
       bestRoute = await (
-        await fetch(`https://lite-api.jup.ag/v6/quote?inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
+        await fetch(`https://lite-api.jup.ag/swap/v1/quote?inputMint=${inputToken.address}&outputMint=${outputToken.address}&amount=${inputAmountInSmallestUnits}`)
       ).json();
 
     } catch (error) {
