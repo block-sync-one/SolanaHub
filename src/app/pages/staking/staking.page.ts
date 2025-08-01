@@ -15,6 +15,7 @@ import { addIcons } from 'ionicons';
 import { gitBranchOutline, hourglassOutline, leafOutline, statsChartOutline } from 'ionicons/icons';
 import { StakeService } from './stake.service';
 import { StakePositionsComponent } from './stake-positions/stake-positions.component';
+import { MarinadeUnstakeTicketComponent } from './stake-box/unstake-form/marinade-unstake-ticket/marinade-unstake-ticket.component';
 
 interface ValidatorDataItem {
   title: string;
@@ -28,6 +29,7 @@ interface ValidatorDataItem {
   styleUrls: ['./staking.page.scss'],
   standalone: true,
   imports: [
+    MarinadeUnstakeTicketComponent,
     PageHeaderComponent,
     IonGrid,
     IonRow,

@@ -49,6 +49,14 @@ export class LiquidStakeService {
     this.marinadeSDK = new Marinade(config)
   }
 
+  public async getMarinadeTickets(){
+    if (!this.marinadeSDK) {
+      this._initMarinade(this._shs.getCurrentWallet().publicKey)
+    }
+    const tickets = await this.marinadeSDK.getDelayedUnstakeTickets(this._shs.getCurrentWallet().publicKey)
+    console.log('my tickets', tickets)
+    return tickets
+  }
   public async getStakePoolList(): Promise<StakePool[]> {
     let stakePools: StakePool[] = [];
     if (this.stakePools.length > 0) {
@@ -134,9 +142,9 @@ export class LiquidStakeService {
       if (!this.marinadeSDK) {
         this._initMarinade(publicKey)
       }
-      const { transaction } = await this.marinadeSDK.liquidUnstake(new BN(lamports))
+      const { transaction, ticketAccountKeypair } = await this.marinadeSDK.orderUnstake(new BN(lamports))
       // sign and send the `transaction`
-      await this._txi.sendTx([transaction], publicKey, null, record, PremiumActions.UNSTAKE_LST)
+      await this._txi.sendTx([transaction], publicKey, [ticketAccountKeypair], record, PremiumActions.UNSTAKE_LST)
     } else if (pool.type === 'SanctumSpl' || pool.type === 'SanctumSplMulti') {
 
       const singalValidatorsPool_PROGRAM_ID = new PublicKey('SP12tWFxD9oJsVWNavTTBZvMbA6gkAmxtVgxdqvyvhY')

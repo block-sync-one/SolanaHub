@@ -1,0 +1,54 @@
+@if(tickets().length > 0) {
+<div class="marinade-unstake-tickets">
+  <h2 class="ion-text-center ion-margin-bottom">mSOL delayed unstake tickets</h2>
+  
+  @if (tickets() && tickets().length > 0) {
+    <div class="tickets-list">
+      @for (ticket of tickets(); track ticket.ticketAccount) {
+        <ion-card class="ticket-card">
+          <ion-card-content>
+            <div class="ticket-content">
+              <div class="ticket-icon">
+                <ion-img src="https://assets.coingecko.com/coins/images/17752/standard/mSOL.png" class="marinade-icon"></ion-img>
+              </div>
+              
+              <div class="ticket-info">
+                <div class="ticket-name">Marinade ticket</div>
+                <div class="ticket-details">
+                  <span class="ticket-amount">{{ ticket.lamportsAmount / 1e9 | number:'1.0-3' }} SOL</span>
+                  <span class="ticket-dot">•</span>
+                  <span class="ticket-time">
+                    @if (ticket.isDue) {
+                      ready to claim
+                    } @else {
+                      in {{ ticket.timeRemaining }}
+                    }
+                  </span>
+                </div>
+              </div>
+              
+              <div class="ticket-action">
+                <ion-button 
+                  [disabled]="!ticket.isDue"
+                  (click)="claimTicket(ticket.ticketAccount)"
+                  fill="solid"
+                  color="primary"
+                  size="small">
+                  Claim
+                </ion-button>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+      }
+    </div>
+  } @else {
+    <div class="no-tickets">
+      <ion-text color="medium">
+        <p class="ion-text-center">No delayed unstake tickets found</p>
+      </ion-text>
+    </div>
+  }
+</div>
+
+}

@@ -50,7 +50,7 @@ import { CaptchaService } from './services/captcha.service';
 import {FreemiumService} from "@app/shared/layouts/freemium";
 import { StakeService } from './pages/staking/stake.service';
 import { FreemiumModule } from './shared/layouts/freemium/freemium.module';
-import { createPhantom } from "@phantom/wallet-sdk"
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -154,7 +154,7 @@ export class AppComponent implements OnInit {
   }
 
   async ngOnInit() {
-    createPhantom();
+  // createPhantom();
     // set stored theme
     this._renderer.addClass(this.document.body, this._utilService.theme + '-theme')
 

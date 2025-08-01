@@ -13,6 +13,7 @@ import { StakeService } from '../stake.service';
 import { FreemiumModule } from '@app/shared/layouts/freemium/freemium.module';
 import { ProUpgradeMessageComponent } from '@app/shared/layouts/freemium/pro-upgrade-message/pro-upgrade-message.component';
 import { IsPremiumServiceDirective } from '@app/shared/directives';
+import { MarinadeUnstakeTicketComponent } from './unstake-form/marinade-unstake-ticket/marinade-unstake-ticket.component';
 
 
 @Component({
@@ -32,7 +33,8 @@ import { IsPremiumServiceDirective } from '@app/shared/directives';
     UnstakeFormComponent,
     FreemiumModule,
     ProUpgradeMessageComponent,
-    IsPremiumServiceDirective
+    IsPremiumServiceDirective,
+    MarinadeUnstakeTicketComponent
   ]
 })
 export class StakeBoxWrapperComponent implements OnInit {

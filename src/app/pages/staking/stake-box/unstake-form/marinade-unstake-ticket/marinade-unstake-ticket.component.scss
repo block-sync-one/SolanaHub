@@ -1,0 +1,98 @@
+.marinade-unstake-tickets {
+  h2 {
+    font-weight: bold;
+    color: var(--ion-color-dark);
+    margin-bottom: 20px;
+  }
+
+  .tickets-list {
+    .ticket-card {
+      margin-bottom: 12px;
+      border-radius: 12px;
+      box-shadow: 0px 1px 2px 0px rgba(16, 24, 40, 0.05);
+      border: 1px solid var(--ion-color-border);
+      background: var(--ion-color-light);
+
+      ion-card-content {
+        padding: 16px;
+      }
+
+      .ticket-content {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .ticket-icon {
+          .marinade-icon {
+            width: 40px;
+            height: 40px;
+            background: #e6f7f4;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #00d4aa;
+            font-size: 20px;
+          }
+        }
+
+        .ticket-info {
+          flex: 1;
+
+          .ticket-name {
+            font-weight: 600;
+            color: var(--ion-color-dark);
+            margin-bottom: 4px;
+          }
+
+          .ticket-details {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+
+            .ticket-amount {
+              color: var(--ion-color-medium);
+            }
+
+            .ticket-dot {
+              color: var(--ion-color-medium);
+              font-size: 12px;
+            }
+
+            .ticket-time {
+              color: #ff9500;
+              font-weight: 500;
+
+              &.due {
+                color: #00d4aa;
+              }
+            }
+          }
+        }
+
+        .ticket-action {
+          ion-button {
+            --background: #00d4aa;
+            --color: white;
+            --border-radius: 8px;
+            height: 36px;
+            font-size: 14px;
+            font-weight: 500;
+
+            &:disabled {
+              --background: var(--ion-color-medium);
+              opacity: 0.6;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .no-tickets {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--ion-color-medium);
+  }
+}
