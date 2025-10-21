@@ -324,7 +324,7 @@ export class PortfolioService {
 
 
     // Load NFT afterward, since call is expensive
-    this._portfolioNFT(walletAddress, tempNft);
+    // this._portfolioNFT(walletAddress, tempNft);
   }
 
   private handlePortfolioError(error: any, walletAddress: string) {

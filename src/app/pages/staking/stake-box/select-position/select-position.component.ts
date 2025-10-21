@@ -42,14 +42,22 @@ export class SelectPositionComponent  implements OnInit {
         );
         console.log(positions);
         
-        const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112");
-        if(sol) {
-          positions.push({
-            ...sol,
-            exchangeRate: 1,
-            source: 'liquid'
-          } as LiquidStakeToken);
-        }
+        // const sol = this._portfolioService.tokens().find(t => t.address == "So11111111111111111111111111111111111111112") || {
+        //   address: "So11111111111111111111111111111111111111112",
+        //   symbol: "SOL",
+        //   name: "SOL",
+        //   logoURI: "assets/images/sol.svg",
+        //   decimals: 9,
+        //   chainId: 101,
+        //   balance: 0,
+        // };
+        // if(sol) {
+        //   positions.push({
+        //     ...sol,
+        //     exchangeRate: 1,
+        //     source: 'liquid'
+        //   } as LiquidStakeToken);
+        // }
       }
       if (this.formType === 'unstake') {
         positions = positions.filter(p => p.source == 'liquid');
