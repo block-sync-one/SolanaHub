@@ -1,23 +1,24 @@
 <div id="news-feed" class="ion-padding">
-  <div id="news-feed-header">News Feed</div>
-  <ion-img id="close-icon" src="assets/images/close-icon.svg" (click)="dismissModal()" />
-  <div id="feed-wrapper">
-    <div id="main-feed">
-      <chip [name]="mainFeed.type" [color]="mainFeed.color" id="featured-chip" />
-      <ion-img [src]="mainFeed.image" />
-      <div [innerHTML]="mainFeed.description"></div>
+  <div id="sunset-container">
+    <div id="sunset-header">
+      <h1 id="sunset-title">SolanaHub Has Sunset</h1>
+      <p id="sunset-subtitle">We've fully moved to our new app</p>
     </div>
-    @for (feed of feed; track feed.title) {
-    <div class="feed-item">
-      <div class="feed-head">
-        <div class="feed-title">{{feed.title}}</div>
-        
-         <span> &#x2022; </span><chip name="{{feed.type}}" color="{{feed.color}}" />
-        
-      </div>
-      <div class="feed-body" [innerHTML]="feed.description"></div>
+    
+    <div id="hubra-section">
+      <ion-img id="hubra-logo" src="assets/hubra-logo.svg" />
+      <h2 id="hubra-title">Hubra</h2>
+      <p id="hubra-description">
+        The power of a CEX, with the freedom of DeFi.<br/>
+        Experience the future of decentralized finance.
+      </p>
     </div>
-    }
 
+    <ion-button 
+      id="hubra-button" 
+      expand="block" 
+      (click)="navigateToHubra()">
+      Continue to Hubra
+    </ion-button>
   </div>
 </div>

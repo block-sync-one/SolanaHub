@@ -141,7 +141,9 @@ export class AppComponent implements OnInit {
 
     const modal = await this._modalCtrl.create({
       component: NewsFeedComponent,
-      cssClass: 'news-feed-modal'
+      cssClass: 'news-feed-modal',
+      backdropDismiss: false,
+      canDismiss: false
     });
     modal.present();
     modal.onDidDismiss().then(() => {

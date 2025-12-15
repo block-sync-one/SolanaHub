@@ -212,8 +212,7 @@ ion-spinner {
 .news-feed-modal {
     --width: 540px;
     --border-radius: 12px;
-    --height: 800px;
-    --max-height: 90%;
+    --max-height: fit-content;
     --max-width: 95%;
     --background: var(--ion-color-light);;
     overflow: auto;
